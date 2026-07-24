@@ -1,0 +1,754 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Provider API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: 'For GPU providers: applications, nodes, provisioning tokens, and earnings.'
+  name: Provider
+paths:
+  /v1/orgs/{orgId}/provider/apply:
+    post:
+      operationId: applyForProvider
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyForProviderRequest'
+        required: true
+      responses:
+        '204':
+          description: Submitted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Submit a provider application
+      tags:
+      - Provider
+  /v1/orgs/{orgId}/provider/earnings:
+    get:
+      operationId: getProviderEarnings
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderEarnings'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Provider earnings from usage records (+ payout history)
+      tags:
+      - Provider
+  /v1/orgs/{orgId}/provider/nodes:
+    get:
+      operationId: listProviderNodes
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: includeRemoved
+        required: false
+        schema:
+          type: boolean
+      - description: Filter to one status (online|offline|maintenance|draining|removed)
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProviderNode'
+                type: array
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List the provider org's nodes (with GPUs + location)
+      tags:
+      - Provider
+  /v1/orgs/{orgId}/provider/nodes/{nodeId}:
+    patch:
+      operationId: updateProviderNode
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: nodeId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                status:
+                  description: 'Operator-set lifecycle state. draining/maintenance stop new placement (reconcile leaves them alone, capacity excluded); removed decommissions the node (Phase-1 reaper frees its workloads + GPU units); online clears an operator hold (the next reconcile pass re-derives true liveness from Nomad).
+
+                    '
+                  enum:
+                  - online
+                  - draining
+                  - maintenance
+                  - removed
+                  type: string
+              required:
+              - status
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderNode'
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Set a node's operator lifecycle status (drain / maintenance / remove / online)
+      tags:
+      - Provider
+  /v1/orgs/{orgId}/provider/stats:
+    get:
+      operationId: getProviderStats
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderStats'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Provider node + token stats
+      tags:
+      - Provider
+  /v1/orgs/{orgId}/provider/status:
+    get:
+      operationId: getProviderStatus
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderStatus'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Provider status (isProvider + application status)
+      tags:
+      - Provider
+  /v1/orgs/{orgId}/provider/tokens:
+    get:
+      operationId: listProvisioningTokens
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProvisioningTokenItem'
+                type: array
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List the org's provisioning tokens (provider only)
+      tags:
+      - Provider
+    post:
+      operationId: generateProvisioningToken
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateProvisioningTokenRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisioningTokenCreated'
+          description: Created
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Generate a one-time provisioning token (owner/admin, provider only)
+      tags:
+      - Provider
+  /v1/orgs/{orgId}/provider/tokens/{id}:
+    delete:
+      operationId: revokeProvisioningToken
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Revoked
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Revoke a provisioning token (owner/admin)
+      tags:
+      - Provider
+      x-openrelay-mcp:
+        destructiveHint: true
+  /v1/provider/bootstrap:
+    get:
+      description: 'Returns a self-contained shell installer (curl | sudo bash). With a bearer org API key it mints a fresh single-use provisioning token; with ?token=vtk_… (e.g. minted from the dashboard) it self-auths and embeds that token instead. name only applies when minting (the token already carries it). Nodes always enroll as QEMU VM hosts in the community pool.
+
+        '
+      operationId: providerBootstrap
+      parameters:
+      - description: Pre-minted provisioning token (vtk_…); replaces bearer auth
+        in: query
+        name: token
+        required: false
+        schema:
+          type: string
+      - description: Truthy → run the GPU passthrough (IOMMU + vfio-pci) setup. Safe on CPU-only hosts (self-skips when no GPU is present).
+        in: query
+        name: gpu
+        required: false
+        schema:
+          type: string
+      - description: Token label; mint path only
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            text/x-shellscript:
+              schema:
+                type: string
+          description: The installer script (contains a secret provisioning token — never cached)
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Missing/invalid credentials
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not an approved provider (or revoked/exhausted token)
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Node artifact unavailable
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Onboarding not configured
+      security:
+      - apiKey: []
+      - {}
+      summary: One-command node onboarding installer (auth = org API key bearer, OR a pre-minted provisioning token via ?token=)
+      tags:
+      - Provider
+      x-openrelay-cli:
+        hidden: true
+      x-openrelay-mcp:
+        exclude: true
+components:
+  schemas:
+    EarningsBreakdownStream:
+      properties:
+        billableGrossCents:
+          description: Paid-band gross for this stream (billableHours × rate) — what commission applies to.
+          type: integer
+        billableHours:
+          description: Hours in this stream that fell in the paid band.
+          type: number
+        earningsCents:
+          description: Net earned for this stream (paid band × commission).
+          type: integer
+        grossEarningsCents:
+          description: Gross hosted value for this stream before commission/waterfall.
+          type: integer
+        hours:
+          description: Total hours hosted in this stream.
+          type: number
+        stream:
+          description: 'Income stream: ''gpu'' (GPU rentals) or ''cpu'' (CPU-only rentals).'
+          type: string
+      required:
+      - stream
+      - earningsCents
+      - hours
+      type: object
+    NodeGpuItem:
+      properties:
+        gpuName:
+          type: string
+        quantity:
+          type: integer
+        vramGb:
+          type: integer
+      required:
+      - gpuName
+      - vramGb
+      - quantity
+      type: object
+    ProvisioningTokenCreated:
+      properties:
+        expiresAt:
+          nullable: true
+          type: string
+        id:
+          type: string
+        maxNodes:
+          type: integer
+        name:
+          nullable: true
+          type: string
+        nodePool:
+          type: string
+        token:
+          type: string
+        tokenPrefix:
+          type: string
+        warning:
+          type: string
+      required:
+      - id
+      - token
+      - tokenPrefix
+      - warning
+      type: object
+    ProviderStats:
+      properties:
+        activeTokens:
+          type: integer
+        offlineNodes:
+          type: integer
+        onlineNodes:
+          type: integer
+        totalNodes:
+          type: integer
+      required:
+      - totalNodes
+      - onlineNodes
+      - offlineNodes
+      - activeTokens
+      type: object
+    EarningsBreakdownGpu:
+      properties:
+        billableGrossCents:
+          description: Paid-band gross (billableHours × rate) — what commission applies to; earningsCents = billableGrossCents × commission%.
+          type: integer
+        billableHours:
+          description: Hours that fell in the paid band.
+          type: number
+        earningsCents:
+          type: integer
+        gpuModelId:
+          type: string
+        grossEarningsCents:
+          description: Gross hosted value before commission/free-credit waterfall (hosted hours × rate).
+          type: integer
+        hours:
+          description: Total hours hosted.
+          type: number
+        name:
+          type: string
+      required:
+      - gpuModelId
+      - name
+      - earningsCents
+      - hours
+      type: object
+    GenerateProvisioningTokenRequest:
+      properties:
+        expiresInHours:
+          type: integer
+        maxNodes:
+          description: Enrollment quota; 0/omitted = unlimited
+          type: integer
+        name:
+          type: string
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    ProvisioningTokenItem:
+      properties:
+        createdAt:
+          type: string
+        expiresAt:
+          nullable: true
+          type: string
+        id:
+          type: string
+        maxNodes:
+          type: integer
+        name:
+          nullable: true
+          type: string
+        nodePool:
+          type: string
+        nodeType:
+          type: string
+        revokedAt:
+          nullable: true
+          type: string
+        status:
+          type: string
+        tokenPrefix:
+          type: string
+        usedAt:
+          nullable: true
+          type: string
+        usedByNodeId:
+          nullable: true
+          type: string
+        usedCount:
+          type: integer
+      required:
+      - id
+      - tokenPrefix
+      - nodeType
+      - status
+      - createdAt
+      type: object
+    PayoutItem:
+      properties:
+        amountCents:
+          type: integer
+        createdAt:
+          type: string
+        description:
+          nullable: true
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - type
+      - amountCents
+      - createdAt
+      type: object
+    ProviderEarnings:
+      properties:
+        availableForPayoutCents:
+          type: integer
+        billableGrossCents:
+          description: 'Total paid-band gross (Σ billableHours × rate) — exactly what commission applies to: totalEarningsCents ≈ billableGrossCents × commission%. Render the gross→net reconciliation from THIS, not grossEarningsCents.'
+          type: integer
+        billableHours:
+          description: Hours that earned (fell in customers' paid band). Diverges from totalHours when you host free-credit-funded usage.
+          type: number
+        byGpuModel:
+          items:
+            $ref: '#/components/schemas/EarningsBreakdownGpu'
+          type: array
+        byNode:
+          items:
+            $ref: '#/components/schemas/EarningsBreakdownNode'
+          type: array
+        byStream:
+          description: CPU vs GPU income streams.
+          items:
+            $ref: '#/components/schemas/EarningsBreakdownStream'
+          type: array
+        commissionPercent:
+          type: integer
+        currentMonthEarningsCents:
+          type: integer
+        currentMonthHours:
+          type: number
+        freeCreditHours:
+          description: Hours funded by customer free credits (not paid out
+          per the provider agreement).: null
+          type: number
+        grossEarningsCents:
+          description: Total gross hosted value before commission and the free-credit waterfall (Σ hosted hours × rate). totalEarningsCents is the net actually earned; the gap is commission + free/unpaid-band usage.
+          type: integer
+        pendingEarningsCents:
+          type: integer
+        recentPayouts:
+          items:
+            $ref: '#/components/schemas/PayoutItem'
+          type: array
+        totalEarningsCents:
+          type: integer
+        totalHours:
+          description: Total hours hosted across all of this provider's usage.
+          type: number
+        totalPaidOutCents:
+          type: integer
+        unpaidHours:
+          description: Hours the customer ran beyond their free credit + paid balance (debt — not collected
+          so not paid out).: null
+          type: number
+      required:
+      - totalEarningsCents
+      - totalHours
+      - currentMonthEarningsCents
+      - currentMonthHours
+      - pendingEarningsCents
+      - availableForPayoutCents
+      - totalPaidOutCents
+      - commissionPercent
+      - byNode
+      - byGpuModel
+      - recentPayouts
+      type: object
+    EarningsBreakdownNode:
+      properties:
+        billableGrossCents:
+          description: 'Paid-band gross (billableHours × rate) — exactly what commission applies to: earningsCents = billableGrossCents × commission%. Use THIS for the gross→net reconciliation, not grossEarningsCents.'
+          type: integer
+        billableHours:
+          description: Hours that fell in the paid band (i.e. that earned).
+          type: number
+        earningsCents:
+          type: integer
+        gpuCount:
+          description: 'GPU count on this node for the utilization denominator: sellable catalog inventory (Σ NodeGpu.Quantity, excluding unrecognised hardware), falling back to raw detected accelerators (Σ DetectedGpusRaw.Count) when no sellable rows exist. 0 only for a genuine CPU-only node.'
+          type: integer
+        grossEarningsCents:
+          description: Gross hosted value before commission/free-credit waterfall (hosted hours × rate). earningsCents is what's actually earned.
+          type: integer
+        hostname:
+          type: string
+        hours:
+          description: Total hours hosted (paid + free-credit + unpaid).
+          type: number
+        nodeId:
+          type: string
+        rentedGpuHoursMonth:
+          description: 'GPU-hours rented on this node so far this calendar month (Σ over GPU records of month-clamped hours × the record''s gpuCount). The utilizationPercent numerator. NOTE: usage records written before per-record gpuCount was stamped count as 1 GPU (a conservative floor).'
+          type: number
+        utilizationPercent:
+          description: 'Month-to-date utilization: rentedGpuHoursMonth / (gpuCount × hours elapsed this month) × 100, clamped to [0,100]. Null when gpuCount is 0 (CPU node) or the month just started (no elapsed time to measure against). CAVEAT: the denominator uses the node''s CURRENT gpuCount, so a node whose GPU inventory changed mid-month is exact only from the change onward (added GPUs understate; removed GPUs can saturate at 100).'
+          nullable: true
+          type: number
+      required:
+      - nodeId
+      - hostname
+      - earningsCents
+      - hours
+      type: object
+    ProviderStatus:
+      properties:
+        applicationStatus:
+          nullable: true
+          type: string
+        applicationSubmittedAt:
+          nullable: true
+          type: string
+        isProvider:
+          type: boolean
+      required:
+      - isProvider
+      type: object
+    ProviderNode:
+      properties:
+        cpuCores:
+          nullable: true
+          type: integer
+        cpuModel:
+          nullable: true
+          type: string
+        createdAt:
+          type: string
+        gpus:
+          items:
+            $ref: '#/components/schemas/NodeGpuItem'
+          type: array
+        hostname:
+          type: string
+        id:
+          type: string
+        locationCity:
+          nullable: true
+          type: string
+        locationCountry:
+          nullable: true
+          type: string
+        nodeType:
+          type: string
+        ramGb:
+          nullable: true
+          type: integer
+        status:
+          type: string
+        tdxEnabled:
+          type: boolean
+      required:
+      - id
+      - hostname
+      - nodeType
+      - tdxEnabled
+      - status
+      - createdAt
+      - gpus
+      type: object
+    ApplyForProviderRequest:
+      properties:
+        note:
+          type: string
+      required:
+      - note
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

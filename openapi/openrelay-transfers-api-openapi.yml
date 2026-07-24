@@ -1,0 +1,395 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Transfers API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Move resources between organizations you belong to.
+  name: Transfers
+paths:
+  /v1/orgs/{orgId}/transfers:
+    post:
+      operationId: initiateTransfer
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiateTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferRequest'
+          description: Created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Initiate a resource transfer to another org (owner/admin)
+      tags:
+      - Transfers
+  /v1/orgs/{orgId}/transfers/incoming:
+    get:
+      operationId: listIncomingTransfers
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TransferItem'
+                type: array
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Pending incoming transfers (enriched)
+      tags:
+      - Transfers
+  /v1/orgs/{orgId}/transfers/outgoing:
+    get:
+      operationId: listOutgoingTransfers
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TransferItem'
+                type: array
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Outgoing transfers, all statuses (enriched)
+      tags:
+      - Transfers
+  /v1/orgs/{orgId}/transfers/pending-count:
+    get:
+      operationId: getTransferPendingCount
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendingCount'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Count of pending incoming transfers
+      tags:
+      - Transfers
+  /v1/transfers/target-orgs:
+    get:
+      operationId: listTransferTargetOrgs
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TargetOrg'
+                type: array
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - apiKey: []
+      summary: Orgs the caller belongs to (for the transfer target dropdown)
+      tags:
+      - Transfers
+  /v1/transfers/{id}/accept:
+    post:
+      operationId: acceptTransfer
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptTransferRequest'
+        required: false
+      responses:
+        '204':
+          description: Accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Accept a pending incoming transfer (target org owner/admin)
+      tags:
+      - Transfers
+  /v1/transfers/{id}/cancel:
+    post:
+      operationId: cancelTransfer
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Cancelled
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Cancel a pending outgoing transfer (source org)
+      tags:
+      - Transfers
+      x-openrelay-mcp:
+        destructiveHint: true
+  /v1/transfers/{id}/reject:
+    post:
+      operationId: rejectTransfer
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Rejected
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Reject a pending incoming transfer (target org owner/admin)
+      tags:
+      - Transfers
+      x-openrelay-mcp:
+        destructiveHint: true
+components:
+  schemas:
+    AcceptTransferRequest:
+      properties:
+        sshKeyIds:
+          items:
+            type: string
+          type: array
+      type: object
+    TargetOrg:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+      required:
+      - id
+      - name
+      - slug
+      type: object
+    InitiateTransferRequest:
+      properties:
+        note:
+          type: string
+        resourceId:
+          type: string
+        resourceType:
+          enum:
+          - cluster
+          - vm
+          type: string
+        targetOrgSlug:
+          type: string
+      required:
+      - resourceType
+      - resourceId
+      - targetOrgSlug
+      type: object
+    TransferItem:
+      properties:
+        clusterId:
+          type: string
+        completedAt:
+          type: string
+        createdAt:
+          type: string
+        expiresAt:
+          type: string
+        id:
+          type: string
+        note:
+          type: string
+        resourceName:
+          type: string
+        resourceType:
+          type: string
+        respondedAt:
+          type: string
+        sourceOrgName:
+          type: string
+        sourceOrgSlug:
+          type: string
+        status:
+          type: string
+        targetOrgName:
+          type: string
+        targetOrgSlug:
+          type: string
+        vmId:
+          type: string
+      required:
+      - id
+      - resourceType
+      - status
+      - resourceName
+      - createdAt
+      type: object
+    PendingCount:
+      properties:
+        count:
+          type: integer
+      required:
+      - count
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    TransferRequest:
+      properties:
+        clusterId:
+          type: string
+        completedAt:
+          type: string
+        createdAt:
+          type: string
+        expiresAt:
+          type: string
+        id:
+          type: string
+        initiatedBy:
+          type: string
+        note:
+          type: string
+        resourceType:
+          type: string
+        respondedAt:
+          type: string
+        respondedBy:
+          type: string
+        sourceOrganizationId:
+          type: string
+        status:
+          type: string
+        targetOrganizationId:
+          type: string
+        vmId:
+          type: string
+      required:
+      - id
+      - resourceType
+      - sourceOrganizationId
+      - targetOrganizationId
+      - status
+      - createdAt
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

@@ -1,0 +1,304 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Snapshots API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Point-in-time VM snapshots and forking new VMs from them.
+  name: Snapshots
+paths:
+  /v1/orgs/{orgId}/snapshots:
+    get:
+      operationId: listOrgSnapshots
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: vmId
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Snapshot'
+                type: array
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List an org's VM snapshots (optionally filtered by source VM)
+      tags:
+      - Snapshots
+  /v1/orgs/{orgId}/vms/fork:
+    post:
+      operationId: forkVm
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForkRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedResource'
+          description: Created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+      - apiKey: []
+      summary: Fork a new VM from a snapshot
+      tags:
+      - Snapshots
+      x-openrelay-cli:
+        group: VMs
+  /v1/snapshots/{id}:
+    delete:
+      operationId: deleteSnapshot
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+      - apiKey: []
+      summary: Soft-delete a snapshot
+      tags:
+      - Snapshots
+      x-openrelay-mcp:
+        destructiveHint: true
+  /v1/vms/{id}/snapshots:
+    post:
+      description: 'Beta: the snapshot record is created, but snapshot capture is not yet enabled on the data plane.'
+      operationId: createVmSnapshot
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSnapshotRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedResource'
+          description: Created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+      - apiKey: []
+      summary: Create a snapshot of a VM
+      tags:
+      - Snapshots
+      x-openrelay-cli:
+        group: VMs
+components:
+  schemas:
+    CreateSnapshotRequest:
+      properties:
+        name:
+          type: string
+      required:
+      - name
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    Snapshot:
+      properties:
+        chainDepth:
+          type: integer
+        containerPort:
+          type: integer
+        createdAt:
+          type: string
+        deletedAt:
+          type: string
+        diskPath:
+          type: string
+        diskSizeGb:
+          type: integer
+        envVars:
+          additionalProperties:
+            type: string
+          type: object
+        errorMessage:
+          type: string
+        gpuCount:
+          type: integer
+        gpuModelId:
+          type: string
+        id:
+          type: string
+        imageUrl:
+          type: string
+        name:
+          type: string
+        nodeId:
+          type: string
+        organizationId:
+          type: string
+        resourceSize:
+          type: string
+        sizeBytes:
+          format: int64
+          type: integer
+        sourceVmId:
+          type: string
+        status:
+          type: string
+        templateId:
+          type: string
+      required:
+      - id
+      - organizationId
+      - name
+      - status
+      - diskSizeGb
+      - chainDepth
+      - createdAt
+      type: object
+    CreatedResource:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+      required:
+      - id
+      - name
+      - status
+      type: object
+    ForkRequest:
+      properties:
+        containerPort:
+          type: integer
+        diskSizeGb:
+          type: integer
+        envVars:
+          additionalProperties:
+            type: string
+          type: object
+        gpuCount:
+          type: integer
+        gpuModelId:
+          type: string
+        imageUrl:
+          type: string
+        name:
+          type: string
+        resourceSize:
+          type: string
+        snapshotId:
+          type: string
+      required:
+      - snapshotId
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

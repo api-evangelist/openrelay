@@ -1,0 +1,308 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Internal API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Machine-to-machine endpoints used by platform infrastructure. Not part of the public API.
+  name: Internal
+  x-internal: true
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+          description: Service is up
+      summary: Liveness probe (no auth)
+      tags:
+      - Internal
+      x-internal: true
+  /v1/nodes/enroll:
+    post:
+      operationId: enrollNode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollNodeRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrollNodeBundle'
+          description: Enrolled
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid/expired token
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Revoked
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Node busy (reassign blocked) or hostname conflict
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Quota exhausted
+      security: []
+      summary: Self-enroll a node using a provisioning token (no API key)
+      tags:
+      - Internal
+      x-internal: true
+components:
+  schemas:
+    GpuInventory:
+      description: 'Versioned, driverless GPU detection (lspci) collected by enroll.sh. Works on VFIO hosts with no NVIDIA driver and on non-NVIDIA accelerators. source=none means the node could not detect (no lspci) — the control plane must NOT treat that as "no GPUs".
+
+        '
+      properties:
+        devices:
+          items:
+            properties:
+              bdfs:
+                description: full BDFs of the group's devices
+                items:
+                  type: string
+                type: array
+              count:
+                type: integer
+              pciClass:
+                description: PCI class code, e.g. 0300/0302/1200
+                type: string
+              pciDeviceId:
+                description: vendor:device, e.g. 10de:2204
+                type: string
+              pciName:
+                description: lspci device name string
+                type: string
+            required:
+            - pciDeviceId
+            - count
+            type: object
+          type: array
+        driverVersion:
+          type: string
+        iommuGroups:
+          description: 'Per-IOMMU-group VFIO units: each entry is one IOMMU group containing an NVIDIA/AMD GPU. A group''s GPUs are indivisible (must be passed together). Empty when IOMMU is off (gVisor/CPU nodes) — those GPUs are fed via the Nomad device fingerprint instead. Kept out of the hardware fingerprint (BDFs renumber across reboots).
+
+            '
+          items:
+            properties:
+              gpus:
+                description: GPU-class (0300/0302) NVIDIA/AMD devices in this group — the sellable + passthrough set
+                items:
+                  properties:
+                    bdf:
+                      description: full BDF, e.g. 0000:04:00.0
+                      type: string
+                    deviceId:
+                      description: vendor:device, e.g. 10de:2204
+                      type: string
+                  required:
+                  - bdf
+                  - deviceId
+                  type: object
+                type: array
+              group:
+                description: IOMMU group number (provenance)
+                type: integer
+            required:
+            - group
+            - gpus
+            type: object
+          type: array
+        nvswitchCount:
+          description: NVSwitch bridges (PCI class 0680, vendor 10de) on the node
+          type: integer
+        source:
+          description: none | lspci | lspci+nvidia-smi
+          type: string
+        version:
+          type: integer
+      required:
+      - version
+      - source
+      - devices
+      - nvswitchCount
+      type: object
+    Health:
+      properties:
+        service:
+          type: string
+        status:
+          type: string
+      required:
+      - status
+      - service
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    EnrollNodeRequest:
+      properties:
+        cpuCores:
+          type: integer
+        cpuModel:
+          type: string
+        gpuInventory:
+          $ref: '#/components/schemas/GpuInventory'
+        gpus:
+          description: LEGACY nvidia-smi detection (name + pci.bus_id BDF — NOT a vendor:device id despite the example). Kept for old scripts; gpuInventory supersedes it.
+          items:
+            properties:
+              name:
+                type: string
+              pciId:
+                description: nvidia-smi pci.bus_id (a BDF like 00000000:04:00.0)
+                type: string
+            required:
+            - pciId
+            type: object
+          type: array
+        hardwareFingerprint:
+          type: string
+        hostname:
+          type: string
+        identityPubkey:
+          description: 'Node ed25519 identity public key (base64 raw, 32 bytes). Identity v2 collision-safe anchor: the box generates this once, keeps the private key at /etc/vectorlay/identity.key, and signs every enroll with it. Optional — absent = legacy (v1) enroll.'
+          type: string
+        machineId:
+          description: Stable per-box identity (SMBIOS product_uuid / serial / cloud instance-id). Primary global node-identity key; fingerprint is the fallback when empty.
+          type: string
+        nebulaPubkey:
+          description: Node Nebula public key PEM (from nebula-cert keygen)
+          type: string
+        ramGb:
+          type: integer
+        runtime:
+          description: 'Node runtime detected by enroll.sh: qemu (VFIO/KVM passthrough) or gvisor (container GPUs). Default gvisor.'
+          type: string
+        signature:
+          description: base64 ed25519 signature (v2) proving possession of identityPubkey over the identity-critical enroll fields (token hash, identity pubkey, nebula pubkey hash, fingerprint, machineId, hostname, signedAt). Required iff identityPubkey is set.
+          type: string
+        signedAt:
+          description: Unix seconds when the enroll body was signed (v2). Rejected if more than 300s from server time.
+          type: integer
+        token:
+          description: Provisioning token (vtk_...)
+          type: string
+      required:
+      - token
+      - hardwareFingerprint
+      - nebulaPubkey
+      type: object
+    EnrollNodeBundle:
+      properties:
+        dataPlaneCa:
+          description: CertIssuer CA the gateway pins; optional
+          type: string
+        dataPlaneCert:
+          description: node data-plane mTLS cert (gateway tunnel); optional
+          type: string
+        dataPlaneKey:
+          description: node data-plane mTLS key; optional
+          type: string
+        datacenter:
+          type: string
+        gatewayAddr:
+          description: host:port the node-agent dials (QUIC/UDP); optional
+          type: string
+        gatewayServerName:
+          description: expected CN on the gateway server cert; optional
+          type: string
+        nebulaCa:
+          type: string
+        nebulaCert:
+          type: string
+        nebulaLighthouses:
+          items:
+            properties:
+              endpoint:
+                description: publicIp:4242
+                type: string
+              nebulaIp:
+                type: string
+            required:
+            - nebulaIp
+            - endpoint
+            type: object
+          type: array
+        nebulaOverlayIp:
+          type: string
+        nodeAgentToken:
+          description: durable node token for the node-agent self-update fetch (GET /v1/nodes/agent); optional
+          type: string
+        nodeId:
+          type: string
+        nomadCa:
+          type: string
+        nomadClientCert:
+          type: string
+        nomadClientKey:
+          type: string
+        nomadIntroToken:
+          type: string
+        nomadPool:
+          type: string
+        nomadServers:
+          description: server Nebula RPC addrs (ip:4647)
+          items:
+            type: string
+          type: array
+      required:
+      - nodeId
+      - nebulaCert
+      - nebulaCa
+      - nebulaOverlayIp
+      - nebulaLighthouses
+      - nomadCa
+      - nomadClientCert
+      - nomadClientKey
+      - nomadServers
+      - nomadIntroToken
+      - nomadPool
+      - datacenter
+      - dataPlaneCert
+      - dataPlaneKey
+      - dataPlaneCa
+      - gatewayAddr
+      - gatewayServerName
+      type: object
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

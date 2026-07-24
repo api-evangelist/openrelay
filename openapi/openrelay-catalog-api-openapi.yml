@@ -1,0 +1,455 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Catalog API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: 'Public catalog: GPU models, availability, pricing, templates, and locations.'
+  name: Catalog
+paths:
+  /v1/gpu-availability:
+    get:
+      description: Live availability per GPU model. Responses are served from a short-lived cache.
+      operationId: getGpuAvailability
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+              - cluster:
+                  freeGpus: 8
+                  maxPlaceableGpus: 8
+                  totalGpus: 8
+                gpuModelId: rtx-4090
+                vm:
+                  freeGpus: 5
+                  maxPlaceableGpus: 4
+                  totalGpus: 12
+              schema:
+                items:
+                  $ref: '#/components/schemas/GpuAvailability'
+                type: array
+          description: Availability by gpu model
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: GPU availability by model
+      tags:
+      - Catalog
+      x-openrelay-mcp:
+        default: true
+  /v1/gpu-models:
+    get:
+      operationId: listGpuModels
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+              - hidden: false
+                id: rtx-4090
+                manufacturer: NVIDIA
+                name: RTX 4090
+                vramGb: 24
+              schema:
+                items:
+                  $ref: '#/components/schemas/GpuModel'
+                type: array
+          description: GPU models
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - apiKey: []
+      summary: GPU model catalog
+      tags:
+      - Catalog
+      x-openrelay-mcp:
+        default: true
+  /v1/locations:
+    get:
+      operationId: listLocations
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Location'
+                type: array
+          description: Locations
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - apiKey: []
+      summary: Locations / regions
+      tags:
+      - Catalog
+  /v1/models:
+    get:
+      description: 'Returns the public model catalog. Free, not balance-gated. Models with status "available" can be used immediately in /v1/chat/completions; "request_access" models are listed for discovery but are not yet invocable.
+
+        '
+      operationId: listModels
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelList'
+          description: The public model catalog
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - apiKey: []
+      summary: List models in the OpenRelay catalog (OpenAI-compatible)
+      tags:
+      - Catalog
+      x-openrelay-mcp:
+        default: true
+  /v1/pricing:
+    get:
+      operationId: getPricing
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pricing'
+          description: Pricing
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - apiKey: []
+      summary: GPU + CPU pricing
+      tags:
+      - Catalog
+      x-openrelay-mcp:
+        default: true
+  /v1/vm-templates:
+    get:
+      operationId: listVmTemplates
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/VmTemplate'
+                type: array
+          description: Templates
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - apiKey: []
+      summary: VM template catalog
+      tags:
+      - Catalog
+      x-openrelay-mcp:
+        default: true
+components:
+  schemas:
+    GpuModel:
+      properties:
+        architecture:
+          type: string
+        createdAt:
+          type: string
+        hidden:
+          type: boolean
+        id:
+          type: string
+        manufacturer:
+          type: string
+        name:
+          type: string
+        vramGb:
+          type: integer
+      required:
+      - id
+      - name
+      - manufacturer
+      - vramGb
+      - hidden
+      type: object
+    VmTemplate:
+      properties:
+        compatibleGpuModelIds:
+          description: GPU model ids this template supports; null = all GPUs allowed
+          items:
+            type: string
+          nullable: true
+          type: array
+        description:
+          type: string
+        driverVersion:
+          type: string
+        filename:
+          type: string
+        id:
+          type: string
+        isDefault:
+          type: boolean
+        name:
+          type: string
+        osType:
+          type: string
+        osVersion:
+          type: string
+        requiresGpu:
+          type: boolean
+        slug:
+          type: string
+        sortOrder:
+          type: integer
+      required:
+      - id
+      - name
+      - slug
+      - filename
+      - requiresGpu
+      - osType
+      type: object
+    Location:
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        id:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        name:
+          type: string
+        region:
+          type: string
+      required:
+      - id
+      - name
+      - city
+      - country
+      - region
+      type: object
+    ModelList:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Model'
+          type: array
+        object:
+          enum:
+          - list
+          type: string
+      required:
+      - object
+      - data
+      type: object
+    NodeClassCap:
+      properties:
+        freeGpus:
+          type: integer
+        freeUnits:
+          type: integer
+        nodeId:
+          type: string
+        unitSizes:
+          description: Free unit sizes on this node (for display/tiling).
+          items:
+            type: integer
+          type: array
+      required:
+      - nodeId
+      - freeUnits
+      - freeGpus
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    Modalities:
+      description: 'Input and output modalities the model accepts and produces. Values are free-form strings (text, image, audio, video, and novel ones such as a world model''s state/actions) so new modalities need no schema change. This is what distinguishes text→text, vision (image→text), text→image, image→image, TTS/STT, and video/world models.
+
+        '
+      properties:
+        input:
+          description: What the model accepts, e.g. [text], [text, image].
+          items:
+            type: string
+          type: array
+        output:
+          description: What the model produces, e.g. [text], [image], [video].
+          items:
+            type: string
+          type: array
+      required:
+      - input
+      - output
+      type: object
+    CpuPrice:
+      properties:
+        pricePerHourCents:
+          type: integer
+        resourceSize:
+          type: string
+      required:
+      - resourceSize
+      - pricePerHourCents
+      type: object
+    ClassAvailability:
+      description: 'Availability for one consumption mode of a model: "vm" = VFIO passthrough (exact, from per-node unit state); "cluster" = container device-request (capacity minus cluster commitment).'
+      properties:
+        freeGpus:
+          type: integer
+        maxPlaceableGpus:
+          description: Largest single allocation possible right now — for a VM the biggest tiling on any one node, for a cluster the largest per-replica device count on any one node. A workload can never exceed this even if freeGpus is larger (it lands on a single node).
+          type: integer
+        nodes:
+          items:
+            $ref: '#/components/schemas/NodeClassCap'
+          type: array
+        placeableGpuCounts:
+          description: GPU counts actually placeable on >=1 node right now. Frontends drive the count picker from this so offered counts can't 409/deploy-timeout.
+          items:
+            type: integer
+          type: array
+        tileLattice:
+          description: Structural set of counts this model's units can ever tile to (free or not) — the hardware shape. vm view only; clusters are step-1.
+          items:
+            type: integer
+          type: array
+        totalGpus:
+          description: free + claimed
+          type: integer
+      required:
+      - totalGpus
+      - freeGpus
+      - maxPlaceableGpus
+      type: object
+    GpuPrice:
+      properties:
+        gpuModelId:
+          type: string
+        gpuModelName:
+          type: string
+        pricePerHourCents:
+          type: integer
+        tier:
+          type: string
+        vramGb:
+          type: integer
+      required:
+      - gpuModelId
+      - tier
+      - pricePerHourCents
+      type: object
+    Model:
+      description: A public model in the OpenRelay catalog (OpenAI-compatible).
+      properties:
+        batch_eligible:
+          description: 'Whether this model can be run through the Batch API (POST /v1/batches). Omitted/false = online only. Batch pricing is ~50% of the online rate.
+
+            '
+          type: boolean
+        created:
+          description: Unix timestamp (seconds) the model was added to the catalog.
+          format: int64
+          type: integer
+        id:
+          description: Public model id, send this in the `model` field of a request.
+          type: string
+        modalities:
+          $ref: '#/components/schemas/Modalities'
+        object:
+          enum:
+          - model
+          type: string
+        owned_by:
+          description: Always "openrelay".
+          type: string
+        status:
+          description: 'available = usable now. request_access = listed for discovery but not yet invocable for your organization; request access to enable it.
+
+            '
+          enum:
+          - available
+          - request_access
+          type: string
+        supported_apis:
+          description: API families this model serves, e.g. chat_completions, images, embeddings.
+          items:
+            type: string
+          type: array
+      required:
+      - id
+      - object
+      - created
+      - owned_by
+      - supported_apis
+      - modalities
+      - status
+      type: object
+    GpuAvailability:
+      description: 'Per-model GPU availability, answered separately for the two consumption modes because a physical GPU belongs to exactly one alloc-class (its driver binding): "vm" (vfio-group passthrough) and "cluster" (device-request).'
+      properties:
+        cluster:
+          $ref: '#/components/schemas/ClassAvailability'
+        gpuModelId:
+          type: string
+        vm:
+          $ref: '#/components/schemas/ClassAvailability'
+      required:
+      - gpuModelId
+      - vm
+      - cluster
+      type: object
+    Pricing:
+      properties:
+        cpu:
+          items:
+            $ref: '#/components/schemas/CpuPrice'
+          type: array
+        gpu:
+          items:
+            $ref: '#/components/schemas/GpuPrice'
+          type: array
+      required:
+      - gpu
+      - cpu
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

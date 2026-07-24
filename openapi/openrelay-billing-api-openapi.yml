@@ -1,0 +1,450 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Billing API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Prepaid balance, saved cards, deposits, and auto-recharge.
+  name: Billing
+paths:
+  /v1/orgs/{orgId}/billing/auto-recharge:
+    get:
+      operationId: getAutoRecharge
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoRechargeSettings'
+          description: Current settings (defaults when never set)
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Read the org's auto-recharge policy
+      tags:
+      - Billing
+    put:
+      operationId: updateAutoRecharge
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoRechargeSettings'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoRechargeSettings'
+          description: Saved settings
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      security:
+      - apiKey: []
+      summary: Set the org's auto-recharge policy
+      tags:
+      - Billing
+  /v1/orgs/{orgId}/billing/balance:
+    get:
+      operationId: getBalance
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                accruedUsageCents: 2120
+                availableCents: 10430
+                balanceCents: 12550
+                monthlySpendLimitCents: null
+                transactions:
+                - amountCents: 10000
+                  createdAt: '2026-06-28T14:03:22Z'
+                  description: Card deposit
+                  id: txn_01hzy3
+                  source: stripe
+                  type: stripe_deposit
+              schema:
+                $ref: '#/components/schemas/Balance'
+          description: Balance
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Org balance + recent transactions
+      tags:
+      - Billing
+      x-openrelay-mcp:
+        default: true
+  /v1/orgs/{orgId}/billing/deposit:
+    post:
+      description: Charges the org's default saved card off-session. The balance credit is applied by the payment_intent.succeeded webhook (the authoritative money signal), not this response — poll the balance after success.
+      operationId: createBillingDeposit
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              amountCents: 5000
+              idempotencyKey: dep-2026-07-02-a1b2c3
+            schema:
+              $ref: '#/components/schemas/DepositRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepositResult'
+          description: Charge outcome (status drives the dashboard's next step)
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      security:
+      - apiKey: []
+      summary: Charge the saved card to top up prepaid balance
+      tags:
+      - Billing
+  /v1/orgs/{orgId}/billing/payment-methods:
+    get:
+      operationId: listBillingPaymentMethods
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethods'
+          description: Saved cards
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List saved cards (brand/last4/exp only)
+      tags:
+      - Billing
+  /v1/orgs/{orgId}/billing/payment-methods/{paymentMethodId}:
+    delete:
+      operationId: deleteBillingPaymentMethod
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: paymentMethodId
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Removed
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      security:
+      - apiKey: []
+      summary: Remove a saved card
+      tags:
+      - Billing
+      x-openrelay-mcp:
+        destructiveHint: true
+  /v1/orgs/{orgId}/billing/setup-intent:
+    post:
+      operationId: createBillingSetupIntent
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetupIntent'
+          description: SetupIntent client secret + publishable key
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      security:
+      - apiKey: []
+      summary: Start saving a card (Stripe SetupIntent for inline Elements)
+      tags:
+      - Billing
+components:
+  schemas:
+    DepositResult:
+      properties:
+        clientSecret:
+          description: Set only when status is requires_action (on-session SCA).
+          type: string
+        paymentIntentId:
+          type: string
+        status:
+          description: Stripe PaymentIntent status. "succeeded" → credit lands via webhook; "requires_action" → complete SCA on-session with clientSecret; "requires_payment_method" → the card was declined.
+          type: string
+      required:
+      - paymentIntentId
+      - status
+      type: object
+    PaymentMethods:
+      properties:
+        defaultPaymentMethodId:
+          type: string
+        paymentMethods:
+          items:
+            $ref: '#/components/schemas/PaymentMethodCard'
+          type: array
+      required:
+      - paymentMethods
+      type: object
+    InferenceTransactionDetails:
+      properties:
+        carriedNanoUSD:
+          description: Customer charge represented by these metered requests that remains as sub-cent accrual for a later debit.
+          pattern: ^[0-9]+$
+          type: string
+        models:
+          items:
+            $ref: '#/components/schemas/InferenceModelUsage'
+          type: array
+        partial:
+          description: True when some of the debit is not itemized in this row, including legacy usage or sub-cent cost carried from a prior row.
+          type: boolean
+      required:
+      - models
+      - partial
+      - carriedNanoUSD
+      type: object
+    AutoRechargeSettings:
+      properties:
+        amountCents:
+          description: Amount charged per auto-recharge (within deposit bounds $10–$500).
+          type: integer
+        enabled:
+          description: When on, the balance is topped up automatically below the threshold.
+          type: boolean
+        thresholdCents:
+          description: Recharge fires when available balance drops below this.
+          type: integer
+      required:
+      - enabled
+      - thresholdCents
+      - amountCents
+      type: object
+    PaymentMethodCard:
+      properties:
+        brand:
+          type: string
+        expMonth:
+          type: integer
+        expYear:
+          type: integer
+        id:
+          type: string
+        last4:
+          type: string
+      required:
+      - id
+      - brand
+      - last4
+      - expMonth
+      - expYear
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    Balance:
+      properties:
+        accruedUsageCents:
+          description: Current-month usage cost not yet settled into a transaction.
+          type: integer
+        availableCents:
+          description: Spendable balance = balanceCents − accruedUsageCents. This is what the deploy gate checks; it can be below balanceCents while usage is running, and slightly negative between auto-recharge ticks.
+          type: integer
+        balanceCents:
+          description: Raw ledger balance (deposits + credits − settled debits).
+          type: integer
+        monthlySpendLimitCents:
+          description: The org's monthly spend cap, or null if no limit is set. Drives the "used of limit" budget gauge in the dashboard.
+          nullable: true
+          type: integer
+        transactions:
+          items:
+            $ref: '#/components/schemas/Transaction'
+          type: array
+      required:
+      - balanceCents
+      - availableCents
+      - accruedUsageCents
+      - transactions
+      type: object
+    DepositRequest:
+      properties:
+        amountCents:
+          description: Amount to charge the saved card, in cents (bounds $10–$500).
+          type: integer
+        idempotencyKey:
+          description: Client-generated id for this logical deposit; reused verbatim on retry so a network/client retry can't double-charge. Optional — the server generates one if absent (then retries won't dedupe).
+          type: string
+        promoCode:
+          description: Optional first-deposit promo code. When valid on the org's first deposit, amountCents is the deposit the customer wants credited and the saved card is charged the DISCOUNTED amount; the discount is credited as free (usage-only) credit by the webhook. Invalid / already-used codes are rejected (400) before any charge.
+          type: string
+      required:
+      - amountCents
+      type: object
+    Transaction:
+      properties:
+        amountCents:
+          type: integer
+        createdAt:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        inferenceDetails:
+          $ref: '#/components/schemas/InferenceTransactionDetails'
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - type
+      - source
+      - amountCents
+      - createdAt
+      type: object
+    InferenceModelUsage:
+      properties:
+        batch:
+          type: boolean
+        dimensions:
+          additionalProperties:
+            pattern: ^[0-9]+$
+            type: string
+          description: Exact decimal token quantities. Current keys are input, cached_input, cache_write, and output; the map shape reserves room for future metered units.
+          type: object
+        model:
+          type: string
+        requestCount:
+          description: Exact decimal count; encoded as a string so browser clients do not lose int64 precision.
+          pattern: ^[0-9]+$
+          type: string
+      required:
+      - model
+      - requestCount
+      - batch
+      - dimensions
+      type: object
+    SetupIntent:
+      properties:
+        clientSecret:
+          type: string
+        publishableKey:
+          type: string
+      required:
+      - clientSecret
+      - publishableKey
+      type: object
+  responses:
+    Unavailable:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: A required integration (e.g. payments) is not configured
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

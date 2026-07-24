@@ -1,0 +1,113 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Usage API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Current-period usage and cost breakdowns.
+  name: Usage
+paths:
+  /v1/orgs/{orgId}/usage/current:
+    get:
+      operationId: getCurrentUsage
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUsage'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Current-month usage (cents/hours + per gpuModel-tier breakdown)
+      tags:
+      - Usage
+      x-openrelay-mcp:
+        default: true
+components:
+  schemas:
+    UsageBreakdownItem:
+      properties:
+        cents:
+          type: integer
+        hours:
+          type: number
+        key:
+          type: string
+      required:
+      - key
+      - hours
+      - cents
+      type: object
+    CurrentUsage:
+      properties:
+        autoStopFloorCents:
+          description: available-balance floor (cents) below which the org is auto-stopped
+          type: integer
+        breakdown:
+          items:
+            $ref: '#/components/schemas/UsageBreakdownItem'
+          type: array
+        burnPerHourCents:
+          description: sum of the locked rates of every open usage record in the org (live burn per hour)
+          type: integer
+        projectedRunwayHours:
+          description: 'hours until available balance hits the auto-stop floor at the current burn: (available - autoStopFloorCents) / burnPerHourCents; null when burn is 0, clamped to 0 when already at or below the floor'
+          format: double
+          nullable: true
+          type: number
+        usageCents:
+          type: integer
+        usageHours:
+          type: number
+      required:
+      - usageCents
+      - usageHours
+      - breakdown
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

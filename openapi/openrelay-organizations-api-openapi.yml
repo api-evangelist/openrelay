@@ -1,0 +1,464 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Organizations API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Organizations and their members. Most resources are scoped to an org.
+  name: Organizations
+paths:
+  /v1/orgs:
+    post:
+      description: Requires a signed-in dashboard session token; API keys cannot call this endpoint.
+      operationId: createOrg
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrgRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BootstrapResult'
+          description: Created (caller is owner)
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+      - apiKey: []
+      summary: Create an organization (caller becomes owner)
+      tags:
+      - Organizations
+      x-openrelay-cli:
+        hidden: true
+      x-openrelay-mcp:
+        exclude: true
+  /v1/orgs/{orgId}:
+    get:
+      operationId: getOrg
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+          description: The organization
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Get an organization
+      tags:
+      - Organizations
+    patch:
+      operationId: updateOrg
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrgRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+          description: Updated
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Update an organization (owner/admin)
+      tags:
+      - Organizations
+  /v1/orgs/{orgId}/invites:
+    get:
+      operationId: listOrgInvites
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Invite'
+                type: array
+          description: Pending invites
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List an org's pending invites (owner/admin)
+      tags:
+      - Organizations
+  /v1/orgs/{orgId}/invites/{email}:
+    delete:
+      operationId: revokeOrgInvite
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: email
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Revoked
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Revoke a pending invite (owner/admin)
+      tags:
+      - Organizations
+      x-openrelay-mcp:
+        destructiveHint: true
+  /v1/orgs/{orgId}/members:
+    get:
+      operationId: listOrgMembers
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Member'
+                type: array
+          description: Members
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List an org's members
+      tags:
+      - Organizations
+  /v1/orgs/{orgId}/members/add:
+    post:
+      description: Records a pending invite and emails the address. The response status is always "invited"; the user becomes a member only after they accept (POST /v1/me/invites/{orgId}/accept). Re-inviting the same email refreshes the invite's role and expiry. 409 if the email already belongs to a member.
+      operationId: addOrgMember
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMemberRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+          description: Added
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+      - apiKey: []
+      summary: Invite a member by email (owner/admin)
+      tags:
+      - Organizations
+  /v1/orgs/{orgId}/members/{userId}:
+    delete:
+      operationId: removeOrgMember
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Removed
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Remove a member (owner/admin)
+      tags:
+      - Organizations
+      x-openrelay-mcp:
+        destructiveHint: true
+    patch:
+      operationId: updateOrgMemberRole
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMemberRoleRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+          description: Updated
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Update a member's role (owner/admin)
+      tags:
+      - Organizations
+components:
+  schemas:
+    UpdateOrgRequest:
+      properties:
+        billingEmail:
+          type: string
+        name:
+          type: string
+      type: object
+    CreateOrgRequest:
+      properties:
+        billingEmail:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+      required:
+      - name
+      type: object
+    Organization:
+      properties:
+        billingEmail:
+          type: string
+        createdAt:
+          type: string
+        id:
+          type: string
+        isProvider:
+          type: boolean
+        name:
+          type: string
+        plan:
+          type: string
+        shortId:
+          type: string
+        slug:
+          type: string
+      required:
+      - id
+      - shortId
+      - name
+      - slug
+      - billingEmail
+      - plan
+      type: object
+    Invite:
+      properties:
+        email:
+          type: string
+        expiresAt:
+          description: RFC3339; the invite cannot be accepted after this time. Re-invite to refresh.
+          type: string
+        invitedAt:
+          type: string
+        invitedBy:
+          type: string
+        role:
+          type: string
+      required:
+      - email
+      - role
+      - invitedAt
+      type: object
+    Member:
+      properties:
+        avatarUrl:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+        invitedAt:
+          type: string
+        joinedAt:
+          type: string
+        role:
+          type: string
+        status:
+          enum:
+          - active
+          - invited
+          type: string
+        userId:
+          type: string
+      required:
+      - userId
+      - role
+      type: object
+    UpdateMemberRoleRequest:
+      properties:
+        role:
+          enum:
+          - owner
+          - admin
+          - member
+          - viewer
+          type: string
+      required:
+      - role
+      type: object
+    AddMemberRequest:
+      properties:
+        email:
+          type: string
+        role:
+          enum:
+          - admin
+          - member
+          - viewer
+          type: string
+      required:
+      - email
+      - role
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    BootstrapResult:
+      properties:
+        organizationId:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

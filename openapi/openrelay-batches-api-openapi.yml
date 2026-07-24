@@ -1,0 +1,410 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Batches API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: 'Batch inference jobs: submit a JSONL file of requests, poll status, and download results at a discounted rate. Served by the inference endpoint (inference.openrelay.inc). Batch access is enabled per organization; without it these endpoints return 404.
+
+    '
+  name: Batches
+paths:
+  /v1/batches:
+    servers:
+    - description: Production
+      url: https://inference.openrelay.inc
+    - description: Beta
+      url: https://inference.beta.openrelay.inc
+    get:
+      operationId: listBatches
+      parameters:
+      - description: Page size, 1-100 (default 20).
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A batch id; returns batches submitted after it (use the previous page's last_id).
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchList'
+          description: OK
+        '400':
+          $ref: '#/components/responses/InferenceBadRequest'
+        '401':
+          $ref: '#/components/responses/InferenceUnauthorized'
+        '404':
+          $ref: '#/components/responses/InferenceNotFound'
+      security:
+      - apiKey: []
+      summary: List batches, newest first
+      tags:
+      - Batches
+    post:
+      description: 'Submit a batch from an uploaded input file (input_file_id) or inline request objects (requests); provide exactly one of the two. The batch completes within the 24h window at a discounted rate; poll it with get, then download results via the output and error file ids.
+
+        '
+      operationId: createBatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                completion_window:
+                  description: Time budget for the batch; only "24h" is supported.
+                  enum:
+                  - 24h
+                  type: string
+                endpoint:
+                  description: The API family every record in the batch calls.
+                  enum:
+                  - /v1/chat/completions
+                  - /v1/completions
+                  type: string
+                input_file_id:
+                  description: Id of an uploaded JSONL input file (from the file upload).
+                  type: string
+                metadata:
+                  additionalProperties:
+                    type: string
+                  description: Up to 16 key-value pairs echoed back on the batch object.
+                  type: object
+                model:
+                  description: 'Optional display hint shown on the batch immediately; validation settles the authoritative value from the input file.
+
+                    '
+                  type: string
+                requests:
+                  description: 'Inline request objects (max 50,000), each with a custom_id and the request body for the chosen endpoint. Alternative to input_file_id for small batches.
+
+                    '
+                  items:
+                    type: object
+                  type: array
+              required:
+              - endpoint
+              - completion_window
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchObject'
+          description: OK
+        '400':
+          $ref: '#/components/responses/InferenceBadRequest'
+        '401':
+          $ref: '#/components/responses/InferenceUnauthorized'
+        '404':
+          $ref: '#/components/responses/InferenceNotFound'
+        '413':
+          $ref: '#/components/responses/InferenceTooLarge'
+        '429':
+          $ref: '#/components/responses/InferenceRateLimited'
+        '503':
+          $ref: '#/components/responses/InferenceUnavailable'
+      security:
+      - apiKey: []
+      summary: Create a batch inference job
+      tags:
+      - Batches
+  /v1/batches/{id}:
+    servers:
+    - description: Production
+      url: https://inference.openrelay.inc
+    - description: Beta
+      url: https://inference.beta.openrelay.inc
+    get:
+      operationId: getBatch
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchObject'
+          description: OK
+        '401':
+          $ref: '#/components/responses/InferenceUnauthorized'
+        '404':
+          $ref: '#/components/responses/InferenceNotFound'
+      security:
+      - apiKey: []
+      summary: Get a batch by id
+      tags:
+      - Batches
+  /v1/batches/{id}/cancel:
+    servers:
+    - description: Production
+      url: https://inference.openrelay.inc
+    - description: Beta
+      url: https://inference.beta.openrelay.inc
+    post:
+      description: 'In-flight records finish, unstarted records are skipped, and partial results are written; the batch settles to cancelled within a few minutes. Completed work is billed. Batches already in a terminal state return 409.
+
+        '
+      operationId: cancelBatch
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchObject'
+          description: OK
+        '401':
+          $ref: '#/components/responses/InferenceUnauthorized'
+        '404':
+          $ref: '#/components/responses/InferenceNotFound'
+        '409':
+          $ref: '#/components/responses/InferenceConflict'
+        '503':
+          $ref: '#/components/responses/InferenceUnavailable'
+      security:
+      - apiKey: []
+      summary: Cancel a running batch
+      tags:
+      - Batches
+      x-openrelay-mcp:
+        destructiveHint: true
+components:
+  schemas:
+    BatchObject:
+      description: A batch inference job (OpenAI-compatible).
+      properties:
+        cancelled_at:
+          format: int64
+          type: integer
+        completed_at:
+          format: int64
+          type: integer
+        completion_window:
+          enum:
+          - 24h
+          type: string
+        created_at:
+          description: Unix timestamp (seconds).
+          format: int64
+          type: integer
+        endpoint:
+          description: The API family every record in the batch calls.
+          type: string
+        error_file_id:
+          description: Present once results are written; fetch its content for failed records.
+          type: string
+        expired_at:
+          format: int64
+          type: integer
+        expires_at:
+          description: When the completion window closes (created_at + 24h).
+          format: int64
+          type: integer
+        failed_at:
+          format: int64
+          type: integer
+        id:
+          description: Batch id (batch_…).
+          type: string
+        input_file_id:
+          type: string
+        metadata:
+          additionalProperties:
+            type: string
+          description: Your key-value pairs, echoed back unchanged.
+          type: object
+        model:
+          description: Model id, settled from the input file during validation.
+          type: string
+        object:
+          enum:
+          - batch
+          type: string
+        output_file_id:
+          description: Present once results are written; fetch its content for successful records.
+          type: string
+        request_counts:
+          $ref: '#/components/schemas/BatchRequestCounts'
+        status:
+          description: 'Lifecycle state. validating → in_progress → finalizing → completed | failed | expired; cancelling → cancelled.
+
+            '
+          enum:
+          - validating
+          - in_progress
+          - finalizing
+          - completed
+          - failed
+          - expired
+          - cancelling
+          - cancelled
+          type: string
+        usage:
+          $ref: '#/components/schemas/BatchUsage'
+      required:
+      - id
+      - object
+      - endpoint
+      - input_file_id
+      - completion_window
+      - status
+      - created_at
+      - request_counts
+      type: object
+    BatchList:
+      description: One page of batches, newest first (OpenAI list envelope).
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/BatchObject'
+          type: array
+        first_id:
+          description: Id of the first batch on this page.
+          type: string
+        has_more:
+          type: boolean
+        last_id:
+          description: Id of the last batch on this page; pass it as `after` to fetch the next page.
+          type: string
+        object:
+          enum:
+          - list
+          type: string
+      required:
+      - object
+      - data
+      - has_more
+      type: object
+    InferenceError:
+      description: Error shape returned by the inference endpoint (OpenAI-compatible).
+      properties:
+        error:
+          properties:
+            code:
+              description: Machine code for the specific failure.
+              type: string
+            message:
+              description: Human-readable explanation.
+              type: string
+            type:
+              description: Error class, e.g. invalid_request_error.
+              type: string
+          required:
+          - message
+          - type
+          type: object
+      required:
+      - error
+      type: object
+    BatchRequestCounts:
+      description: Progress counters, settled as the batch validates and shards complete.
+      properties:
+        completed:
+          format: int64
+          type: integer
+        failed:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - total
+      - completed
+      - failed
+      type: object
+    BatchUsage:
+      description: 'Rolled-up token and cost totals, present once any progress is recorded. cost_nano_usd is the price you pay (batch discount applied), in nano-USD so sub-cent batches stay exact.
+
+        '
+      properties:
+        cost_nano_usd:
+          format: int64
+          type: integer
+        input_tokens:
+          format: int64
+          type: integer
+        output_tokens:
+          format: int64
+          type: integer
+      required:
+      - input_tokens
+      - output_tokens
+      - cost_nano_usd
+      type: object
+  responses:
+    InferenceNotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Not found (also returned when the organization does not have Batch API access)
+    InferenceBadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The request is invalid
+    InferenceRateLimited:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Too many concurrent uploads; retry shortly
+    InferenceConflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The resource is in a state that rejects this action
+    InferenceUnauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Missing or invalid API key
+    InferenceUnavailable:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The action could not be dispatched; retry
+    InferenceTooLarge:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The upload exceeds the 200 MB limit
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

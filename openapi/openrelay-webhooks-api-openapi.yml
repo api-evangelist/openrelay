@@ -1,0 +1,461 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Webhooks API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Subscribe to platform events with signed HTTP callbacks.
+  name: Webhooks
+paths:
+  /v1/orgs/{orgId}/webhooks:
+    get:
+      operationId: listOrgWebhooks
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/WebhookSummary'
+                type: array
+          description: Webhooks
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List an org's webhooks (no secrets)
+      tags:
+      - Webhooks
+  /v1/orgs/{orgId}/webhooks/create:
+    post:
+      operationId: createOrgWebhook
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              events:
+              - vm.running
+              - vm.stopped
+              - cluster.degraded
+              name: deploy-events
+              url: https://example.com/hooks/openrelay
+            schema:
+              $ref: '#/components/schemas/CreateWebhookRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookWithSecret'
+          description: Created
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Create a webhook (returns the signing secret once)
+      tags:
+      - Webhooks
+  /v1/orgs/{orgId}/webhooks/{id}:
+    delete:
+      operationId: deleteOrgWebhook
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Delete a webhook
+      tags:
+      - Webhooks
+      x-openrelay-mcp:
+        destructiveHint: true
+    patch:
+      operationId: updateOrgWebhook
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWebhookRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookUpdateResult'
+          description: Updated
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Update a webhook (name/url/events)
+      tags:
+      - Webhooks
+  /v1/orgs/{orgId}/webhooks/{id}/deliveries:
+    get:
+      operationId: listOrgWebhookDeliveries
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/WebhookDeliveryItem'
+                type: array
+          description: Deliveries
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Recent delivery attempts for a webhook
+      tags:
+      - Webhooks
+  /v1/orgs/{orgId}/webhooks/{id}/regenerate-secret:
+    post:
+      operationId: regenerateOrgWebhookSecret
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSecret'
+          description: Regenerated
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Regenerate a webhook's signing secret (returned once)
+      tags:
+      - Webhooks
+  /v1/orgs/{orgId}/webhooks/{id}/toggle:
+    post:
+      operationId: toggleOrgWebhook
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToggleWebhookRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookToggleResult'
+          description: Toggled
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Enable/disable a webhook
+      tags:
+      - Webhooks
+components:
+  schemas:
+    WebhookUpdateResult:
+      properties:
+        events:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+      required:
+      - id
+      - name
+      - url
+      - events
+      type: object
+    WebhookSecret:
+      properties:
+        id:
+          type: string
+        secret:
+          type: string
+        secretPrefix:
+          type: string
+      required:
+      - id
+      - secret
+      - secretPrefix
+      type: object
+    WebhookWithSecret:
+      properties:
+        createdAt:
+          type: string
+        enabled:
+          type: boolean
+        events:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        name:
+          type: string
+        secret:
+          type: string
+        secretPrefix:
+          type: string
+        url:
+          type: string
+      required:
+      - id
+      - name
+      - url
+      - secretPrefix
+      - events
+      - enabled
+      - createdAt
+      - secret
+      type: object
+    WebhookDeliveryItem:
+      properties:
+        attemptNumber:
+          type: integer
+        createdAt:
+          type: string
+        deliveredAt:
+          type: string
+        errorMessage:
+          type: string
+        eventId:
+          type: string
+        eventType:
+          type: string
+        id:
+          type: string
+        status:
+          type: string
+        statusCode:
+          type: integer
+      required:
+      - id
+      - eventType
+      - eventId
+      - attemptNumber
+      - status
+      - createdAt
+      type: object
+    UpdateWebhookRequest:
+      properties:
+        events:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        url:
+          type: string
+      type: object
+    WebhookSummary:
+      properties:
+        createdAt:
+          type: string
+        enabled:
+          type: boolean
+        events:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        name:
+          type: string
+        secretPrefix:
+          type: string
+        updatedAt:
+          type: string
+        url:
+          type: string
+      required:
+      - id
+      - name
+      - url
+      - secretPrefix
+      - events
+      - enabled
+      - createdAt
+      - updatedAt
+      type: object
+    ToggleWebhookRequest:
+      properties:
+        enabled:
+          type: boolean
+      required:
+      - enabled
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    WebhookToggleResult:
+      properties:
+        enabled:
+          type: boolean
+        id:
+          type: string
+      required:
+      - id
+      - enabled
+      type: object
+    CreateWebhookRequest:
+      properties:
+        events:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        url:
+          type: string
+      required:
+      - name
+      - url
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

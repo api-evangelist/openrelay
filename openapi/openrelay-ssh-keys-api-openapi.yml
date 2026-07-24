@@ -1,0 +1,179 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account SSH Keys API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Org-level SSH public keys that can be attached to VMs.
+  name: SSH Keys
+paths:
+  /v1/orgs/{orgId}/ssh-keys:
+    get:
+      operationId: listOrgSshKeys
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/SshKeySummary'
+                type: array
+          description: SSH keys
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List an org's SSH public keys
+      tags:
+      - SSH Keys
+  /v1/orgs/{orgId}/ssh-keys/create:
+    post:
+      operationId: createOrgSshKey
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: work-laptop
+              publicKey: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB5ro6Vg2mXKC3jExample user@laptop
+            schema:
+              $ref: '#/components/schemas/CreateSshKeyRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshKeySummary'
+          description: Added
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid key
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+      - apiKey: []
+      summary: Add an SSH public key (computes fingerprint)
+      tags:
+      - SSH Keys
+  /v1/orgs/{orgId}/ssh-keys/{id}:
+    delete:
+      operationId: deleteOrgSshKey
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Delete an SSH public key
+      tags:
+      - SSH Keys
+      x-openrelay-mcp:
+        destructiveHint: true
+components:
+  schemas:
+    SshKeySummary:
+      properties:
+        createdAt:
+          type: string
+        fingerprint:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        publicKey:
+          type: string
+      required:
+      - id
+      - name
+      - publicKey
+      - fingerprint
+      - createdAt
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    CreateSshKeyRequest:
+      properties:
+        name:
+          type: string
+        publicKey:
+          type: string
+      required:
+      - name
+      - publicKey
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

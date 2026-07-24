@@ -1,0 +1,655 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Runners API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Managed GitHub Actions runner pools.
+  name: Runners
+paths:
+  /v1/orgs/{orgId}/runner-pools:
+    get:
+      operationId: listRunnerPools
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/RunnerPoolItem'
+                type: array
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List runner pools (with active/queued usage)
+      tags:
+      - Runners
+    post:
+      operationId: createRunnerPool
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRunnerPoolRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerPool'
+          description: Created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: Create a runner pool
+      tags:
+      - Runners
+  /v1/orgs/{orgId}/runner-pools/connect-url:
+    get:
+      operationId: getRunnerConnectUrl
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerConnectUrl'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: GitHub connect URL (OAuth authorize when configured, else App install)
+      tags:
+      - Runners
+  /v1/orgs/{orgId}/runner-pools/installations:
+    post:
+      operationId: listRunnerInstallations
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunnerInstallationsRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerInstallationsResult'
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List GitHub installations the user can connect (OAuth code exchange)
+      tags:
+      - Runners
+  /v1/orgs/{orgId}/runner-pools/{id}:
+    delete:
+      operationId: deleteRunnerPool
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteRunnerPoolResult'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Delete (or drain) a runner pool
+      tags:
+      - Runners
+      x-openrelay-mcp:
+        destructiveHint: true
+    get:
+      operationId: getRunnerPool
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerPoolItem'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Get a runner pool (with usage)
+      tags:
+      - Runners
+  /v1/orgs/{orgId}/runner-pools/{id}/jobs:
+    get:
+      operationId: listRunnerJobs
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/RunnerJob'
+                type: array
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: List runner jobs for a pool
+      tags:
+      - Runners
+  /v1/orgs/{orgId}/runner-pools/{id}/metrics:
+    get:
+      operationId: getRunnerJobMetrics
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerMetrics'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Runner pool job metrics (last 30 days) + cost comparison
+      tags:
+      - Runners
+  /v1/orgs/{orgId}/runner-pools/{id}/resize:
+    post:
+      operationId: resizeRunnerPool
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResizeRunnerPoolRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerPool'
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Resize a runner pool's RAM tier
+      tags:
+      - Runners
+components:
+  schemas:
+    DeleteRunnerPoolResult:
+      properties:
+        status:
+          type: string
+      required:
+      - status
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    RunnerPool:
+      properties:
+        createdAt:
+          type: string
+        currentPeriodEnd:
+          type: string
+        diskSizeGb:
+          type: integer
+        githubInstallationId:
+          format: int64
+          type: integer
+        githubOwner:
+          type: string
+        githubOwnerType:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        organizationId:
+          type: string
+        poolRamGb:
+          type: integer
+        runtime:
+          type: string
+        status:
+          type: string
+        subscriptionStatus:
+          type: string
+        trialEndsAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+      - id
+      - organizationId
+      - name
+      - githubInstallationId
+      - githubOwner
+      - githubOwnerType
+      - poolRamGb
+      - diskSizeGb
+      - status
+      - createdAt
+      - updatedAt
+      type: object
+    RunnerJob:
+      properties:
+        completedAt:
+          type: string
+        cpus:
+          type: integer
+        failureReason:
+          type: string
+        githubRepo:
+          type: string
+        id:
+          type: string
+        nodeId:
+          type: string
+        organizationId:
+          type: string
+        provisioningAt:
+          type: string
+        queuedAt:
+          type: string
+        ramMb:
+          type: integer
+        runnerName:
+          type: string
+        runnerPoolId:
+          type: string
+        runnerSizeLabel:
+          type: string
+        runningAt:
+          type: string
+        status:
+          type: string
+      required:
+      - id
+      - runnerPoolId
+      - organizationId
+      - status
+      - ramMb
+      - cpus
+      - queuedAt
+      type: object
+    RunnerInstallationsRequest:
+      properties:
+        code:
+          type: string
+        state:
+          type: string
+      required:
+      - code
+      type: object
+    ResizeRunnerPoolRequest:
+      properties:
+        poolRamGb:
+          type: integer
+      required:
+      - poolRamGb
+      type: object
+    RunnerMetricsCost:
+      properties:
+        githubCostCents:
+          type: integer
+        savedCents:
+          type: integer
+        vectorlayCostCents:
+          type: integer
+      required:
+      - githubCostCents
+      - vectorlayCostCents
+      - savedCents
+      type: object
+    RunnerPoolItem:
+      properties:
+        activeRunners:
+          type: integer
+        createdAt:
+          type: string
+        currentPeriodEnd:
+          type: string
+        diskSizeGb:
+          type: integer
+        githubInstallationId:
+          format: int64
+          type: integer
+        githubOwner:
+          type: string
+        githubOwnerType:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        organizationId:
+          type: string
+        poolRamGb:
+          type: integer
+        queuedRamMb:
+          type: integer
+        queuedRunners:
+          type: integer
+        runtime:
+          type: string
+        status:
+          type: string
+        subscriptionStatus:
+          type: string
+        trialEndsAt:
+          type: string
+        updatedAt:
+          type: string
+        usedRamMb:
+          type: integer
+      required:
+      - id
+      - organizationId
+      - name
+      - githubInstallationId
+      - githubOwner
+      - githubOwnerType
+      - poolRamGb
+      - diskSizeGb
+      - status
+      - createdAt
+      - updatedAt
+      - activeRunners
+      - usedRamMb
+      - queuedRunners
+      - queuedRamMb
+      type: object
+    RunnerMetricsDaily:
+      properties:
+        cancelled:
+          type: integer
+        completed:
+          type: integer
+        date:
+          type: string
+        failed:
+          type: integer
+        running:
+          type: integer
+      required:
+      - date
+      - completed
+      - failed
+      - cancelled
+      - running
+      type: object
+    RunnerMetricsSummary:
+      properties:
+        avgDurationSec:
+          type: integer
+        avgQueueTimeSec:
+          type: integer
+        completedJobs:
+          type: integer
+        failedJobs:
+          type: integer
+        totalJobs:
+          type: integer
+      required:
+      - totalJobs
+      - completedJobs
+      - failedJobs
+      - avgDurationSec
+      - avgQueueTimeSec
+      type: object
+    RunnerInstallation:
+      properties:
+        account:
+          type: string
+        accountType:
+          type: string
+        alreadyConnected:
+          type: boolean
+        connectGrant:
+          type: string
+        installationId:
+          format: int64
+          type: integer
+      required:
+      - installationId
+      - account
+      - accountType
+      - alreadyConnected
+      - connectGrant
+      type: object
+    RunnerInstallationsResult:
+      properties:
+        installations:
+          items:
+            $ref: '#/components/schemas/RunnerInstallation'
+          type: array
+      required:
+      - installations
+      type: object
+    RunnerConnectUrl:
+      properties:
+        installUrl:
+          type: string
+        oauth:
+          type: boolean
+        url:
+          type: string
+      required:
+      - url
+      - installUrl
+      - oauth
+      type: object
+    CreateRunnerPoolRequest:
+      properties:
+        diskSizeGb:
+          type: integer
+        githubOwner:
+          type: string
+        githubOwnerType:
+          type: string
+        grant:
+          type: string
+        installationId:
+          format: int64
+          type: integer
+        name:
+          type: string
+        poolRamGb:
+          type: integer
+      required:
+      - installationId
+      type: object
+    RunnerMetrics:
+      properties:
+        cost:
+          $ref: '#/components/schemas/RunnerMetricsCost'
+        daily:
+          items:
+            $ref: '#/components/schemas/RunnerMetricsDaily'
+          type: array
+        summary:
+          $ref: '#/components/schemas/RunnerMetricsSummary'
+      required:
+      - daily
+      - summary
+      - cost
+      type: object
+  responses:
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http

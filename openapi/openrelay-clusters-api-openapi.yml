@@ -1,0 +1,583 @@
+openapi: 3.1.0
+info:
+  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+
+    '
+  title: OpenRelay Account Clusters API
+  version: 0.1.0
+servers:
+- description: Production
+  url: https://api.openrelay.inc
+- description: Beta
+  url: https://api.beta.openrelay.inc
+- description: Local development
+  url: http://localhost:8083
+tags:
+- description: Autoscaling inference clusters that serve a container image behind an endpoint.
+  name: Clusters
+paths:
+  /v1/clusters/{id}:
+    get:
+      operationId: getCluster
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterSummary'
+          description: The cluster
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Get a cluster by id
+      tags:
+      - Clusters
+  /v1/clusters/{id}/detail:
+    get:
+      operationId: getClusterDetail
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterDetail'
+          description: The cluster detail
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Get a cluster with its replicas and GPU model
+      tags:
+      - Clusters
+      x-openrelay-mcp:
+        default: true
+  /v1/clusters/{id}/restart:
+    post:
+      operationId: restartCluster
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterSummary'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Restart a cluster
+      tags:
+      - Clusters
+  /v1/clusters/{id}/scale:
+    post:
+      operationId: scaleCluster
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              replicaCount: 4
+            schema:
+              $ref: '#/components/schemas/ScaleRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterSummary'
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+      - apiKey: []
+      summary: Scale a cluster's replica count
+      tags:
+      - Clusters
+  /v1/clusters/{id}/stop:
+    post:
+      operationId: stopCluster
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterSummary'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Stop a cluster
+      tags:
+      - Clusters
+  /v1/clusters/{id}/terminate:
+    post:
+      operationId: terminateCluster
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterSummary'
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKey: []
+      summary: Terminate a cluster
+      tags:
+      - Clusters
+      x-openrelay-mcp:
+        destructiveHint: true
+  /v1/orgs/{orgId}/clusters:
+    get:
+      operationId: listOrgClusters
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - in: query
+        name: cursor
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterPage'
+          description: Page of clusters
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - apiKey: []
+      summary: List an org's clusters (cursor-paginated)
+      tags:
+      - Clusters
+      x-openrelay-mcp:
+        default: true
+  /v1/orgs/{orgId}/clusters/create:
+    post:
+      operationId: createCluster
+      parameters:
+      - in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              containerPort: 8000
+              gpuModelId: rtx-4090
+              gpusPerReplica: 1
+              healthCheckPath: /health
+              imageUrl: vllm/vllm-openai:latest
+              name: vllm-serving
+              replicaCount: 2
+            schema:
+              $ref: '#/components/schemas/CreateClusterRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterSummary'
+          description: Created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+      - apiKey: []
+      summary: Create a cluster
+      tags:
+      - Clusters
+      x-openrelay-mcp:
+        default: true
+components:
+  schemas:
+    ClusterDetail:
+      properties:
+        allowFallback:
+          type: boolean
+        containerPort:
+          type: integer
+        createdAt:
+          type: string
+        deployToken:
+          type: string
+        diskSizeGb:
+          type: integer
+        endpointUrl:
+          type: string
+        envVars:
+          additionalProperties:
+            type: string
+          type: object
+        gpuModel:
+          $ref: '#/components/schemas/GpuModel'
+        gpuModelId:
+          type: string
+        gpusPerReplica:
+          type: integer
+        healthCheckPath:
+          type: string
+        healthCheckPort:
+          type: integer
+        healthChecks:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        imageUrl:
+          type: string
+        name:
+          type: string
+        notes:
+          type: string
+        organizationId:
+          type: string
+        preferredRegions:
+          items:
+            type: string
+          type: array
+        privileged:
+          type: boolean
+        replicaCount:
+          type: integer
+        replicas:
+          items:
+            $ref: '#/components/schemas/ClusterReplicaItem'
+          type: array
+        resourceSize:
+          type: string
+        status:
+          type: string
+        statusReason:
+          description: human-readable cause for failed/stuck states
+          type: string
+        tier:
+          type: string
+        updatedAt:
+          type: string
+      required:
+      - id
+      - organizationId
+      - name
+      - status
+      - gpusPerReplica
+      - resourceSize
+      - replicaCount
+      - tier
+      - allowFallback
+      - diskSizeGb
+      - privileged
+      - replicas
+      - createdAt
+      - updatedAt
+      type: object
+    GpuModel:
+      properties:
+        architecture:
+          type: string
+        createdAt:
+          type: string
+        hidden:
+          type: boolean
+        id:
+          type: string
+        manufacturer:
+          type: string
+        name:
+          type: string
+        vramGb:
+          type: integer
+      required:
+      - id
+      - name
+      - manufacturer
+      - vramGb
+      - hidden
+      type: object
+    ClusterSummary:
+      properties:
+        activeReplicas:
+          type: integer
+        createdAt:
+          type: string
+        endpointUrl:
+          type: string
+        gpuModelId:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        organizationId:
+          type: string
+        replicaCount:
+          type: integer
+        status:
+          type: string
+      required:
+      - id
+      - organizationId
+      - name
+      - status
+      type: object
+    ClusterReplicaItem:
+      properties:
+        consecutiveFailures:
+          type: integer
+        createdAt:
+          type: string
+        diskTotalBytes:
+          format: int64
+          type: integer
+        diskUpdatedAt:
+          type: string
+        diskUsedBytes:
+          format: int64
+          type: integer
+        endpointUrl:
+          type: string
+        gpuCount:
+          type: integer
+        healthy:
+          type: boolean
+        id:
+          type: string
+        internalIp:
+          type: string
+        lastHealthCheckAt:
+          type: string
+        nodeHostname:
+          type: string
+        nodeId:
+          type: string
+        nodeLocation:
+          type: string
+        nodeRegion:
+          type: string
+        nvlinkEnabled:
+          type: boolean
+        port:
+          type: integer
+        sshPort:
+          type: integer
+        startedAt:
+          type: string
+        status:
+          type: string
+      required:
+      - id
+      - gpuCount
+      - status
+      - healthy
+      - nvlinkEnabled
+      - createdAt
+      type: object
+    ScaleRequest:
+      properties:
+        replicaCount:
+          minimum: 1
+          type: integer
+      required:
+      - replicaCount
+      type: object
+    ClusterPage:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ClusterSummary'
+          type: array
+        nextCursor:
+          type: string
+      required:
+      - items
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    CreateClusterRequest:
+      properties:
+        allowFallback:
+          type: boolean
+        containerCommand:
+          items:
+            type: string
+          type: array
+        containerPort:
+          type: integer
+        diskSizeGb:
+          type: integer
+        envVars:
+          additionalProperties:
+            type: string
+          type: object
+        gpuModelId:
+          type: string
+        gpusPerReplica:
+          type: integer
+        healthCheckPath:
+          type: string
+        healthCheckPort:
+          type: integer
+        healthChecks:
+          items:
+            type: string
+          type: array
+        imageUrl:
+          type: string
+        kernelModules:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        preferredRegions:
+          items:
+            type: string
+          type: array
+        privileged:
+          type: boolean
+        registryCredentialId:
+          type: string
+        replicaCount:
+          type: integer
+        resourceSize:
+          type: string
+        templateId:
+          type: string
+        tier:
+          type: string
+      required:
+      - name
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+  securitySchemes:
+    apiKey:
+      description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+      scheme: bearer
+      type: http
