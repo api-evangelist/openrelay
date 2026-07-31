@@ -1,0 +1,37 @@
+generated: '2026-07-20'
+method: searched
+source:
+- https://docs.openrelay.inc
+- https://openrelay.inc/status
+- https://openrelay.inc/changelog
+- openapi/openrelay-openapi.json
+versioning:
+  scheme: url-path
+  current: v1
+  spec_version: 0.1.0
+  notes: >-
+    All control-plane resources live under /v1. OpenAPI info.version is 0.1.0.
+    A separate Beta host (api.beta.openrelay.inc) exists for pre-release testing.
+beta_features:
+  note: >-
+    Several operations are marked Beta in the docs and validated-but-not-yet-executed
+    on the data plane.
+  operations:
+  - rebootVm (accepted but in-guest reboot not yet executed)
+  - resizeVmDisk (recorded but disk not yet resized)
+  - createVmSnapshot (record created but capture not yet enabled)
+deprecation:
+  policy_published: false
+  sunset_headers: false
+  deprecated_operations: []
+  notes: No deprecation/sunset policy or deprecated operations documented as of this pass.
+status_page:
+  url: https://openrelay.inc/status
+  http_status: 200
+changelog:
+  url: https://openrelay.inc/changelog
+sla:
+  published: false
+  notes: >-
+    Marketing references committed uptime/latency/throughput on dedicated
+    capacity, but no formal public SLA document was found.

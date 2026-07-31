@@ -1,0 +1,21 @@
+generated: '2026-07-20'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: api.openrelay.inc
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Dec 23 23:59:59 2026 GMT
+  hsts: null
+- host: api.beta.openrelay.inc
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Jan 12 23:59:59 2027 GMT
+  hsts: null
+domains:
+- domain: openrelay.inc
+  dnssec: false
+  caa: []
+  spf: false
+  dmarc: true
+  dmarc_policy: none

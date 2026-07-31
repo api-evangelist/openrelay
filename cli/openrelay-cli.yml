@@ -1,0 +1,38 @@
+generated: '2026-07-20'
+method: searched
+source:
+- https://docs.openrelay.inc/docs/cli
+- https://docs.openrelay.inc/docs/cli/quickstart
+- https://github.com/OpenRelayInc/orl
+name: orl
+description: >-
+  The OpenRelay command-line tool. Log in with an API key, deploy GPU VMs,
+  open SSH sessions, run inference clusters, and drive the whole control-plane
+  API from the terminal. Also ships an MCP server (orl mcp serve).
+official: true
+repo: https://github.com/OpenRelayInc/orl
+releases: https://github.com/OpenRelayInc/orl/releases
+install:
+  homebrew: brew install openrelayinc/tap/orl
+  debian: sudo dpkg -i orl_*_linux_amd64.deb
+  rpm: sudo rpm -i orl_*_linux_amd64.rpm
+  direct: Extract the platform archive from the latest GitHub release and add orl to PATH.
+  verify: orl version
+auth:
+  login: orl auth login   # paste API key (vl_...); org resolved from the key
+command_groups:
+- name: auth
+  commands: [login]
+- name: deploy
+  commands: ['deploy (flags: --gpu-model, --gpu-count, --image, --name, --wait, --connect)']
+- name: vms
+  commands: [get, ssh, stop, restart, terminate]
+- name: catalog
+  commands: ['gpu-availability get', 'pricing get']
+- name: mcp
+  commands: ['serve (expose the API to agents over stdio MCP)']
+key_flows:
+- Deploy a GPU VM and open an SSH session with a single orl deploy --connect.
+- Serve the full API to Claude/agents via claude mcp add openrelay -- orl mcp serve.
+- Script orl in CI to provision and tear down GPU capacity.
+docs: https://docs.openrelay.inc/docs/cli

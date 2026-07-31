@@ -1,0 +1,21 @@
+generated: '2026-07-20'
+method: generated
+source: openapi/openrelay-openapi.json
+api: OpenRelay API (control-plane)
+description: >-
+  Packaged Agent Skills grounded in real OpenRelay control-plane operationIds.
+  Note: OpenRelay also ships a first-party MCP server (orl mcp serve) that
+  exposes these same operations as tools — see mcp/openrelay-mcp.yml.
+skills:
+- file: openrelay-deploy-gpu-vm.md
+  name: Deploy a GPU VM
+  operations: [listGpuModels, getGpuAvailability, getPricing, createVm, getVmDetail, getVmBurn, stopVm, terminateVm]
+- file: openrelay-run-inference-cluster.md
+  name: Run an autoscaling inference cluster
+  operations: [createCluster, getClusterDetail, scaleCluster, restartCluster, stopCluster, terminateCluster]
+- file: openrelay-run-batch-inference.md
+  name: Run a batch inference job
+  operations: [presignFileUpload, uploadFile, completeFileUpload, createBatch, getBatch, listBatches, cancelBatch, getFileContent]
+- file: openrelay-manage-api-keys-and-webhooks.md
+  name: Manage API keys and webhooks
+  operations: [createOrgApiKey, listOrgApiKeys, revokeOrgApiKey, createOrgWebhook, listOrgWebhooks, toggleOrgWebhook, regenerateOrgWebhookSecret]

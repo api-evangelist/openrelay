@@ -1,0 +1,184 @@
+# Docs
+
+
+- **Getting Started**
+- [Introduction](/docs): The OpenRelay REST API — deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure.
+- [Quickstart](/docs/quickstart): From an API key to your first running GPU VM, with the orl CLI or plain curl.
+- [Authentication](/docs/authentication): Authenticate every request with an OpenRelay API key (vl_…) sent as a Bearer token.
+- [VM billing and burn rate](/docs/vm-billing): One bundled hourly rate per VM, live burn, and runway to the auto-stop floor.
+- [Providers](/docs/providers): Bring your GPU hardware online as OpenRelay capacity with a single command and start earning.
+- [Provider nodes](/docs/provider-nodes): Hardware requirements, NVIDIA GPU passthrough, node health checks, and the full lifecycle of your provider hardware.
+- [Errors](/docs/errors): How the OpenRelay API reports errors — status codes and the JSON error body.
+- [Pagination](/docs/pagination): How to page through OpenRelay list endpoints with cursors.
+
+- **Command Line**
+- Command Line
+  - [Overview](/docs/cli): orl is the OpenRelay command-line tool. Log in with an API key, deploy GPU VMs, open SSH sessions, and drive the whole API from your terminal or an agent.
+  - [Quickstart](/docs/cli/quickstart): Sign up, log in, and get a GPU VM running with the orl CLI in four commands.
+  - [Authentication](/docs/cli/authentication): How orl stores your API key, resolves your organization, and reads configuration.
+  - [Workflows](/docs/cli/workflows): The signature orl commands for deploying and connecting to GPU VMs, plus how to script orl in CI.
+  - [Agents (MCP)](/docs/cli/agents): Serve the whole OpenRelay API to Claude and other agents over MCP with a single command.
+  - [Upgrade & shell setup](/docs/cli/upgrade): Keep orl current, and add shell completions and man pages.
+
+- **Inference API**
+- Inference API
+  - [Overview](/docs/inference): The OpenRelay Inference API, an OpenAI-compatible chat completions API and, for supporting models, an Anthropic-compatible Messages API.
+  - [Quickstart](/docs/inference/quickstart): From an API key to your first chat completion — unary and streaming — using nothing but curl.
+  - [Authentication](/docs/inference/authentication): Authenticate every inference request with an OpenRelay API key (vl_…), sent as a Bearer token or an x-api-key header.
+  - [Chat Completions](/docs/inference/chat-completions): POST /v1/chat/completions — the OpenAI-compatible chat completions endpoint, its request parameters, and response shape.
+  - [Messages (Anthropic)](/docs/inference/messages): POST /v1/messages, the Anthropic-compatible Messages endpoint, its request parameters, response shape, and cache-token billing.
+  - [Streaming](/docs/inference/streaming): Stream chat completions as Server-Sent Events with stream:true — the SSE format, the [DONE] sentinel, and usage in the final chunk.
+  - [Models](/docs/inference/models): List available models with GET /v1/models and the OpenRelay public model ids you can request.
+  - [Using OpenAI SDKs](/docs/inference/openai-sdks): Use the official OpenAI Python and Node libraries with OpenRelay by setting base_url and api_key.
+  - Batch API
+    - [Overview](/docs/inference/batch): The OpenRelay Batch API. Submit large jobs of chat or text completions as a JSONL file, run them asynchronously within 24 hours, and download the results at a reduced per-token rate.
+    - [Quickstart](/docs/inference/batch/quickstart): Run a batch end to end. Build a JSONL file, upload it, create a batch, poll to completion, and download the results, with curl, the orl CLI, or the OpenAI SDK.
+    - [Files](/docs/inference/batch/files): Upload batch input files as JSONL (a direct multipart upload for smaller files, a presigned URL for large ones), then read file metadata and content.
+    - [Batches](/docs/inference/batch/batches): Create, get, list, and cancel batches. The batch object, inline vs file input, the status lifecycle, and pagination.
+    - [Results](/docs/inference/batch/results): The output and error file formats. One JSONL line per request, joined back to your inputs by custom_id.
+  - [Pricing & billing](/docs/inference/pricing): How inference is billed — a prepaid balance, per-token metering with distinct input, cached-input, and output rates, and per-request usage.
+  - [Errors & rate limits](/docs/inference/errors): How the Inference API reports errors — the OpenAI-style error body, the status codes you'll see, and how to retry.
+
+- **API Reference**
+- Account: The signed-in user: profile, memberships, and first-time onboarding.
+  - [Overview](/docs/account/overview): The signed-in user: profile, memberships, and first-time onboarding.
+  - [Create the caller's profile and first org (idempotent)](/docs/account/bootstrap): Requires a signed-in dashboard session token; API keys cannot call this endpoint.
+  - [Current user profile and org memberships](/docs/account/getMe): Returns the signed-in user's profile and organization memberships. Requires a dashboard session token; API keys cannot call this endpoint.
+  - [Pending org invites addressed to the signed-in user's email](/docs/account/listMyInvites): Returns unexpired pending invites whose invited email matches the session's email. Requires a dashboard session token; API keys are org service accounts and cannot hold or accept invites.
+  - [Accept a pending org invite (session only)](/docs/account/acceptOrgInvite): Creates the membership for the invite addressed to the session's email in the given org, then consumes the invite. This is the only way an invite becomes a membership: the invitee must be authenticated with the invited email and act explicitly.
+  - [Decline a pending org invite (session only)](/docs/account/declineOrgInvite)
+  - [The current principal and the org it acts in](/docs/account/whoami): Returns the calling principal (API key or user session) and the organization the request acts in. For an API key that org is fixed by the key; for a session it is the active org, and availableOrgs lists every org the user belongs to. Unlike /v1/me this works for API keys and does not onboard.
+  - [Update the caller's profile](/docs/account/updateProfile): Requires a signed-in dashboard session token; API keys cannot call this endpoint.
+- Organizations: Organizations and their members. Most resources are scoped to an org.
+  - [Overview](/docs/organizations/overview): Organizations and their members. Most resources are scoped to an org.
+  - [List an org's members](/docs/organizations/listOrgMembers)
+  - [List an org's pending invites (owner/admin)](/docs/organizations/listOrgInvites)
+  - [Revoke a pending invite (owner/admin)](/docs/organizations/revokeOrgInvite)
+  - [Create an organization (caller becomes owner)](/docs/organizations/createOrg): Requires a signed-in dashboard session token; API keys cannot call this endpoint.
+  - [Get an organization](/docs/organizations/getOrg)
+  - [Update an organization (owner/admin)](/docs/organizations/updateOrg)
+  - [Invite a member by email (owner/admin)](/docs/organizations/addOrgMember): Records a pending invite and emails the address. The response status is always "invited"; the user becomes a member only after they accept (POST /v1/me/invites/{orgId}/accept). Re-inviting the same email refreshes the invite's role and expiry. 409 if the email already belongs to a member.
+  - [Update a member's role (owner/admin)](/docs/organizations/updateOrgMemberRole)
+  - [Remove a member (owner/admin)](/docs/organizations/removeOrgMember)
+- Clusters: Autoscaling inference clusters that serve a container image behind an endpoint.
+  - [Overview](/docs/clusters/overview): Autoscaling inference clusters that serve a container image behind an endpoint.
+  - [Get a cluster by id](/docs/clusters/getCluster)
+  - [Get a cluster with its replicas and GPU model](/docs/clusters/getClusterDetail)
+  - [List an org's clusters (cursor-paginated)](/docs/clusters/listOrgClusters)
+  - [Create a cluster](/docs/clusters/createCluster)
+  - [Stop a cluster](/docs/clusters/stopCluster)
+  - [Restart a cluster](/docs/clusters/restartCluster)
+  - [Terminate a cluster](/docs/clusters/terminateCluster)
+  - [Scale a cluster's replica count](/docs/clusters/scaleCluster)
+- VMs: GPU virtual machines: lifecycle, disks, SSH access, and console links.
+  - [Overview](/docs/vms/overview): GPU virtual machines: lifecycle, disks, SSH access, and console links.
+  - [List an org's VMs (cursor-paginated)](/docs/vms/listOrgVms)
+  - [Get a VM by id](/docs/vms/getVm)
+  - [Get a VM with its GPU/node/template info and price](/docs/vms/getVmDetail)
+  - [Live burn rate, session cost so far, and org runway for a VM](/docs/vms/getVmBurn): Every VM bills at one bundled hourly rate (per-GPU catalog price times GPU count for GPU VMs, a flat size rate for CPU VMs); disk is included, never billed separately. The rate is locked when the usage session opens, so this endpoint reads it from the open usage record when one exists (rateSource=locked) and only falls back to the current catalog when nothing is accruing (rateSource=catalog).
+  - [Create a VM](/docs/vms/createVm)
+  - [Stop a VM](/docs/vms/stopVm)
+  - [Restart a VM](/docs/vms/restartVm)
+  - [Terminate a VM](/docs/vms/terminateVm)
+  - [Reboot a VM](/docs/vms/rebootVm): Beta: the reboot request is validated and accepted, but the in-guest reboot is not yet executed by the data plane.
+  - [Set a VM's endpoint visibility](/docs/vms/setVmVisibility)
+  - [Resize a stopped VM's disk](/docs/vms/resizeVmDisk): Beta: the new disk size is validated and recorded, but the disk is not yet resized on the node.
+  - [Get a VM's embedded Telegram link](/docs/vms/getVmTelegramLink)
+  - [SSH keys attached to a VM + the org's keys](/docs/vms/getVmSshKeys)
+  - [Attach an org SSH key to a VM](/docs/vms/attachVmSshKey)
+- Snapshots: Point-in-time VM snapshots and forking new VMs from them.
+  - [Overview](/docs/snapshots/overview): Point-in-time VM snapshots and forking new VMs from them.
+  - [Create a snapshot of a VM](/docs/snapshots/createVmSnapshot): Beta: the snapshot record is created, but snapshot capture is not yet enabled on the data plane.
+  - [List an org's VM snapshots (optionally filtered by source VM)](/docs/snapshots/listOrgSnapshots)
+  - [Soft-delete a snapshot](/docs/snapshots/deleteSnapshot)
+  - [Fork a new VM from a snapshot](/docs/snapshots/forkVm)
+- SSH Keys: Org-level SSH public keys that can be attached to VMs.
+  - [Overview](/docs/ssh-keys/overview): Org-level SSH public keys that can be attached to VMs.
+  - [List an org's SSH public keys](/docs/ssh-keys/listOrgSshKeys)
+  - [Add an SSH public key (computes fingerprint)](/docs/ssh-keys/createOrgSshKey)
+  - [Delete an SSH public key](/docs/ssh-keys/deleteOrgSshKey)
+- API Keys: Programmatic access keys (vl_…) used to authenticate with this API.
+  - [Overview](/docs/api-keys/overview): Programmatic access keys (vl_…) used to authenticate with this API.
+  - [List an org's API keys (no secrets)](/docs/api-keys/listOrgApiKeys)
+  - [Create an API key (returns the plaintext once)](/docs/api-keys/createOrgApiKey)
+  - [Revoke an API key](/docs/api-keys/revokeOrgApiKey)
+- Registry Credentials: Private container-registry credentials for pulling images.
+  - [Overview](/docs/registry-credentials/overview): Private container-registry credentials for pulling images.
+  - [List an org's registry credentials (no secrets)](/docs/registry-credentials/listOrgRegistryCredentials)
+  - [Create a registry credential (credentials stored encrypted)](/docs/registry-credentials/createOrgRegistryCredential)
+  - [Delete a registry credential](/docs/registry-credentials/deleteOrgRegistryCredential)
+- Webhooks: Subscribe to platform events with signed HTTP callbacks.
+  - [Overview](/docs/webhooks/overview): Receive signed, automatically-retried HTTP callbacks when events happen in your organization.
+  - [List an org's webhooks (no secrets)](/docs/webhooks/listOrgWebhooks)
+  - [Create a webhook (returns the signing secret once)](/docs/webhooks/createOrgWebhook)
+  - [Update a webhook (name/url/events)](/docs/webhooks/updateOrgWebhook)
+  - [Delete a webhook](/docs/webhooks/deleteOrgWebhook)
+  - [Enable/disable a webhook](/docs/webhooks/toggleOrgWebhook)
+  - [Regenerate a webhook's signing secret (returned once)](/docs/webhooks/regenerateOrgWebhookSecret)
+  - [Recent delivery attempts for a webhook](/docs/webhooks/listOrgWebhookDeliveries)
+- Billing: Prepaid balance, saved cards, deposits, and auto-recharge.
+  - [Overview](/docs/billing/overview): Prepaid balance, saved cards, deposits, and auto-recharge.
+  - [Org balance + recent transactions](/docs/billing/getBalance)
+  - [Start saving a card (Stripe SetupIntent for inline Elements)](/docs/billing/createBillingSetupIntent)
+  - [Charge the saved card to top up prepaid balance](/docs/billing/createBillingDeposit): Charges the org's default saved card off-session. The balance credit is applied by the payment_intent.succeeded webhook (the authoritative money signal), not this response — poll the balance after success.
+  - [Read the org's auto-recharge policy](/docs/billing/getAutoRecharge)
+  - [Set the org's auto-recharge policy](/docs/billing/updateAutoRecharge)
+  - [List saved cards (brand/last4/exp only)](/docs/billing/listBillingPaymentMethods)
+  - [Remove a saved card](/docs/billing/deleteBillingPaymentMethod)
+- Usage: Current-period usage and cost breakdowns.
+  - [Overview](/docs/usage/overview): Current-period usage and cost breakdowns.
+  - [Current-month usage (cents/hours + per gpuModel-tier breakdown)](/docs/usage/getCurrentUsage)
+- Transfers: Move resources between organizations you belong to.
+  - [Overview](/docs/transfers/overview): Move resources between organizations you belong to.
+  - [Orgs the caller belongs to (for the transfer target dropdown)](/docs/transfers/listTransferTargetOrgs)
+  - [Initiate a resource transfer to another org (owner/admin)](/docs/transfers/initiateTransfer)
+  - [Pending incoming transfers (enriched)](/docs/transfers/listIncomingTransfers)
+  - [Outgoing transfers, all statuses (enriched)](/docs/transfers/listOutgoingTransfers)
+  - [Count of pending incoming transfers](/docs/transfers/getTransferPendingCount)
+  - [Cancel a pending outgoing transfer (source org)](/docs/transfers/cancelTransfer)
+  - [Accept a pending incoming transfer (target org owner/admin)](/docs/transfers/acceptTransfer)
+  - [Reject a pending incoming transfer (target org owner/admin)](/docs/transfers/rejectTransfer)
+- Provider: For GPU providers: applications, nodes, provisioning tokens, and earnings.
+  - [Overview](/docs/provider/overview): For GPU providers: applications, nodes, provisioning tokens, and earnings.
+  - [One-command node onboarding installer (auth = org API key bearer, OR a pre-minted provisioning token via ?token=)](/docs/provider/providerBootstrap): Returns a self-contained shell installer (curl | sudo bash). With a bearer org API key it mints a fresh single-use provisioning token; with ?token=vtk_… (e.g. minted from the dashboard) it self-auths and embeds that token instead. name only applies when minting (the token already carries it). Nodes always enroll as QEMU VM hosts in the community pool.
+  - [Provider status (isProvider + application status)](/docs/provider/getProviderStatus)
+  - [Submit a provider application](/docs/provider/applyForProvider)
+  - [List the org's provisioning tokens (provider only)](/docs/provider/listProvisioningTokens)
+  - [Generate a one-time provisioning token (owner/admin, provider only)](/docs/provider/generateProvisioningToken)
+  - [Revoke a provisioning token (owner/admin)](/docs/provider/revokeProvisioningToken)
+  - [List the provider org's nodes (with GPUs + location)](/docs/provider/listProviderNodes)
+  - [Set a node's operator lifecycle status (drain / maintenance / remove / online)](/docs/provider/updateProviderNode)
+  - [Provider node + token stats](/docs/provider/getProviderStats)
+  - [Provider earnings from usage records (+ payout history)](/docs/provider/getProviderEarnings)
+- Runners: Managed GitHub Actions runner pools.
+  - [Overview](/docs/runners/overview): Managed GitHub Actions runner pools.
+  - [List runner pools (with active/queued usage)](/docs/runners/listRunnerPools)
+  - [Create a runner pool](/docs/runners/createRunnerPool)
+  - [GitHub connect URL (OAuth authorize when configured, else App install)](/docs/runners/getRunnerConnectUrl)
+  - [List GitHub installations the user can connect (OAuth code exchange)](/docs/runners/listRunnerInstallations)
+  - [Get a runner pool (with usage)](/docs/runners/getRunnerPool)
+  - [Delete (or drain) a runner pool](/docs/runners/deleteRunnerPool)
+  - [Resize a runner pool's RAM tier](/docs/runners/resizeRunnerPool)
+  - [List runner jobs for a pool](/docs/runners/listRunnerJobs)
+  - [Runner pool job metrics (last 30 days) + cost comparison](/docs/runners/getRunnerJobMetrics)
+- Catalog: Public catalog: GPU models, availability, pricing, templates, and locations.
+  - [Overview](/docs/catalog/overview): Public catalog: GPU models, availability, pricing, templates, and locations.
+  - [List models in the OpenRelay catalog (OpenAI-compatible)](/docs/catalog/listModels): Returns the public model catalog. Free, not balance-gated. Models with status "available" can be used immediately in /v1/chat/completions; "request_access" models are listed for discovery but are not yet invocable.
+  - [GPU availability by model](/docs/catalog/getGpuAvailability): Live availability per GPU model. Responses are served from a short-lived cache.
+  - [GPU model catalog](/docs/catalog/listGpuModels)
+  - [GPU + CPU pricing](/docs/catalog/getPricing)
+  - [VM template catalog](/docs/catalog/listVmTemplates)
+  - [Locations / regions](/docs/catalog/listLocations)
+- Batches: Batch inference jobs: submit a JSONL file of requests, poll status, and download results at a discounted rate. Served by the inference endpoint (inference.openrelay.inc). Batch access is enabled per organization; without it these endpoints return 404.
+  - [Overview](/docs/batches/overview): Batch inference jobs: submit a JSONL file of requests, poll status, and download results at a discounted rate. Served by the inference endpoint (inference.openrelay.inc). Batch access is enabled per organization; without it these endpoints return 404.
+  - [List batches, newest first](/docs/batches/listBatches)
+  - [Create a batch inference job](/docs/batches/createBatch): Submit a batch from an uploaded input file (input_file_id) or inline request objects (requests); provide exactly one of the two. The batch completes within the 24h window at a discounted rate; poll it with get, then download results via the output and error file ids.
+  - [Get a batch by id](/docs/batches/getBatch)
+  - [Cancel a running batch](/docs/batches/cancelBatch): In-flight records finish, unstarted records are skipped, and partial results are written; the batch settles to cancelled within a few minutes. Completed work is billed. Batches already in a terminal state return 409.
+- Files: Input and result files for the Batch API (JSONL, up to 200 MB and 50,000 records). Served by the inference endpoint (inference.openrelay.inc).
+  - [Overview](/docs/files/overview): Input and result files for the Batch API (JSONL, up to 200 MB and 50,000 records). Served by the inference endpoint (inference.openrelay.inc).
+  - [Upload a JSONL input file for the Batch API](/docs/files/uploadFile): Send multipart/form-data with a `file` part (the JSONL bytes, up to 200 MB and 50,000 records) and a `purpose` field set to `batch`. Each line is one request object; the returned file id goes in `input_file_id` when creating a batch.
+  - [Mint a signed URL for a direct JSONL upload](/docs/files/presignFileUpload): For browser clients that upload the file straight to storage instead of through the API: returns a file id and a signed PUT URL (valid 15 minutes). After the PUT succeeds, register the file with the complete call. CLI and SDK clients should use the plain upload instead.
+  - [Register a presigned upload after the PUT succeeds](/docs/files/completeFileUpload): Validates the uploaded object (size, line count) and registers it as a batch input file. Idempotent; completing an already-registered id returns the existing file.
+  - [Get a file's metadata](/docs/files/getFile)
+  - [Download a file's raw JSONL content](/docs/files/getFileContent): Streams the file bytes. Use it to fetch batch results: the batch object's output_file_id (successful records) and error_file_id (failed records) each point at a JSONL file of `{custom_id, response | error}` lines.

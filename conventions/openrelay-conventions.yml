@@ -1,0 +1,48 @@
+generated: '2026-07-20'
+method: searched
+source:
+- openapi/openrelay-openapi.json
+- https://docs.openrelay.inc/docs/authentication
+- https://docs.openrelay.inc/docs/pagination
+- https://docs.openrelay.inc/docs/errors
+- https://docs.openrelay.inc/docs/webhooks/overview
+auth:
+  style: http-bearer
+  key_prefix: vl_
+  header: 'Authorization: Bearer vl_...'
+  alt_header: x-api-key (Inference API only)
+  scoping: API keys are org-scoped; role-based permissions on top.
+  see: authentication/openrelay-authentication.yml
+idempotency:
+  client_key_header: false
+  notes: >-
+    No client-supplied Idempotency-Key header. A small number of operations are
+    naturally idempotent (onboarding/bootstrap, file complete, invite decline).
+pagination:
+  style: cursor
+  request_params:
+    limit: max items per page
+    cursor: opaque pointer from the previous response's nextCursor
+  response_fields:
+    items: array of results
+    nextCursor: pointer to next page; absent/empty on the last page
+  rule: Treat cursors as opaque; never parse, modify, or construct them.
+  see: https://docs.openrelay.inc/docs/pagination
+errors:
+  envelope: {error: human message, code: optional machine hint}
+  rfc9457: false
+  diagnostics_field: statusReason (on VMs/clusters)
+  see: errors/openrelay-problem-types.yml
+rate_limiting:
+  signal: HTTP 429 with Retry-After header
+  guidance: exponential backoff with jitter; retry only idempotent requests on 429/5xx.
+versioning:
+  style: url-path (/v1)
+  see: lifecycle/openrelay-lifecycle.yml
+webhooks:
+  signing: HMAC-SHA256 over raw body, X-VectorLay-Signature header
+  see: asyncapi/openrelay-webhooks.yml
+field_conventions:
+  ids: opaque string resource ids
+  timestamps: ISO 8601 (created_at)
+  money: cents-based amounts in billing/usage responses

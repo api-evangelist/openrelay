@@ -1,0 +1,48 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.openrelay.inc/docs/cli/agents
+name: OpenRelay MCP Server
+description: >-
+  Official Model Context Protocol server shipped inside the OpenRelay CLI (orl).
+  It exposes the entire OpenRelay control-plane REST API to Claude and other MCP
+  clients as tools, executing "as you" with your API key and org scope.
+status: official
+transport: stdio
+server_command: orl mcp serve
+install:
+  cli: brew install openrelayinc/tap/orl
+  register_claude: claude mcp add openrelay -- orl mcp serve
+auth: >-
+  Uses the CLI's stored OpenRelay API key (vl_...). No extra credential setup;
+  tools act with the key's org scope. Use a limited-scope key or --read-only for
+  narrower access.
+toolsets:
+  default: curated core set of tools
+  flags:
+  - '--toolset <group>: add a specific tool group (repeatable)'
+  - '--all: expose every available operation as a tool'
+  - '--all --read-only: expose only read-only (GET) operations'
+  guidance: OpenRelay recommends keeping exposed toolsets under ~50 tools.
+safety: >-
+  Destructive operations are flagged so MCP clients can restrict dangerous
+  actions (terminate/delete/scale-down).
+tool_groups_available:
+  # Mirror the OpenAPI tags; tools are generated from the 110 control-plane operations.
+  - Account
+  - Organizations
+  - Clusters
+  - VMs
+  - Snapshots
+  - SSH Keys
+  - API Keys
+  - Registry Credentials
+  - Webhooks
+  - Billing
+  - Usage
+  - Transfers
+  - Provider
+  - Runners
+  - Catalog
+  - Batches
+  - Files
+docs: https://docs.openrelay.inc/docs/cli/agents

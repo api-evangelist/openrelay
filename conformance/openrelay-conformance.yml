@@ -1,0 +1,60 @@
+generated: '2026-07-20'
+method: derived
+source:
+- openapi/openrelay-openapi.json
+- https://docs.openrelay.inc/docs/errors
+- https://docs.openrelay.inc/docs/pagination
+- https://openrelay.inc/security
+standards:
+- id: openai-chat-completions
+  conforms: true
+  evidence: >-
+    Inference API is a drop-in OpenAI-compatible chat completions API
+    (POST /v1/chat/completions); official OpenAI Python/Node SDKs work by
+    swapping base_url and api_key.
+- id: anthropic-messages
+  conforms: true
+  evidence: >-
+    Anthropic-compatible Messages API (POST /v1/messages) offered for
+    supporting models.
+- id: cursor-pagination
+  conforms: true
+  evidence: >-
+    List endpoints use opaque cursor pagination (limit + cursor query params;
+    items + nextCursor response fields).
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Control-plane uses a custom {error, code} JSON envelope, not
+    application/problem+json.
+- id: rfc8594-deprecation-sunset
+  conforms: false
+  evidence: No Deprecation/Sunset headers or deprecated operations found in the OpenAPI.
+- id: idempotency-key
+  conforms: false
+  evidence: >-
+    No client-supplied Idempotency-Key header; a few operations (bootstrap,
+    file complete) are naturally idempotent only.
+- id: oauth2
+  conforms: false
+  evidence: Only HTTP Bearer API-key auth (vl_) is offered; no OAuth2 securityScheme.
+- id: oidc
+  conforms: false
+  evidence: No OpenID Connect discovery or flows.
+- id: webhook-hmac-signing
+  conforms: true
+  evidence: >-
+    Webhooks are signed with HMAC-SHA256 (X-VectorLay-Signature) over the raw
+    body, verified in constant time.
+- id: soc2
+  conforms: false
+  evidence: SOC 2 Type II is stated as "in progress" on the security page (not yet certified).
+- id: gdpr
+  conforms: true
+  evidence: Security page states GDPR compliance.
+- id: ccpa
+  conforms: true
+  evidence: Security page states CCPA compliance.
+- id: tls13
+  conforms: true
+  evidence: All data in transit encrypted with TLS 1.3 (confirmed on api.openrelay.inc).

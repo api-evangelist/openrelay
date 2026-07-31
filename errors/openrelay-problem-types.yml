@@ -1,0 +1,43 @@
+generated: '2026-07-20'
+method: derived
+source:
+- openapi/openrelay-openapi.json
+- https://docs.openrelay.inc/docs/errors
+format: custom-json
+rfc9457: false
+envelope:
+  description: >-
+    Control-plane errors return a compact JSON envelope, NOT RFC 9457
+    application/problem+json.
+  fields:
+  - name: error
+    required: true
+    description: Human-readable message for logs and humans.
+  - name: code
+    required: false
+    description: Optional machine-readable stable hint (e.g. not_found).
+  example: '{"error": "cluster not found", "code": "not_found"}'
+  diagnostics: >-
+    VMs and clusters also carry a statusReason field with a human-readable
+    failure cause.
+inference_api_note: >-
+  The OpenAI-compatible Inference API returns an OpenAI-style error body
+  (error.message / error.type), distinct from this control-plane envelope.
+status_codes:
+- {code: 400, title: Bad Request, remediation: Fix malformed JSON or invalid parameters.}
+- {code: 401, title: Unauthorized, remediation: Check the API key in the Authorization header.}
+- {code: 403, title: Forbidden, remediation: Key lacks required scope or targets a different org.}
+- {code: 404, title: Not Found, remediation: Resource does not exist or is not visible to the caller.}
+- {code: 409, title: Conflict, remediation: Request conflicts with current state (name clash, invalid action).}
+- {code: 410, title: Gone, remediation: Resource has been removed.}
+- {code: 413, title: Payload Too Large, remediation: Reduce upload/file size.}
+- {code: 422, title: Unprocessable Entity, remediation: Well-formed but semantically invalid request.}
+- {code: 429, title: Too Many Requests, remediation: Rate limited; back off and honor Retry-After.}
+- {code: 502, title: Bad Gateway, remediation: Transient upstream issue; retry with backoff.}
+- {code: 503, title: Service Unavailable, remediation: Transient issue; retry with backoff.}
+retry_guidance: >-
+  Retry only idempotent requests on 429 and 5xx using exponential backoff with
+  jitter; honor the Retry-After header when present.
+derivation:
+  note: Status-code counts observed across the 110 control-plane operations.
+  counts: {'400': 35, '401': 109, '403': 87, '404': 50, '409': 14, '410': 1, '413': 2, '429': 3, '502': 1, '503': 7}

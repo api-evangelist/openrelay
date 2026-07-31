@@ -1,0 +1,34 @@
+generated: '2026-07-20'
+method: searched
+source: https://openrelay.inc/changelog
+scheme: dated
+versioned: false
+current_version: v1 (OpenAPI 0.1.0)
+url: https://openrelay.inc/changelog
+entries:
+- date: '2026-06-10'
+  title: API Reference and Guides
+  type: additions
+  breaking: false
+  highlights: >-
+    New documentation site generated from the control-plane OpenAPI spec —
+    89 customer-facing operations across 16 sections, plus authentication,
+    error-handling, pagination, and webhook guides.
+- date: '2026-06-10'
+  title: GPU Availability Improvements
+  type: additions
+  breaking: false
+  highlights: >-
+    Availability now shows which GPU quantities are actually obtainable;
+    unsatisfiable requests are rejected immediately with valid alternatives.
+- date: '2026-06-08'
+  title: Production Launch
+  type: additions
+  breaking: false
+  highlights: >-
+    OpenRelay went live at openrelay.inc — marketing site, dashboard
+    (app.openrelay.inc), control-plane API (api.openrelay.inc), and live
+    Stripe billing.
+notes: >-
+  Entries are dated, not release-numbered; internal tracking codes
+  (OPENRELAY###) are referenced.

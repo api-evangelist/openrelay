@@ -1,0 +1,31 @@
+overlay: 1.0.0
+info:
+  title: OpenRelay API Evangelist enrichment overlay
+  version: 1.0.0
+  x-generated: '2026-07-20'
+  x-method: generated
+  x-source: openapi/openrelay-openapi.json
+extends: ../openapi/openrelay-openapi.json
+actions:
+- target: $.info
+  description: Annotate the API with API Evangelist enrichment metadata.
+  update:
+    x-api-evangelist:
+      auth: HTTP Bearer API key (vl_ prefix), org-scoped
+      pagination: cursor (limit + cursor -> items + nextCursor)
+      error_envelope: '{error, code} custom JSON (not RFC 9457)'
+      rate_limit_signal: HTTP 429 + Retry-After
+      webhooks: HMAC-SHA256 signed (X-VectorLay-Signature), 9 lifecycle events
+      mcp_server: orl mcp serve (official, stdio)
+      inference_api: OpenAI-compatible at https://inference.openrelay.inc/v1
+- target: $.info
+  description: Record documented status and changelog surfaces.
+  update:
+    x-status-page: https://openrelay.inc/status
+    x-changelog: https://openrelay.inc/changelog
+    x-docs: https://docs.openrelay.inc
+- target: $.servers
+  description: Note the production and beta control-plane hosts.
+  update:
+    x-primary-host: https://api.openrelay.inc
+    x-beta-host: https://api.beta.openrelay.inc

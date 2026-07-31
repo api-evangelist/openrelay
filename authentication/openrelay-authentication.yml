@@ -1,0 +1,25 @@
+generated: '2026-07-20'
+method: searched
+source: openapi/openrelay-openapi.json
+docs: https://docs.openrelay.inc/docs/authentication
+summary:
+  types:
+  - http
+  notes: >-
+    Single auth model. Every control-plane request is authenticated with an
+    OpenRelay API key (prefix `vl_`) sent as an HTTP Bearer token. Keys are
+    org-scoped and created in the dashboard under Settings -> API Keys; the
+    plaintext is shown once. The Inference API additionally accepts the same
+    key via an `x-api-key` header for OpenAI-SDK compatibility. No OAuth2 /
+    OIDC flows are offered.
+schemes:
+- name: apiKey
+  type: http
+  scheme: bearer
+  key_prefix: vl_
+  description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
+  alt_header: x-api-key (Inference API only)
+  docs: https://docs.openrelay.inc/docs/authentication
+  sources:
+  - openapi/openrelay-openapi.json
+  - https://docs.openrelay.inc/docs/authentication

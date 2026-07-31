@@ -1,0 +1,32 @@
+generated: '2026-07-20'
+method: probed
+source: live HTTP probes of OpenRelay hosts
+notes: >-
+  Probed the standard well-known and discovery paths across all OpenRelay hosts.
+  No well-known documents are published. api.openrelay.inc returns 401 for these
+  paths (auth-gated catch-all), the other hosts return 404. Absence is valid data.
+probes:
+- host: openrelay.inc
+  paths:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+- host: api.openrelay.inc
+  paths:
+  - {path: /.well-known/security.txt, status: 401}
+  - {path: /.well-known/openid-configuration, status: 401}
+  - {path: /.well-known/oauth-authorization-server, status: 401}
+  - {path: /.well-known/api-catalog, status: 401}
+  - {path: /.well-known/ai-plugin.json, status: 401}
+- host: docs.openrelay.inc
+  paths:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+- host: inference.openrelay.inc
+  paths:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+files: []

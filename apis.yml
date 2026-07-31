@@ -1,22 +1,395 @@
 aid: openrelay
-name: Openrelay
-description: Openrelay is a company surfaced as a portfolio company of y-combinator and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+name: OpenRelay
+description: >-
+  OpenRelay is a Y Combinator-backed distributed GPU cloud for production AI
+  inference — "the CDN of inference." It runs a global mesh of GPUs (RTX 4090/5090,
+  A100, H100) that teams reach through a single API: rent dedicated GPU VMs with
+  SSH and persistent volumes, stand up autoscaling inference clusters behind an
+  endpoint, or call hosted open models via an OpenAI-compatible (and Anthropic
+  Messages-compatible) API. Anyone can also join as a provider and earn on idle
+  compute. The control-plane REST API (api.openrelay.inc) manages orgs, VMs,
+  clusters, snapshots, billing, usage, transfers, provider nodes, batches, files,
+  and webhooks, and is fully driveable from the first-party `orl` CLI — which also
+  ships an official MCP server for agents. Traffic reroutes across healthy nodes
+  in milliseconds, with pricing OpenRelay claims is up to 90% cheaper than the
+  hyperscalers.
 url: https://raw.githubusercontent.com/api-evangelist/openrelay/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - y-combinator
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profile
+x-tier-reason: enriched-from-live-api
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://openrelay.inc/og-image.png
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
-apis: []
+- GPU
+- Inference
+- AI
+- Machine Learning
+- Cloud Compute
+- Infrastructure
+- OpenAI-Compatible
+- GPU Cloud
+- LLM
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- name: OpenRelay Inference API
+  description: >-
+    OpenAI-compatible chat completions API (POST /v1/chat/completions) and, for supporting models, an
+    Anthropic-compatible Messages API (POST /v1/messages). Drop-in: point the official OpenAI SDKs at
+    the base URL with an OpenRelay key. Also offers an asynchronous Batch API over JSONL files.
+  humanURL: https://docs.openrelay.inc/docs/inference
+  baseURL: https://inference.openrelay.inc/v1
+  tags:
+  - Inference
+  - OpenAI-Compatible
+  - LLM
+  properties:
+  - type: Documentation
+    url: https://docs.openrelay.inc/docs/inference
+  - type: GettingStarted
+    url: https://docs.openrelay.inc/docs/inference/quickstart
+- aid: openrelay:openrelay-account-api
+  name: OpenRelay Account API
+  description: 'The signed-in user: profile, memberships, and first-time onboarding.'
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-account-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-api-keys-api
+  name: OpenRelay API Keys API
+  description: Programmatic access keys (vl_…) used to authenticate with this API.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - API Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-api-keys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-batches-api
+  name: OpenRelay Batches API
+  description: >-
+    Batch inference jobs: submit a JSONL file of requests, poll status, and download results at a discounted
+    rate. Served by the inference endpoint (inference.openrelay.inc). Batch access is enabled per organization;
+    without it these endpoints return 404.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Batches
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-batches-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-billing-api
+  name: OpenRelay Billing API
+  description: Prepaid balance, saved cards, deposits, and auto-recharge.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-billing-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-catalog-api
+  name: OpenRelay Catalog API
+  description: 'Public catalog: GPU models, availability, pricing, templates, and locations.'
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Catalog
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-catalog-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-clusters-api
+  name: OpenRelay Clusters API
+  description: Autoscaling inference clusters that serve a container image behind an endpoint.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Clusters
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-clusters-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-files-api
+  name: OpenRelay Files API
+  description: >-
+    Input and result files for the Batch API (JSONL, up to 200 MB and 50,000 records). Served by the inference
+    endpoint (inference.openrelay.inc).
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-files-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-internal-api
+  name: OpenRelay Internal API
+  description: >-
+    Machine-to-machine endpoints used by platform infrastructure. Not part of the public API.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Internal
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-internal-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-organizations-api
+  name: OpenRelay Organizations API
+  description: Organizations and their members. Most resources are scoped to an org.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-provider-api
+  name: OpenRelay Provider API
+  description: 'For GPU providers: applications, nodes, provisioning tokens, and earnings.'
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Provider
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-provider-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-registry-credentials-api
+  name: OpenRelay Registry Credentials API
+  description: Private container-registry credentials for pulling images.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Registry Credentials
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-registry-credentials-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-runners-api
+  name: OpenRelay Runners API
+  description: Managed GitHub Actions runner pools.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Runners
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-runners-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-snapshots-api
+  name: OpenRelay Snapshots API
+  description: Point-in-time VM snapshots and forking new VMs from them.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Snapshots
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-snapshots-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-ssh-keys-api
+  name: OpenRelay SSH Keys API
+  description: Org-level SSH public keys that can be attached to VMs.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - SSH Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-ssh-keys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-transfers-api
+  name: OpenRelay Transfers API
+  description: Move resources between organizations you belong to.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-transfers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-usage-api
+  name: OpenRelay Usage API
+  description: Current-period usage and cost breakdowns.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-usage-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-vms-api
+  name: OpenRelay VMs API
+  description: 'GPU virtual machines: lifecycle, disks, SSH access, and console links.'
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - VMs
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-vms-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-webhooks-api
+  name: OpenRelay Webhooks API
+  description: Subscribe to platform events with signed HTTP callbacks.
+  humanURL: https://docs.openrelay.inc
+  baseURL: https://api.openrelay.inc
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+common:
+- type: DeveloperPortal
+  url: https://app.openrelay.inc
+- type: Documentation
+  url: https://docs.openrelay.inc
+- type: APIReference
+  url: https://docs.openrelay.inc/docs/account/overview
+- type: GettingStarted
+  url: https://docs.openrelay.inc/docs/quickstart
+- type: SignUp
+  url: https://app.openrelay.inc/get-started
+- type: Pricing
+  url: https://openrelay.inc/pricing
+- type: Blog
+  url: https://openrelay.inc/blog
+- type: Support
+  url: https://forum.openrelay.inc
+- type: GitHubOrganization
+  url: https://github.com/OpenRelayInc
+- type: StatusPage
+  url: https://openrelay.inc/status
+- type: ChangeLog
+  url: changelog/openrelay-changelog.yml
+- type: TermsOfService
+  url: https://openrelay.inc/terms
+- type: PrivacyPolicy
+  url: https://openrelay.inc/privacy
+- type: Authentication
+  url: authentication/openrelay-authentication.yml
+- type: DomainSecurity
+  url: security/openrelay-domain-security.yml
+- type: VulnerabilityDisclosure
+  url: security/openrelay-vulnerability-disclosure.yml
+- type: Security
+  url: security/openrelay-vulnerability-disclosure.yml
+- type: Compliance
+  url: conformance/openrelay-conformance.yml
+- type: Conformance
+  url: conformance/openrelay-conformance.yml
+- type: WellKnown
+  url: well-known/openrelay-well-known.yml
+- type: MCPServer
+  url: mcp/openrelay-mcp.yml
+- type: LLMsTxt
+  url: llms/openrelay-llms.txt
+- type: CLI
+  url: cli/openrelay-cli.yml
+- type: Packages
+  url: packages/openrelay-packages.yml
+- type: Lifecycle
+  url: lifecycle/openrelay-lifecycle.yml
+- type: Conventions
+  url: conventions/openrelay-conventions.yml
+- type: ErrorCatalog
+  url: errors/openrelay-problem-types.yml
+- type: DataModel
+  url: data-model/openrelay-data-model.yml
+- type: Webhooks
+  url: asyncapi/openrelay-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 18
+  pass: local-v1

@@ -1,0 +1,46 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.openrelay.inc/docs/webhooks/overview
+type: Webhooks
+description: >-
+  OpenRelay sends signed, automatically-retried HTTP callbacks when cluster,
+  replica, and VM lifecycle events happen in an organization. No AsyncAPI
+  document is published; this is the documented webhook catalog.
+asyncapi_spec: none-published
+delivery:
+  transport: HTTPS POST to a subscriber URL
+  management_operations:
+  - createOrgWebhook
+  - listOrgWebhooks
+  - updateOrgWebhook
+  - toggleOrgWebhook
+  - deleteOrgWebhook
+  - regenerateOrgWebhookSecret
+  - listOrgWebhookDeliveries
+signing:
+  header: X-VectorLay-Signature
+  algorithm: HMAC-SHA256
+  scheme: 'sha256=<hex(HMAC_SHA256(key, rawBody))>, key = SHA-256(webhook secret)'
+  verification: constant-time comparison over the raw request body before parsing
+  additional_headers:
+  - X-VectorLay-Event (event type)
+  - X-VectorLay-Delivery (unique delivery attempt id, for dedup)
+retry:
+  attempts: 3
+  backoff: ~10s, 60s, 300s (exponential)
+payload_envelope:
+  id: event identifier
+  type: event name (e.g. cluster.running)
+  created_at: ISO 8601 timestamp
+  data: event-specific object
+events:
+- cluster.running
+- cluster.degraded
+- cluster.failed
+- replica.healthy
+- replica.unhealthy
+- replica.terminated
+- vm.running
+- vm.stopped
+- vm.terminated
+docs: https://docs.openrelay.inc/docs/webhooks/overview

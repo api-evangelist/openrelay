@@ -1,0 +1,79 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/openrelay-openapi.json
+description: >-
+  Entity-relationship graph derived from the OpenRelay control-plane OpenAPI
+  path structure and id-reference fields. The Organization is the primary
+  tenancy boundary; nearly every resource is org-scoped.
+entities:
+- name: User
+  key: caller principal (via API key or session)
+  relationships:
+  - {type: has_many, target: Organization, via: memberships}
+- name: Organization
+  key: orgId
+  relationships:
+  - {type: has_many, target: Member, via: orgId}
+  - {type: has_many, target: ApiKey, via: orgId}
+  - {type: has_many, target: SshKey, via: orgId}
+  - {type: has_many, target: RegistryCredential, via: orgId}
+  - {type: has_many, target: Vm, via: orgId}
+  - {type: has_many, target: Cluster, via: orgId}
+  - {type: has_many, target: Snapshot, via: orgId}
+  - {type: has_many, target: Webhook, via: orgId}
+  - {type: has_many, target: RunnerPool, via: orgId}
+  - {type: has_one, target: Billing, via: orgId}
+  - {type: has_many, target: Transfer, via: orgId}
+  - {type: has_one, target: ProviderProfile, via: orgId}
+- name: Vm
+  key: id
+  relationships:
+  - {type: belongs_to, target: Organization, via: orgId}
+  - {type: has_many, target: Snapshot, via: vmId}
+  - {type: has_many, target: SshKey, via: attached}
+  - {type: belongs_to, target: GpuModel, via: catalog}
+- name: Cluster
+  key: id
+  relationships:
+  - {type: belongs_to, target: Organization, via: orgId}
+  - {type: has_many, target: Replica, via: cluster}
+- name: Snapshot
+  key: id
+  relationships:
+  - {type: belongs_to, target: Vm, via: vmId}
+  - {type: belongs_to, target: Organization, via: orgId}
+- name: Webhook
+  key: id
+  relationships:
+  - {type: belongs_to, target: Organization, via: orgId}
+  - {type: has_many, target: WebhookDelivery, via: webhook}
+- name: Batch
+  key: id
+  relationships:
+  - {type: belongs_to, target: File, via: input_file}
+- name: File
+  key: id
+  relationships:
+  - {type: belongs_to, target: Organization, via: orgId}
+- name: RunnerPool
+  key: id
+  relationships:
+  - {type: belongs_to, target: Organization, via: orgId}
+  - {type: has_many, target: RunnerJob, via: pool}
+- name: ProviderProfile
+  key: orgId
+  relationships:
+  - {type: has_many, target: ProviderNode, via: provider}
+  - {type: has_many, target: ProvisioningToken, via: provider}
+- name: Transfer
+  key: id
+  relationships:
+  - {type: belongs_to, target: Organization, via: source/target orgId}
+catalog_reference_entities:
+- GpuModel
+- Location
+- VmTemplate
+- Pricing
+notes: >-
+  Catalog entities (gpu-models, locations, vm-templates, pricing) are global
+  read-only references, not org-scoped.

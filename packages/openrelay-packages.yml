@@ -1,0 +1,35 @@
+generated: '2026-07-20'
+method: searched
+source:
+- https://github.com/OpenRelayInc/orl
+- https://docs.openrelay.inc/docs/cli
+- npm/PyPI registry searches
+notes: >-
+  OpenRelay ships one first-party distributable: the `orl` CLI binary (Go),
+  distributed via a Homebrew tap, deb/rpm packages, and GitHub release archives.
+  No first-party language SDK is published — the OpenAI-compatible Inference API
+  is consumed with the official OpenAI Python/Node SDKs (third-party). npm/PyPI
+  packages named "openrelay" belong to unrelated projects (0x/Ethereum relayer,
+  lacasoft payment network) and are NOT first-party.
+packages:
+- name: orl
+  official: true
+  type: cli
+  language: go
+  registries:
+    homebrew: openrelayinc/tap/orl
+    github_releases: https://github.com/OpenRelayInc/orl/releases
+    debian_rpm: true
+  repo: https://github.com/OpenRelayInc/orl
+  install: brew install openrelayinc/tap/orl
+third_party_client_libraries:
+- name: OpenAI Python SDK
+  official: false
+  usage: Inference API is OpenAI-compatible; set base_url=https://inference.openrelay.inc/v1
+- name: OpenAI Node SDK
+  official: false
+  usage: Same OpenAI-compatible base_url swap for the Inference API.
+excluded_false_matches:
+- 'npm @openrelay/* (0x/Ethereum relayer lit-elements) — unrelated'
+- 'npm @lacasoft/openrelay-sdk, PyPI openrelay (lacasoft "open payment network") — unrelated'
+- 'npm @openrelayai/connector (openrelay-dev) — unrelated'
