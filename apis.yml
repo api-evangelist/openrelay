@@ -328,6 +328,8 @@ apis:
   - type: APIReference
     url: https://docs.openrelay.inc/docs/account/overview
 common:
+- type: Overlay
+  url: overlays/openrelay-openapi-overlay.yaml
 - type: DeveloperPortal
   url: https://app.openrelay.inc
 - type: Documentation
