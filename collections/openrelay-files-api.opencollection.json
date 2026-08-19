@@ -1,0 +1,133 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenRelay Account Files API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Files",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload a JSONL input file for the Batch API",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/files",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "purpose",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send multipart/form-data with a `file` part (the JSONL bytes, up to 200 MB and 50,000 records) and a `purpose` field set to `batch`. Each line is one request object; the returned file id goes in `input_file_id` when creating a batch.\n"
+        },
+        {
+          "info": {
+            "name": "Mint a signed URL for a direct JSONL upload",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/files/presign",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "For browser clients that upload the file straight to storage instead of through the API: returns a file id and a signed PUT URL (valid 15 minutes). After the PUT succeeds, register the file with the complete call. CLI and SDK clients should use the plain upload instead.\n"
+        },
+        {
+          "info": {
+            "name": "Get a file's metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/files/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a file's metadata"
+        },
+        {
+          "info": {
+            "name": "Register a presigned upload after the PUT succeeds",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/files/:id/complete",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Validates the uploaded object (size, line count) and registers it as a batch input file. Idempotent; completing an already-registered id returns the existing file.\n"
+        },
+        {
+          "info": {
+            "name": "Download a file's raw JSONL content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/files/:id/content",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Streams the file bytes. Use it to fetch batch results: the batch object's output_file_id (successful records) and error_file_id (failed records) each point at a JSONL file of `{custom_id, response | error}` lines.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

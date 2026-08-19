@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenRelay Account Batches API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Batches",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List batches, newest first",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/batches",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Page size, 1-100 (default 20)."
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "A batch id; returns batches submitted after it (use the previous page's last_id)."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List batches, newest first"
+        },
+        {
+          "info": {
+            "name": "Create a batch inference job",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/batches",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submit a batch from an uploaded input file (input_file_id) or inline request objects (requests); provide exactly one of the two. The batch completes within the 24h window at a discounted rate; poll it with get, then download results via the output and error file ids.\n"
+        },
+        {
+          "info": {
+            "name": "Get a batch by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/batches/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a batch by id"
+        },
+        {
+          "info": {
+            "name": "Cancel a running batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/batches/:id/cancel",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "In-flight records finish, unstarted records are skipped, and partial results are written; the batch settles to cancelled within a few minutes. Completed work is billed. Batches already in a terminal state return 409.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

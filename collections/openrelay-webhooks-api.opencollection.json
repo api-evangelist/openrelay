@@ -1,0 +1,214 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenRelay Account Webhooks API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List an org's webhooks (no secrets)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/webhooks",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List an org's webhooks (no secrets)"
+        },
+        {
+          "info": {
+            "name": "Create a webhook (returns the signing secret once)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/webhooks/create",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a webhook (returns the signing secret once)"
+        },
+        {
+          "info": {
+            "name": "Update a webhook (name/url/events)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/webhooks/:id",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a webhook (name/url/events)"
+        },
+        {
+          "info": {
+            "name": "Delete a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/webhooks/:id",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a webhook"
+        },
+        {
+          "info": {
+            "name": "Recent delivery attempts for a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/webhooks/:id/deliveries",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Recent delivery attempts for a webhook"
+        },
+        {
+          "info": {
+            "name": "Regenerate a webhook's signing secret (returned once)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/webhooks/:id/regenerate-secret",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Regenerate a webhook's signing secret (returned once)"
+        },
+        {
+          "info": {
+            "name": "Enable/disable a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/webhooks/:id/toggle",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Enable/disable a webhook"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

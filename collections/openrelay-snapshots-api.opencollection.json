@@ -1,0 +1,119 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenRelay Account Snapshots API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Snapshots",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List an org's VM snapshots (optionally filtered by source VM)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/snapshots",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "vmId",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List an org's VM snapshots (optionally filtered by source VM)"
+        },
+        {
+          "info": {
+            "name": "Fork a new VM from a snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/vms/fork",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fork a new VM from a snapshot"
+        },
+        {
+          "info": {
+            "name": "Soft-delete a snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.openrelay.inc/v1/snapshots/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete a snapshot"
+        },
+        {
+          "info": {
+            "name": "Create a snapshot of a VM",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/vms/:id/snapshots",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Beta: the snapshot record is created, but snapshot capture is not yet enabled on the data plane."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

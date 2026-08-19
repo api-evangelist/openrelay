@@ -1,0 +1,1267 @@
+{
+  "item": [
+    {
+      "id": "7e413d06-e37d-4a82-8a5d-5e3ac000b979",
+      "name": "Batches",
+      "description": {
+        "content": "Batch inference jobs: submit a JSONL file of requests, poll status, and download results at a discounted rate. Served by the inference endpoint (inference.openrelay.inc). Batch access is enabled per organization; without it these endpoints return 404.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e6e5b21f-78ed-4c1c-a8fd-bcad8f18b05f",
+          "name": "List batches, newest first",
+          "request": {
+            "name": "List batches, newest first",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "batches"
+              ],
+              "host": [
+                "{{v1-batches-Url}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Page size, 1-100 (default 20)."
+                },
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<string>",
+                  "description": "A batch id; returns batches submitted after it (use the previous page's last_id)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d2848914-bb82-49e4-bb9c-cc7bd54befef",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"object\": \"batch\",\n      \"endpoint\": \"string\",\n      \"input_file_id\": \"string\",\n      \"completion_window\": \"24h\",\n      \"status\": \"expired\",\n      \"created_at\": 5806,\n      \"request_counts\": {\n        \"total\": 6986,\n        \"completed\": 8758,\n        \"failed\": 7674\n      },\n      \"cancelled_at\": 3084,\n      \"completed_at\": 6218,\n      \"error_file_id\": \"string\",\n      \"expired_at\": 9923,\n      \"expires_at\": 4394,\n      \"failed_at\": 2835,\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\",\n        \"key_2\": \"string\"\n      },\n      \"model\": \"string\",\n      \"output_file_id\": \"string\",\n      \"usage\": {\n        \"input_tokens\": 5549,\n        \"output_tokens\": 1770,\n        \"cost_nano_usd\": 2783\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"object\": \"batch\",\n      \"endpoint\": \"string\",\n      \"input_file_id\": \"string\",\n      \"completion_window\": \"24h\",\n      \"status\": \"finalizing\",\n      \"created_at\": 8325,\n      \"request_counts\": {\n        \"total\": 4960,\n        \"completed\": 1124,\n        \"failed\": 6827\n      },\n      \"cancelled_at\": 5894,\n      \"completed_at\": 512,\n      \"error_file_id\": \"string\",\n      \"expired_at\": 8341,\n      \"expires_at\": 9995,\n      \"failed_at\": 3725,\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\"\n      },\n      \"model\": \"string\",\n      \"output_file_id\": \"string\",\n      \"usage\": {\n        \"input_tokens\": 4339,\n        \"output_tokens\": 3041,\n        \"cost_nano_usd\": 3663\n      }\n    }\n  ],\n  \"has_more\": false,\n  \"first_id\": \"string\",\n  \"last_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4d0f2fa7-ce99-46a7-b2c7-8fc210daf760",
+              "name": "The request is invalid",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5ff115b0-359f-48e4-ac8e-65cce1fd8a81",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f5f85e7b-d888-4b89-b337-37cb34f90275",
+              "name": "Not found (also returned when the organization does not have Batch API access)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "402a57c3-022e-400b-b235-36853f61b15e",
+          "name": "Create a batch inference job",
+          "request": {
+            "name": "Create a batch inference job",
+            "description": {
+              "content": "Submit a batch from an uploaded input file (input_file_id) or inline request objects (requests); provide exactly one of the two. The batch completes within the 24h window at a discounted rate; poll it with get, then download results via the output and error file ids.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "batches"
+              ],
+              "host": [
+                "{{v1-batches-Url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"endpoint\": \"<string>\",\n  \"completion_window\": \"<string>\",\n  \"input_file_id\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": \"<string>\"\n  },\n  \"model\": \"<string>\",\n  \"requests\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "745677ea-8658-409a-9470-8097a1318bf0",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"endpoint\": \"<string>\",\n  \"completion_window\": \"<string>\",\n  \"input_file_id\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"model\": \"<string>\",\n  \"requests\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"object\": \"batch\",\n  \"endpoint\": \"string\",\n  \"input_file_id\": \"string\",\n  \"completion_window\": \"24h\",\n  \"status\": \"in_progress\",\n  \"created_at\": 4445,\n  \"request_counts\": {\n    \"total\": 3012,\n    \"completed\": 3048,\n    \"failed\": 7593\n  },\n  \"cancelled_at\": 2532,\n  \"completed_at\": 8637,\n  \"error_file_id\": \"string\",\n  \"expired_at\": 2527,\n  \"expires_at\": 3861,\n  \"failed_at\": 5145,\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"model\": \"string\",\n  \"output_file_id\": \"string\",\n  \"usage\": {\n    \"input_tokens\": 7201,\n    \"output_tokens\": 2299,\n    \"cost_nano_usd\": 8236\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3b11daf0-cad7-42a0-a0bb-efcb93ee0e1d",
+              "name": "The request is invalid",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"endpoint\": \"<string>\",\n  \"completion_window\": \"<string>\",\n  \"input_file_id\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"model\": \"<string>\",\n  \"requests\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5da46906-223a-4203-833f-21ed2a3ce4c2",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"endpoint\": \"<string>\",\n  \"completion_window\": \"<string>\",\n  \"input_file_id\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"model\": \"<string>\",\n  \"requests\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a1aef519-f142-4f10-b720-b19712ce1326",
+              "name": "Not found (also returned when the organization does not have Batch API access)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"endpoint\": \"<string>\",\n  \"completion_window\": \"<string>\",\n  \"input_file_id\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"model\": \"<string>\",\n  \"requests\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "658d27c0-1599-4c57-acd5-7c623bf59ecd",
+              "name": "The upload exceeds the 200 MB limit",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"endpoint\": \"<string>\",\n  \"completion_window\": \"<string>\",\n  \"input_file_id\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"model\": \"<string>\",\n  \"requests\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Request Entity Too Large",
+              "code": 413,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6be1c230-18eb-4aeb-821c-63309b470007",
+              "name": "Too many concurrent uploads; retry shortly",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"endpoint\": \"<string>\",\n  \"completion_window\": \"<string>\",\n  \"input_file_id\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"model\": \"<string>\",\n  \"requests\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "39ef5d6c-8ec8-44ff-898a-5644bfe968be",
+              "name": "The action could not be dispatched; retry",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches"
+                  ],
+                  "host": [
+                    "{{v1-batches-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"endpoint\": \"<string>\",\n  \"completion_window\": \"<string>\",\n  \"input_file_id\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"model\": \"<string>\",\n  \"requests\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f7b2bc7b-6982-4825-b4d9-c53eaec4be57",
+          "name": "Get a batch by id",
+          "request": {
+            "name": "Get a batch by id",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "batches",
+                ":id"
+              ],
+              "host": [
+                "{{v1-batches-id-Url}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ea737e89-aa26-42a3-9418-49556098bec1",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{v1-batches-id-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"object\": \"batch\",\n  \"endpoint\": \"string\",\n  \"input_file_id\": \"string\",\n  \"completion_window\": \"24h\",\n  \"status\": \"in_progress\",\n  \"created_at\": 4445,\n  \"request_counts\": {\n    \"total\": 3012,\n    \"completed\": 3048,\n    \"failed\": 7593\n  },\n  \"cancelled_at\": 2532,\n  \"completed_at\": 8637,\n  \"error_file_id\": \"string\",\n  \"expired_at\": 2527,\n  \"expires_at\": 3861,\n  \"failed_at\": 5145,\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"model\": \"string\",\n  \"output_file_id\": \"string\",\n  \"usage\": {\n    \"input_tokens\": 7201,\n    \"output_tokens\": 2299,\n    \"cost_nano_usd\": 8236\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "482a3535-1759-4d6d-8e7a-d59eaa0936c7",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{v1-batches-id-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c4461b0a-7814-46d7-a3e1-62a60e3b3ff9",
+              "name": "Not found (also returned when the organization does not have Batch API access)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{v1-batches-id-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7272db17-f86c-44c1-9ce3-47665ac4661e",
+          "name": "Cancel a running batch",
+          "request": {
+            "name": "Cancel a running batch",
+            "description": {
+              "content": "In-flight records finish, unstarted records are skipped, and partial results are written; the batch settles to cancelled within a few minutes. Completed work is billed. Batches already in a terminal state return 409.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "batches",
+                ":id",
+                "cancel"
+              ],
+              "host": [
+                "{{v1-batches-id-cancel-Url}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "363e7ac4-7619-43ba-a7e2-5aa255d04243",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches",
+                    ":id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{v1-batches-id-cancel-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"object\": \"batch\",\n  \"endpoint\": \"string\",\n  \"input_file_id\": \"string\",\n  \"completion_window\": \"24h\",\n  \"status\": \"in_progress\",\n  \"created_at\": 4445,\n  \"request_counts\": {\n    \"total\": 3012,\n    \"completed\": 3048,\n    \"failed\": 7593\n  },\n  \"cancelled_at\": 2532,\n  \"completed_at\": 8637,\n  \"error_file_id\": \"string\",\n  \"expired_at\": 2527,\n  \"expires_at\": 3861,\n  \"failed_at\": 5145,\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"model\": \"string\",\n  \"output_file_id\": \"string\",\n  \"usage\": {\n    \"input_tokens\": 7201,\n    \"output_tokens\": 2299,\n    \"cost_nano_usd\": 8236\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "584a27b3-b2e9-4674-be13-03d22094bdc3",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches",
+                    ":id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{v1-batches-id-cancel-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2fc1f8bd-bca6-45dd-9a4a-ab6665247176",
+              "name": "Not found (also returned when the organization does not have Batch API access)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches",
+                    ":id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{v1-batches-id-cancel-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "57ba3504-9c26-4748-8938-db63859d3367",
+              "name": "The resource is in a state that rejects this action",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches",
+                    ":id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{v1-batches-id-cancel-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "11d45c58-2b24-4308-b9d7-c683227ab7d2",
+              "name": "The action could not be dispatched; retry",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "batches",
+                    ":id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{v1-batches-id-cancel-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"type\": \"string\",\n    \"code\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.openrelay.inc",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "https://inference.openrelay.inc",
+      "key": "v1-batches-Url"
+    },
+    {
+      "type": "string",
+      "value": "https://inference.openrelay.inc",
+      "key": "v1-batches-id-Url"
+    },
+    {
+      "type": "string",
+      "value": "https://inference.openrelay.inc",
+      "key": "v1-batches-id-cancel-Url"
+    }
+  ],
+  "info": {
+    "_postman_id": "4a1bead3-b80a-4bfe-b667-a74ec41746de",
+    "name": "OpenRelay Account Batches API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.\n",
+      "type": "text/plain"
+    }
+  }
+}

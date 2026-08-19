@@ -1,0 +1,195 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenRelay Account Transfers API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Transfers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initiate a resource transfer to another org (owner/admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/transfers",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Initiate a resource transfer to another org (owner/admin)"
+        },
+        {
+          "info": {
+            "name": "Pending incoming transfers (enriched)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/transfers/incoming",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Pending incoming transfers (enriched)"
+        },
+        {
+          "info": {
+            "name": "Outgoing transfers, all statuses (enriched)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/transfers/outgoing",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Outgoing transfers, all statuses (enriched)"
+        },
+        {
+          "info": {
+            "name": "Count of pending incoming transfers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/transfers/pending-count",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Count of pending incoming transfers"
+        },
+        {
+          "info": {
+            "name": "Orgs the caller belongs to (for the transfer target dropdown)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/transfers/target-orgs",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Orgs the caller belongs to (for the transfer target dropdown)"
+        },
+        {
+          "info": {
+            "name": "Accept a pending incoming transfer (target org owner/admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/transfers/:id/accept",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Accept a pending incoming transfer (target org owner/admin)"
+        },
+        {
+          "info": {
+            "name": "Cancel a pending outgoing transfer (source org)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/transfers/:id/cancel",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Cancel a pending outgoing transfer (source org)"
+        },
+        {
+          "info": {
+            "name": "Reject a pending incoming transfer (target org owner/admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/transfers/:id/reject",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Reject a pending incoming transfer (target org owner/admin)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

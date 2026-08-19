@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenRelay Account Internal API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Internal",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Liveness probe (no auth)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/health"
+          },
+          "docs": "Liveness probe (no auth)"
+        },
+        {
+          "info": {
+            "name": "Self-enroll a node using a provisioning token (no API key)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/nodes/enroll",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Self-enroll a node using a provisioning token (no API key)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

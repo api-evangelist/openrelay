@@ -1,0 +1,145 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenRelay Account API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Current user profile and org memberships",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/me",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the signed-in user's profile and organization memberships. Requires a dashboard session token; API keys cannot call this endpoint."
+        },
+        {
+          "info": {
+            "name": "Pending org invites addressed to the signed-in user's email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/me/invites",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns unexpired pending invites whose invited email matches the session's email. Requires a dashboard session token; API keys are org service accounts and cannot hold or accept invites."
+        },
+        {
+          "info": {
+            "name": "Accept a pending org invite (session only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/me/invites/:orgId/accept",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates the membership for the invite addressed to the session's email in the given org, then consumes the invite. This is the only way an invite becomes a membership: the invitee must be authenticated with the invited email and act explicitly."
+        },
+        {
+          "info": {
+            "name": "Decline a pending org invite (session only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/me/invites/:orgId/decline",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Decline a pending org invite (session only)"
+        },
+        {
+          "info": {
+            "name": "Update the caller's profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.openrelay.inc/v1/me/profile",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Requires a signed-in dashboard session token; API keys cannot call this endpoint."
+        },
+        {
+          "info": {
+            "name": "Create the caller's profile and first org (idempotent)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/onboarding/bootstrap",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Requires a signed-in dashboard session token; API keys cannot call this endpoint."
+        },
+        {
+          "info": {
+            "name": "The current principal and the org it acts in",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/whoami",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the calling principal (API key or user session) and the organization the request acts in. For an API key that org is fixed by the key; for a session it is the active org, and availableOrgs lists every org the user belongs to. Unlike /v1/me this works for API keys and does not onboard."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

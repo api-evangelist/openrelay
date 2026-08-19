@@ -1,0 +1,284 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenRelay Account Provider API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Provider",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Submit a provider application",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/provider/apply",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submit a provider application"
+        },
+        {
+          "info": {
+            "name": "Provider earnings from usage records (+ payout history)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/provider/earnings",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Provider earnings from usage records (+ payout history)"
+        },
+        {
+          "info": {
+            "name": "List the provider org's nodes (with GPUs + location)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/provider/nodes",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "includeRemoved",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter to one status (online|offline|maintenance|draining|removed)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the provider org's nodes (with GPUs + location)"
+        },
+        {
+          "info": {
+            "name": "Set a node's operator lifecycle status (drain / maintenance / remove / online)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/provider/nodes/:nodeId",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "nodeId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Set a node's operator lifecycle status (drain / maintenance / remove / online)"
+        },
+        {
+          "info": {
+            "name": "Provider node + token stats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/provider/stats",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Provider node + token stats"
+        },
+        {
+          "info": {
+            "name": "Provider status (isProvider + application status)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/provider/status",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Provider status (isProvider + application status)"
+        },
+        {
+          "info": {
+            "name": "List the org's provisioning tokens (provider only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/provider/tokens",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the org's provisioning tokens (provider only)"
+        },
+        {
+          "info": {
+            "name": "Generate a one-time provisioning token (owner/admin, provider only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/provider/tokens",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate a one-time provisioning token (owner/admin, provider only)"
+        },
+        {
+          "info": {
+            "name": "Revoke a provisioning token (owner/admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.openrelay.inc/v1/orgs/:orgId/provider/tokens/:id",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke a provisioning token (owner/admin)"
+        },
+        {
+          "info": {
+            "name": "One-command node onboarding installer (auth = org API key bearer, OR a pre-minted provisioning token via ?token=)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.openrelay.inc/v1/provider/bootstrap",
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Pre-minted provisioning token (vtk_…); replaces bearer auth"
+              },
+              {
+                "name": "gpu",
+                "value": "",
+                "type": "query",
+                "description": "Truthy → run the GPU passthrough (IOMMU + vfio-pci) setup. Safe on CPU-only hosts (self-skips when no GPU is present)."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Token label; mint path only"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns a self-contained shell installer (curl | sudo bash). With a bearer org API key it mints a fresh single-use provisioning token; with ?token=vtk_… (e.g. minted from the dashboard) it self-auths and embeds that token instead. name only applies when minting (the token already carries it). Nodes always enroll as QEMU VM hosts in the community pool.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
