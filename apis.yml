@@ -40,6 +40,17 @@ tags:
 - Company
 - GPU
 - Inference
+- Artificial Intelligence
+- Machine-Learning
+- Cloud Compute
+- Infrastructure
+- OpenAI-Compatible
+- GPU Cloud
+- LLM
+tags_raw:
+- Company
+- GPU
+- Inference
 - AI
 - Machine Learning
 - Cloud Compute
@@ -89,6 +100,8 @@ apis:
   humanURL: https://docs.openrelay.inc
   baseURL: https://api.openrelay.inc
   tags:
+  - APIKeys
+  tags_raw:
   - API Keys
   properties:
   - type: OpenAPI
@@ -148,6 +161,8 @@ apis:
   humanURL: https://docs.openrelay.inc
   baseURL: https://api.openrelay.inc
   tags:
+  - Cluster
+  tags_raw:
   - Clusters
   properties:
   - type: OpenAPI
@@ -164,6 +179,8 @@ apis:
   humanURL: https://docs.openrelay.inc
   baseURL: https://api.openrelay.inc
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
@@ -193,6 +210,8 @@ apis:
   humanURL: https://docs.openrelay.inc
   baseURL: https://api.openrelay.inc
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -319,6 +338,8 @@ apis:
   humanURL: https://docs.openrelay.inc
   baseURL: https://api.openrelay.inc
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
