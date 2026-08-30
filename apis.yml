@@ -361,6 +361,9 @@ apis:
   - type: APIReference
     url: https://docs.openrelay.inc/docs/account/overview
 common:
+- type: CapabilityMap
+  url: capabilities/openrelay-capability-edges.yml
+  name: OpenRelay Business Capability Map
 - type: Overlay
   url: overlays/openrelay-openapi-overlay.yaml
 - type: DeveloperPortal

@@ -1,0 +1,76 @@
+slug: openrelay
+provider: OpenRelay
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Electrical Components & Equipment
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 6
+edges:
+- tag: VMs
+  spec_file: openrelay-vms-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.78
+  evidence: POST /v1/orgs/{orgId}/vms/create  createVm  Create a VM; POST /v1/vms/{id}/reboot  rebootVm;
+    POST /v1/vms/{id}/resize-disk  Resize a stopped VM's disk
+  reason: Provisioning and lifecycle operation of GPU compute virtual machines and their disks — compute/cloud
+    infrastructure management.
+- tag: Billing
+  spec_file: openrelay-billing-api-openapi.yml
+  capability_id: BC-4250.40
+  capability_id_l1: BC-4250
+  capability_name: Payment Collection & Dunning
+  confidence: 0.75
+  evidence: POST /v1/orgs/{orgId}/billing/deposit  Charge the saved card to top up prepaid balance; GET
+    .../billing/payment-methods  List saved cards (brand/last4/exp only)
+  reason: Operations manage payment methods, card charging, prepaid balance and auto-recharge policy for
+    a usage-based cloud service — payment-method management and collection within subscription/usage billing.
+- tag: Clusters
+  spec_file: openrelay-clusters-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.72
+  evidence: POST /v1/orgs/{orgId}/clusters/create  Create a cluster; POST /v1/clusters/{id}/scale  Scale
+    a cluster's replica count
+  reason: Provisioning, scaling, stopping and terminating GPU compute clusters — cloud compute infrastructure
+    lifecycle, i.e. IT Infrastructure Management.
+- tag: Webhooks
+  spec_file: openrelay-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.72
+  evidence: POST /v1/orgs/{orgId}/webhooks/create  Create a webhook (returns the signing secret once);
+    listOrgWebhookDeliveries  Recent delivery attempts for a webhook
+  reason: Lifecycle of customer-facing outbound webhook subscriptions including event selection, signing
+    secrets and delivery attempt visibility — matches the explicit Webhook & Event Subscription Management
+    capability.
+- tag: Runners
+  spec_file: openrelay-runners-api-openapi.yml
+  capability_id: BC-4210.10
+  capability_id_l1: BC-4210
+  capability_name: Continuous Integration Management
+  confidence: 0.7
+  evidence: GET /v1/orgs/{orgId}/runner-pools/{id}/jobs  listRunnerJobs  List runner jobs for a pool;
+    getRunnerConnectUrl  GitHub connect URL
+  reason: Manages pools of self-hosted GitHub CI runners, their jobs, sizing and job metrics/cost — i.e.
+    build-pipeline execution capacity, which is Continuous Integration Management.
+- tag: Usage
+  spec_file: openrelay-usage-api-openapi.yml
+  capability_id: BC-4250.10
+  capability_id_l1: BC-4250
+  capability_name: Usage Metering
+  confidence: 0.7
+  evidence: GET /v1/orgs/{orgId}/usage/current  getCurrentUsage  Current-month usage (cents/hours + per
+    gpuModel-tier breakdown)
+  reason: Aggregated consumption metering per organization feeding charges — Usage Metering within subscription
+    billing/revenue management.
