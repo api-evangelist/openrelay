@@ -331,20 +331,6 @@ apis:
     url: https://docs.openrelay.inc
   - type: APIReference
     url: https://docs.openrelay.inc/docs/account/overview
-- aid: openrelay:openrelay-vms-api
-  name: OpenRelay VMs API
-  description: 'GPU virtual machines: lifecycle, disks, SSH access, and console links.'
-  humanURL: https://docs.openrelay.inc
-  baseURL: https://api.openrelay.inc
-  tags:
-  - VMs
-  properties:
-  - type: OpenAPI
-    url: openapi/openrelay-vms-api-openapi.yml
-  - type: Documentation
-    url: https://docs.openrelay.inc
-  - type: APIReference
-    url: https://docs.openrelay.inc/docs/account/overview
 - aid: openrelay:openrelay-webhooks-api
   name: OpenRelay Webhooks API
   description: Subscribe to platform events with signed HTTP callbacks.
@@ -357,6 +343,20 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/openrelay-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.openrelay.inc
+  - type: APIReference
+    url: https://docs.openrelay.inc/docs/account/overview
+- aid: openrelay:openrelay-vms-api
+  name: OpenRelay V Ms API
+  description: 'GPU virtual machines: lifecycle, disks, SSH access, and console links.'
+  humanURL: https://docs.openrelay.inc/docs/inference
+  baseURL: https://inference.openrelay.inc/v1
+  tags:
+  - VMs
+  properties:
+  - type: OpenAPI
+    url: openapi/openrelay-vms-api-openapi.yml
   - type: Documentation
     url: https://docs.openrelay.inc
   - type: APIReference
