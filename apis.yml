@@ -239,6 +239,8 @@ apis:
   humanURL: https://docs.openrelay.inc
   baseURL: https://api.openrelay.inc
   tags:
+  - Providers
+  tags_raw:
   - Provider
   properties:
   - type: OpenAPI
