@@ -364,6 +364,8 @@ apis:
   - type: APIReference
     url: https://docs.openrelay.inc/docs/account/overview
 common:
+- type: Plans
+  url: plans/openrelay-plans-pricing.yml
 - type: Website
   url: https://www.openrelay.inc/
 - type: CapabilityMap
