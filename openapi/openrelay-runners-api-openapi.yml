@@ -1,9 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
-
-    '
-  title: OpenRelay Account Runners API
+  description: The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+  title: OpenRelay Runners API
   version: 0.1.0
 servers:
 - description: Production
@@ -318,12 +316,14 @@ paths:
       - Runners
 components:
   schemas:
-    DeleteRunnerPoolResult:
+    RunnerInstallationsResult:
       properties:
-        status:
-          type: string
+        installations:
+          items:
+            $ref: '#/components/schemas/RunnerInstallation'
+          type: array
       required:
-      - status
+      - installations
       type: object
     Error:
       properties:
@@ -333,6 +333,22 @@ components:
           type: string
       required:
       - error
+      type: object
+    RunnerInstallationsRequest:
+      properties:
+        code:
+          type: string
+        state:
+          type: string
+      required:
+      - code
+      type: object
+    DeleteRunnerPoolResult:
+      properties:
+        status:
+          type: string
+      required:
+      - status
       type: object
     RunnerPool:
       properties:
@@ -380,62 +396,24 @@ components:
       - createdAt
       - updatedAt
       type: object
-    RunnerJob:
+    RunnerMetricsSummary:
       properties:
-        completedAt:
-          type: string
-        cpus:
+        avgDurationSec:
           type: integer
-        failureReason:
-          type: string
-        githubRepo:
-          type: string
-        id:
-          type: string
-        nodeId:
-          type: string
-        organizationId:
-          type: string
-        provisioningAt:
-          type: string
-        queuedAt:
-          type: string
-        ramMb:
+        avgQueueTimeSec:
           type: integer
-        runnerName:
-          type: string
-        runnerPoolId:
-          type: string
-        runnerSizeLabel:
-          type: string
-        runningAt:
-          type: string
-        status:
-          type: string
-      required:
-      - id
-      - runnerPoolId
-      - organizationId
-      - status
-      - ramMb
-      - cpus
-      - queuedAt
-      type: object
-    RunnerInstallationsRequest:
-      properties:
-        code:
-          type: string
-        state:
-          type: string
-      required:
-      - code
-      type: object
-    ResizeRunnerPoolRequest:
-      properties:
-        poolRamGb:
+        completedJobs:
+          type: integer
+        failedJobs:
+          type: integer
+        totalJobs:
           type: integer
       required:
-      - poolRamGb
+      - totalJobs
+      - completedJobs
+      - failedJobs
+      - avgDurationSec
+      - avgQueueTimeSec
       type: object
     RunnerMetricsCost:
       properties:
@@ -527,24 +505,38 @@ components:
       - cancelled
       - running
       type: object
-    RunnerMetricsSummary:
+    CreateRunnerPoolRequest:
       properties:
-        avgDurationSec:
+        diskSizeGb:
           type: integer
-        avgQueueTimeSec:
+        githubOwner:
+          type: string
+        githubOwnerType:
+          type: string
+        grant:
+          type: string
+        installationId:
+          format: int64
           type: integer
-        completedJobs:
-          type: integer
-        failedJobs:
-          type: integer
-        totalJobs:
+        name:
+          type: string
+        poolRamGb:
           type: integer
       required:
-      - totalJobs
-      - completedJobs
-      - failedJobs
-      - avgDurationSec
-      - avgQueueTimeSec
+      - installationId
+      type: object
+    RunnerConnectUrl:
+      properties:
+        installUrl:
+          type: string
+        oauth:
+          type: boolean
+        url:
+          type: string
+      required:
+      - url
+      - installUrl
+      - oauth
       type: object
     RunnerInstallation:
       properties:
@@ -566,48 +558,6 @@ components:
       - alreadyConnected
       - connectGrant
       type: object
-    RunnerInstallationsResult:
-      properties:
-        installations:
-          items:
-            $ref: '#/components/schemas/RunnerInstallation'
-          type: array
-      required:
-      - installations
-      type: object
-    RunnerConnectUrl:
-      properties:
-        installUrl:
-          type: string
-        oauth:
-          type: boolean
-        url:
-          type: string
-      required:
-      - url
-      - installUrl
-      - oauth
-      type: object
-    CreateRunnerPoolRequest:
-      properties:
-        diskSizeGb:
-          type: integer
-        githubOwner:
-          type: string
-        githubOwnerType:
-          type: string
-        grant:
-          type: string
-        installationId:
-          format: int64
-          type: integer
-        name:
-          type: string
-        poolRamGb:
-          type: integer
-      required:
-      - installationId
-      type: object
     RunnerMetrics:
       properties:
         cost:
@@ -623,13 +573,55 @@ components:
       - summary
       - cost
       type: object
+    ResizeRunnerPoolRequest:
+      properties:
+        poolRamGb:
+          type: integer
+      required:
+      - poolRamGb
+      type: object
+    RunnerJob:
+      properties:
+        completedAt:
+          type: string
+        cpus:
+          type: integer
+        failureReason:
+          type: string
+        githubRepo:
+          type: string
+        id:
+          type: string
+        nodeId:
+          type: string
+        organizationId:
+          type: string
+        provisioningAt:
+          type: string
+        queuedAt:
+          type: string
+        ramMb:
+          type: integer
+        runnerName:
+          type: string
+        runnerPoolId:
+          type: string
+        runnerSizeLabel:
+          type: string
+        runningAt:
+          type: string
+        status:
+          type: string
+      required:
+      - id
+      - runnerPoolId
+      - organizationId
+      - status
+      - ramMb
+      - cpus
+      - queuedAt
+      type: object
   responses:
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
     Forbidden:
       content:
         application/json:
@@ -642,6 +634,12 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: Missing or invalid API key
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
     BadRequest:
       content:
         application/json:

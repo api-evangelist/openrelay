@@ -1,9 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
-
-    '
-  title: OpenRelay Account Clusters API
+  description: The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+  title: OpenRelay Clusters API
   version: 0.1.0
 servers:
 - description: Production
@@ -280,6 +278,156 @@ paths:
         default: true
 components:
   schemas:
+    CreateClusterRequest:
+      properties:
+        allowFallback:
+          type: boolean
+        containerCommand:
+          items:
+            type: string
+          type: array
+        containerPort:
+          type: integer
+        diskSizeGb:
+          type: integer
+        envVars:
+          additionalProperties:
+            type: string
+          type: object
+        gpuModelId:
+          type: string
+        gpusPerReplica:
+          type: integer
+        healthCheckPath:
+          type: string
+        healthCheckPort:
+          type: integer
+        healthChecks:
+          items:
+            type: string
+          type: array
+        imageUrl:
+          type: string
+        kernelModules:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        preferredRegions:
+          items:
+            type: string
+          type: array
+        privileged:
+          type: boolean
+        registryCredentialId:
+          type: string
+        replicaCount:
+          type: integer
+        resourceSize:
+          type: string
+        templateId:
+          type: string
+        tier:
+          type: string
+      required:
+      - name
+      type: object
+    ClusterSummary:
+      properties:
+        activeReplicas:
+          type: integer
+        createdAt:
+          type: string
+        endpointUrl:
+          type: string
+        gpuModelId:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        organizationId:
+          type: string
+        replicaCount:
+          type: integer
+        status:
+          type: string
+      required:
+      - id
+      - organizationId
+      - name
+      - status
+      type: object
+    ScaleRequest:
+      properties:
+        replicaCount:
+          minimum: 1
+          type: integer
+      required:
+      - replicaCount
+      type: object
+    ClusterReplicaItem:
+      properties:
+        consecutiveFailures:
+          type: integer
+        createdAt:
+          type: string
+        diskTotalBytes:
+          format: int64
+          type: integer
+        diskUpdatedAt:
+          type: string
+        diskUsedBytes:
+          format: int64
+          type: integer
+        endpointUrl:
+          type: string
+        gpuCount:
+          type: integer
+        healthy:
+          type: boolean
+        id:
+          type: string
+        internalIp:
+          type: string
+        lastHealthCheckAt:
+          type: string
+        nodeHostname:
+          type: string
+        nodeId:
+          type: string
+        nodeLocation:
+          type: string
+        nodeRegion:
+          type: string
+        nvlinkEnabled:
+          type: boolean
+        port:
+          type: integer
+        sshPort:
+          type: integer
+        startedAt:
+          type: string
+        status:
+          type: string
+      required:
+      - id
+      - gpuCount
+      - status
+      - healthy
+      - nvlinkEnabled
+      - createdAt
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     ClusterDetail:
       properties:
         allowFallback:
@@ -384,92 +532,6 @@ components:
       - vramGb
       - hidden
       type: object
-    ClusterSummary:
-      properties:
-        activeReplicas:
-          type: integer
-        createdAt:
-          type: string
-        endpointUrl:
-          type: string
-        gpuModelId:
-          type: string
-        id:
-          type: string
-        name:
-          type: string
-        organizationId:
-          type: string
-        replicaCount:
-          type: integer
-        status:
-          type: string
-      required:
-      - id
-      - organizationId
-      - name
-      - status
-      type: object
-    ClusterReplicaItem:
-      properties:
-        consecutiveFailures:
-          type: integer
-        createdAt:
-          type: string
-        diskTotalBytes:
-          format: int64
-          type: integer
-        diskUpdatedAt:
-          type: string
-        diskUsedBytes:
-          format: int64
-          type: integer
-        endpointUrl:
-          type: string
-        gpuCount:
-          type: integer
-        healthy:
-          type: boolean
-        id:
-          type: string
-        internalIp:
-          type: string
-        lastHealthCheckAt:
-          type: string
-        nodeHostname:
-          type: string
-        nodeId:
-          type: string
-        nodeLocation:
-          type: string
-        nodeRegion:
-          type: string
-        nvlinkEnabled:
-          type: boolean
-        port:
-          type: integer
-        sshPort:
-          type: integer
-        startedAt:
-          type: string
-        status:
-          type: string
-      required:
-      - id
-      - gpuCount
-      - status
-      - healthy
-      - nvlinkEnabled
-      - createdAt
-      type: object
-    ScaleRequest:
-      properties:
-        replicaCount:
-          minimum: 1
-          type: integer
-      required:
-      - replicaCount
-      type: object
     ClusterPage:
       properties:
         items:
@@ -481,89 +543,13 @@ components:
       required:
       - items
       type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    CreateClusterRequest:
-      properties:
-        allowFallback:
-          type: boolean
-        containerCommand:
-          items:
-            type: string
-          type: array
-        containerPort:
-          type: integer
-        diskSizeGb:
-          type: integer
-        envVars:
-          additionalProperties:
-            type: string
-          type: object
-        gpuModelId:
-          type: string
-        gpusPerReplica:
-          type: integer
-        healthCheckPath:
-          type: string
-        healthCheckPort:
-          type: integer
-        healthChecks:
-          items:
-            type: string
-          type: array
-        imageUrl:
-          type: string
-        kernelModules:
-          items:
-            type: string
-          type: array
-        name:
-          type: string
-        preferredRegions:
-          items:
-            type: string
-          type: array
-        privileged:
-          type: boolean
-        registryCredentialId:
-          type: string
-        replicaCount:
-          type: integer
-        resourceSize:
-          type: string
-        templateId:
-          type: string
-        tier:
-          type: string
-      required:
-      - name
-      type: object
   responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
     NotFound:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: Resource not found
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
     Unauthorized:
       content:
         application/json:
@@ -576,6 +562,18 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: The request is invalid
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

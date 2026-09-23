@@ -1,28 +1,11 @@
 {
   "provider": "openrelay",
   "sources": [
-    "openrelay-account-api-openapi.yml",
-    "openrelay-api-keys-api-openapi.yml",
-    "openrelay-batches-api-openapi.yml",
-    "openrelay-billing-api-openapi.yml",
-    "openrelay-catalog-api-openapi.yml",
-    "openrelay-clusters-api-openapi.yml",
-    "openrelay-files-api-openapi.yml",
-    "openrelay-internal-api-openapi.yml",
-    "openrelay-organizations-api-openapi.yml",
-    "openrelay-provider-api-openapi.yml",
-    "openrelay-registry-credentials-api-openapi.yml",
-    "openrelay-runners-api-openapi.yml",
-    "openrelay-snapshots-api-openapi.yml",
-    "openrelay-ssh-keys-api-openapi.yml",
-    "openrelay-transfers-api-openapi.yml",
-    "openrelay-usage-api-openapi.yml",
-    "openrelay-vms-api-openapi.yml",
-    "openrelay-webhooks-api-openapi.yml"
+    "_original/openrelay-openapi.json"
   ],
   "outputs": [
-    "openrelay-account-api-openapi.yml",
     "openrelay-api-keys-api-openapi.yml",
+    "openrelay-account-api-openapi.yml",
     "openrelay-batches-api-openapi.yml",
     "openrelay-billing-api-openapi.yml",
     "openrelay-catalog-api-openapi.yml",
@@ -33,16 +16,42 @@
     "openrelay-provider-api-openapi.yml",
     "openrelay-registry-credentials-api-openapi.yml",
     "openrelay-runners-api-openapi.yml",
-    "openrelay-snapshots-api-openapi.yml",
     "openrelay-ssh-keys-api-openapi.yml",
+    "openrelay-snapshots-api-openapi.yml",
     "openrelay-transfers-api-openapi.yml",
     "openrelay-usage-api-openapi.yml",
     "openrelay-vms-api-openapi.yml",
     "openrelay-webhooks-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "openrelay-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "superseded outputs removed: openrelay-v-ms-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 19 total)"
+  ],
+  "skipped": [
+    "openrelay-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-api-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-batches-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-catalog-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-clusters-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-files-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-internal-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-provider-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-registry-credentials-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-runners-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-snapshots-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-ssh-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-transfers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-usage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-v-ms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

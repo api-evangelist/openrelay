@@ -1,0 +1,30 @@
+# Front Door AI Index — openrelay — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: openrelay
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.openrelay.inc
+  final_host: openrelay.inc
+  ownership: own
+  owner: openrelay
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 19
+  host_score: 19
+  density: 30.21
+  words: 629
+  tiers:
+    agentic: 8
+    core: 2
+    model: 9
+  ambiguous: 2
+  top_terms:
+    OpenAI: 6
+    inference: 5
+    Claude: 3
+    MCP: 3
+    AI: 2
+    agent: 2

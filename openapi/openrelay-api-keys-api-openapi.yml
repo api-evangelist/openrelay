@@ -1,9 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
-
-    '
-  title: OpenRelay Account API Keys API
+  description: The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+  title: OpenRelay API Keys API
   version: 0.1.0
 servers:
 - description: Production
@@ -112,35 +110,6 @@ paths:
         destructiveHint: true
 components:
   schemas:
-    CreateApiKeyResult:
-      properties:
-        createdAt:
-          type: string
-        id:
-          type: string
-        key:
-          description: Plaintext key — shown once
-          type: string
-        keyPrefix:
-          type: string
-        name:
-          type: string
-        organizationId:
-          description: The organization this key is bound to. Every API key belongs to exactly one organization; keep this id alongside the key so callers can build org-scoped request paths without a separate lookup (GET /v1/whoami returns the same id for an existing key).
-          type: string
-        scopes:
-          items:
-            type: string
-          type: array
-      required:
-      - id
-      - key
-      - keyPrefix
-      - name
-      - scopes
-      - createdAt
-      - organizationId
-      type: object
     ApiKeySummary:
       properties:
         createdAt:
@@ -193,19 +162,48 @@ components:
       required:
       - error
       type: object
+    CreateApiKeyResult:
+      properties:
+        createdAt:
+          type: string
+        id:
+          type: string
+        key:
+          description: Plaintext key — shown once
+          type: string
+        keyPrefix:
+          type: string
+        name:
+          type: string
+        organizationId:
+          description: The organization this key is bound to. Every API key belongs to exactly one organization; keep this id alongside the key so callers can build org-scoped request paths without a separate lookup (GET /v1/whoami returns the same id for an existing key).
+          type: string
+        scopes:
+          items:
+            type: string
+          type: array
+      required:
+      - id
+      - key
+      - keyPrefix
+      - name
+      - scopes
+      - createdAt
+      - organizationId
+      type: object
   responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
     Unauthorized:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
     BadRequest:
       content:
         application/json:

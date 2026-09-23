@@ -1,9 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
-
-    '
-  title: OpenRelay Account Webhooks API
+  description: The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+  title: OpenRelay Webhooks API
   version: 0.1.0
 servers:
 - description: Production
@@ -259,6 +257,48 @@ paths:
       - Webhooks
 components:
   schemas:
+    CreateWebhookRequest:
+      properties:
+        events:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        url:
+          type: string
+      required:
+      - name
+      - url
+      type: object
+    WebhookDeliveryItem:
+      properties:
+        attemptNumber:
+          type: integer
+        createdAt:
+          type: string
+        deliveredAt:
+          type: string
+        errorMessage:
+          type: string
+        eventId:
+          type: string
+        eventType:
+          type: string
+        id:
+          type: string
+        status:
+          type: string
+        statusCode:
+          type: integer
+      required:
+      - id
+      - eventType
+      - eventId
+      - attemptNumber
+      - status
+      - createdAt
+      type: object
     WebhookUpdateResult:
       properties:
         events:
@@ -277,6 +317,15 @@ components:
       - url
       - events
       type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     WebhookSecret:
       properties:
         id:
@@ -289,6 +338,17 @@ components:
       - id
       - secret
       - secretPrefix
+      type: object
+    UpdateWebhookRequest:
+      properties:
+        events:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        url:
+          type: string
       type: object
     WebhookWithSecret:
       properties:
@@ -320,44 +380,22 @@ components:
       - createdAt
       - secret
       type: object
-    WebhookDeliveryItem:
+    WebhookToggleResult:
       properties:
-        attemptNumber:
-          type: integer
-        createdAt:
-          type: string
-        deliveredAt:
-          type: string
-        errorMessage:
-          type: string
-        eventId:
-          type: string
-        eventType:
-          type: string
+        enabled:
+          type: boolean
         id:
           type: string
-        status:
-          type: string
-        statusCode:
-          type: integer
       required:
       - id
-      - eventType
-      - eventId
-      - attemptNumber
-      - status
-      - createdAt
+      - enabled
       type: object
-    UpdateWebhookRequest:
+    ToggleWebhookRequest:
       properties:
-        events:
-          items:
-            type: string
-          type: array
-        name:
-          type: string
-        url:
-          type: string
+        enabled:
+          type: boolean
+      required:
+      - enabled
       type: object
     WebhookSummary:
       properties:
@@ -389,59 +427,7 @@ components:
       - createdAt
       - updatedAt
       type: object
-    ToggleWebhookRequest:
-      properties:
-        enabled:
-          type: boolean
-      required:
-      - enabled
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    WebhookToggleResult:
-      properties:
-        enabled:
-          type: boolean
-        id:
-          type: string
-      required:
-      - id
-      - enabled
-      type: object
-    CreateWebhookRequest:
-      properties:
-        events:
-          items:
-            type: string
-          type: array
-        name:
-          type: string
-        url:
-          type: string
-      required:
-      - name
-      - url
-      type: object
   responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
     NotFound:
       content:
         application/json:
@@ -454,6 +440,18 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: The request is invalid
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

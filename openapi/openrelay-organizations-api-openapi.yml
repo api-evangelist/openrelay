@@ -1,9 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
-
-    '
-  title: OpenRelay Account Organizations API
+  description: The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+  title: OpenRelay Organizations API
   version: 0.1.0
 servers:
 - description: Production
@@ -294,23 +292,30 @@ paths:
       - Organizations
 components:
   schemas:
-    UpdateOrgRequest:
+    Member:
       properties:
-        billingEmail:
+        avatarUrl:
           type: string
-        name:
+        email:
           type: string
-      type: object
-    CreateOrgRequest:
-      properties:
-        billingEmail:
+        fullName:
           type: string
-        name:
+        invitedAt:
           type: string
-        slug:
+        joinedAt:
+          type: string
+        role:
+          type: string
+        status:
+          enum:
+          - active
+          - invited
+          type: string
+        userId:
           type: string
       required:
-      - name
+      - userId
+      - role
       type: object
     Organization:
       properties:
@@ -338,6 +343,43 @@ components:
       - billingEmail
       - plan
       type: object
+    BootstrapResult:
+      properties:
+        organizationId:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
+      type: object
+    UpdateOrgRequest:
+      properties:
+        billingEmail:
+          type: string
+        name:
+          type: string
+      type: object
+    CreateOrgRequest:
+      properties:
+        billingEmail:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+      required:
+      - name
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     Invite:
       properties:
         email:
@@ -356,43 +398,6 @@ components:
       - role
       - invitedAt
       type: object
-    Member:
-      properties:
-        avatarUrl:
-          type: string
-        email:
-          type: string
-        fullName:
-          type: string
-        invitedAt:
-          type: string
-        joinedAt:
-          type: string
-        role:
-          type: string
-        status:
-          enum:
-          - active
-          - invited
-          type: string
-        userId:
-          type: string
-      required:
-      - userId
-      - role
-      type: object
-    UpdateMemberRoleRequest:
-      properties:
-        role:
-          enum:
-          - owner
-          - admin
-          - member
-          - viewer
-          type: string
-      required:
-      - role
-      type: object
     AddMemberRequest:
       properties:
         email:
@@ -407,23 +412,16 @@ components:
       - email
       - role
       type: object
-    Error:
+    UpdateMemberRoleRequest:
       properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    BootstrapResult:
-      properties:
-        organizationId:
-          type: string
         role:
+          enum:
+          - owner
+          - admin
+          - member
+          - viewer
           type: string
       required:
-      - organizationId
       - role
       type: object
   responses:
@@ -433,18 +431,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
     NotFound:
       content:
         application/json:
@@ -457,6 +443,18 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: The request is invalid
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

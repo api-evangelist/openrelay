@@ -1,9 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
-
-    '
-  title: OpenRelay Account SSH Keys API
+  description: The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+  title: OpenRelay SSH Keys API
   version: 0.1.0
 servers:
 - description: Production
@@ -134,15 +132,6 @@ components:
       - fingerprint
       - createdAt
       type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
     CreateSshKeyRequest:
       properties:
         name:
@@ -153,6 +142,15 @@ components:
       - name
       - publicKey
       type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
   responses:
     Forbidden:
       content:
@@ -160,18 +158,18 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
     Unauthorized:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: Missing or invalid API key
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

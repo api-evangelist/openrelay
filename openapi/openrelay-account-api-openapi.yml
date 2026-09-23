@@ -1,8 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
-
-    '
+  description: The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
   title: OpenRelay Account API
   version: 0.1.0
 servers:
@@ -199,7 +197,24 @@ paths:
         default: true
 components:
   schemas:
-    AcceptInviteResult:
+    Me:
+      properties:
+        organizations:
+          items:
+            $ref: '#/components/schemas/OrgMembership'
+          type: array
+        user:
+          $ref: '#/components/schemas/UserProfile'
+      required:
+      - user
+      - organizations
+      type: object
+    BootstrapRequest:
+      properties:
+        orgName:
+          type: string
+      type: object
+    BootstrapResult:
       properties:
         organizationId:
           type: string
@@ -208,6 +223,74 @@ components:
       required:
       - organizationId
       - role
+      type: object
+    UpdateProfileRequest:
+      properties:
+        avatarUrl:
+          type: string
+        defaultOrganizationId:
+          type: string
+        fullName:
+          type: string
+      type: object
+    MyInvite:
+      properties:
+        expiresAt:
+          type: string
+        invitedAt:
+          type: string
+        inviterEmail:
+          description: Email of the user who sent the invite, when resolvable.
+          type: string
+        organizationId:
+          type: string
+        organizationName:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
+      - invitedAt
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    UserProfile:
+      properties:
+        avatarUrl:
+          type: string
+        defaultOrganizationId:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+        id:
+          type: string
+      required:
+      - id
+      - email
+      type: object
+    OrgFeatures:
+      description: Per-org feature entitlements the dashboard gates its UI on.
+      properties:
+        batch:
+          description: The org is allowlisted for the Batch API (batch-api.md §8).
+          type: boolean
+        publicEndpoint:
+          deprecated: true
+          description: Vestigial, always false. The public-endpoint feature is GA (ungated); this field is kept only to avoid a breaking response-contract change and will be removed in a follow-up deprecation PR.
+          type: boolean
+      required:
+      - batch
+      - publicEndpoint
       type: object
     Whoami:
       properties:
@@ -261,44 +344,7 @@ components:
       - role
       - features
       type: object
-    UserProfile:
-      properties:
-        avatarUrl:
-          type: string
-        defaultOrganizationId:
-          type: string
-        email:
-          type: string
-        fullName:
-          type: string
-        id:
-          type: string
-      required:
-      - id
-      - email
-      type: object
-    UpdateProfileRequest:
-      properties:
-        avatarUrl:
-          type: string
-        defaultOrganizationId:
-          type: string
-        fullName:
-          type: string
-      type: object
-    Me:
-      properties:
-        organizations:
-          items:
-            $ref: '#/components/schemas/OrgMembership'
-          type: array
-        user:
-          $ref: '#/components/schemas/UserProfile'
-      required:
-      - user
-      - organizations
-      type: object
-    BootstrapResult:
+    AcceptInviteResult:
       properties:
         organizationId:
           type: string
@@ -307,54 +353,6 @@ components:
       required:
       - organizationId
       - role
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    BootstrapRequest:
-      properties:
-        orgName:
-          type: string
-      type: object
-    MyInvite:
-      properties:
-        expiresAt:
-          type: string
-        invitedAt:
-          type: string
-        inviterEmail:
-          description: Email of the user who sent the invite, when resolvable.
-          type: string
-        organizationId:
-          type: string
-        organizationName:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
-      - invitedAt
-      type: object
-    OrgFeatures:
-      description: Per-org feature entitlements the dashboard gates its UI on.
-      properties:
-        batch:
-          description: The org is allowlisted for the Batch API (batch-api.md §8).
-          type: boolean
-        publicEndpoint:
-          deprecated: true
-          description: Vestigial, always false. The public-endpoint feature is GA (ungated); this field is kept only to avoid a breaking response-contract change and will be removed in a follow-up deprecation PR.
-          type: boolean
-      required:
-      - batch
-      - publicEndpoint
       type: object
   responses:
     Forbidden:
@@ -363,30 +361,30 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
-    Gone:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The resource existed but is no longer usable (e.g. an expired invite)
     NotFound:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: Resource not found
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
     Unauthorized:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: Missing or invalid API key
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    Gone:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The resource existed but is no longer usable (e.g. an expired invite)
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

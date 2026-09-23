@@ -1,9 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  description: 'The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
-
-    '
-  title: OpenRelay Account Internal API
+  description: The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.
+  title: OpenRelay Internal API
   version: 0.1.0
 servers:
 - description: Production
@@ -152,25 +150,6 @@ components:
       - devices
       - nvswitchCount
       type: object
-    Health:
-      properties:
-        service:
-          type: string
-        status:
-          type: string
-      required:
-      - status
-      - service
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
     EnrollNodeRequest:
       properties:
         cpuCores:
@@ -223,6 +202,15 @@ components:
       - token
       - hardwareFingerprint
       - nebulaPubkey
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
       type: object
     EnrollNodeBundle:
       properties:
@@ -300,6 +288,16 @@ components:
       - dataPlaneCa
       - gatewayAddr
       - gatewayServerName
+      type: object
+    Health:
+      properties:
+        service:
+          type: string
+        status:
+          type: string
+      required:
+      - status
+      - service
       type: object
   securitySchemes:
     apiKey:
