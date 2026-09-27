@@ -76,6 +76,59 @@ paths:
       x-internal: true
 components:
   schemas:
+    EnrollNodeRequest:
+      properties:
+        cpuCores:
+          type: integer
+        cpuModel:
+          type: string
+        gpuInventory:
+          $ref: '#/components/schemas/GpuInventory'
+        gpus:
+          description: LEGACY nvidia-smi detection (name + pci.bus_id BDF — NOT a vendor:device id despite the example). Kept for old scripts; gpuInventory supersedes it.
+          items:
+            properties:
+              name:
+                type: string
+              pciId:
+                description: nvidia-smi pci.bus_id (a BDF like 00000000:04:00.0)
+                type: string
+            required:
+            - pciId
+            type: object
+          type: array
+        hardwareFingerprint:
+          type: string
+        hostname:
+          type: string
+        identityPubkey:
+          description: 'Node ed25519 identity public key (base64 raw, 32 bytes). Identity v2 collision-safe anchor: the box generates this once, keeps the private key at /etc/vectorlay/identity.key, and signs every enroll with it. Optional — absent = legacy (v1) enroll.'
+          type: string
+        machineId:
+          description: Stable per-box identity (SMBIOS product_uuid / serial / cloud instance-id). Primary global node-identity key; fingerprint is the fallback when empty.
+          type: string
+        nebulaPubkey:
+          description: Node Nebula public key PEM (from nebula-cert keygen)
+          type: string
+        ramGb:
+          type: integer
+        runtime:
+          description: 'Node runtime detected by enroll.sh: qemu (VFIO/KVM passthrough) or gvisor (container GPUs). Default gvisor.'
+          type: string
+        signature:
+          description: base64 ed25519 signature (v2) proving possession of identityPubkey over the identity-critical enroll fields (token hash, identity pubkey, nebula pubkey hash, fingerprint, machineId, hostname, signedAt). Required iff identityPubkey is set.
+          type: string
+        signedAt:
+          description: Unix seconds when the enroll body was signed (v2). Rejected if more than 300s from server time.
+          type: integer
+        token:
+          description: Provisioning token (vtk_...)
+          type: string
+      required:
+      - token
+      - hardwareFingerprint
+      - nebulaPubkey
+      type: object
     GpuInventory:
       description: 'Versioned, driverless GPU detection (lspci) collected by enroll.sh. Works on VFIO hosts with no NVIDIA driver and on non-NVIDIA accelerators. source=none means the node could not detect (no lspci) — the control plane must NOT treat that as "no GPUs".
 
@@ -149,59 +202,6 @@ components:
       - source
       - devices
       - nvswitchCount
-      type: object
-    EnrollNodeRequest:
-      properties:
-        cpuCores:
-          type: integer
-        cpuModel:
-          type: string
-        gpuInventory:
-          $ref: '#/components/schemas/GpuInventory'
-        gpus:
-          description: LEGACY nvidia-smi detection (name + pci.bus_id BDF — NOT a vendor:device id despite the example). Kept for old scripts; gpuInventory supersedes it.
-          items:
-            properties:
-              name:
-                type: string
-              pciId:
-                description: nvidia-smi pci.bus_id (a BDF like 00000000:04:00.0)
-                type: string
-            required:
-            - pciId
-            type: object
-          type: array
-        hardwareFingerprint:
-          type: string
-        hostname:
-          type: string
-        identityPubkey:
-          description: 'Node ed25519 identity public key (base64 raw, 32 bytes). Identity v2 collision-safe anchor: the box generates this once, keeps the private key at /etc/vectorlay/identity.key, and signs every enroll with it. Optional — absent = legacy (v1) enroll.'
-          type: string
-        machineId:
-          description: Stable per-box identity (SMBIOS product_uuid / serial / cloud instance-id). Primary global node-identity key; fingerprint is the fallback when empty.
-          type: string
-        nebulaPubkey:
-          description: Node Nebula public key PEM (from nebula-cert keygen)
-          type: string
-        ramGb:
-          type: integer
-        runtime:
-          description: 'Node runtime detected by enroll.sh: qemu (VFIO/KVM passthrough) or gvisor (container GPUs). Default gvisor.'
-          type: string
-        signature:
-          description: base64 ed25519 signature (v2) proving possession of identityPubkey over the identity-critical enroll fields (token hash, identity pubkey, nebula pubkey hash, fingerprint, machineId, hostname, signedAt). Required iff identityPubkey is set.
-          type: string
-        signedAt:
-          description: Unix seconds when the enroll body was signed (v2). Rejected if more than 300s from server time.
-          type: integer
-        token:
-          description: Provisioning token (vtk_...)
-          type: string
-      required:
-      - token
-      - hardwareFingerprint
-      - nebulaPubkey
       type: object
     Error:
       properties:

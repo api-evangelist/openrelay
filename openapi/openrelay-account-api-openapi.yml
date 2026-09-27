@@ -196,6 +196,37 @@ paths:
       x-openrelay-mcp:
         default: true
 components:
+  responses:
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    Gone:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The resource existed but is no longer usable (e.g. an expired invite)
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
   schemas:
     Me:
       properties:
@@ -209,21 +240,6 @@ components:
       - user
       - organizations
       type: object
-    BootstrapRequest:
-      properties:
-        orgName:
-          type: string
-      type: object
-    BootstrapResult:
-      properties:
-        organizationId:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
-      type: object
     UpdateProfileRequest:
       properties:
         avatarUrl:
@@ -233,26 +249,6 @@ components:
         fullName:
           type: string
       type: object
-    MyInvite:
-      properties:
-        expiresAt:
-          type: string
-        invitedAt:
-          type: string
-        inviterEmail:
-          description: Email of the user who sent the invite, when resolvable.
-          type: string
-        organizationId:
-          type: string
-        organizationName:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
-      - invitedAt
-      type: object
     Error:
       properties:
         code:
@@ -261,22 +257,6 @@ components:
           type: string
       required:
       - error
-      type: object
-    UserProfile:
-      properties:
-        avatarUrl:
-          type: string
-        defaultOrganizationId:
-          type: string
-        email:
-          type: string
-        fullName:
-          type: string
-        id:
-          type: string
-      required:
-      - id
-      - email
       type: object
     OrgFeatures:
       description: Per-org feature entitlements the dashboard gates its UI on.
@@ -291,6 +271,16 @@ components:
       required:
       - batch
       - publicEndpoint
+      type: object
+    BootstrapResult:
+      properties:
+        organizationId:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
       type: object
     Whoami:
       properties:
@@ -328,6 +318,21 @@ components:
       - principalType
       - organizationId
       type: object
+    AcceptInviteResult:
+      properties:
+        organizationId:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
+      type: object
+    BootstrapRequest:
+      properties:
+        orgName:
+          type: string
+      type: object
     OrgMembership:
       properties:
         features:
@@ -344,47 +349,42 @@ components:
       - role
       - features
       type: object
-    AcceptInviteResult:
+    UserProfile:
       properties:
+        avatarUrl:
+          type: string
+        defaultOrganizationId:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+        id:
+          type: string
+      required:
+      - id
+      - email
+      type: object
+    MyInvite:
+      properties:
+        expiresAt:
+          type: string
+        invitedAt:
+          type: string
+        inviterEmail:
+          description: Email of the user who sent the invite, when resolvable.
+          type: string
         organizationId:
+          type: string
+        organizationName:
           type: string
         role:
           type: string
       required:
       - organizationId
       - role
+      - invitedAt
       type: object
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
-    Gone:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The resource existed but is no longer usable (e.g. an expired invite)
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

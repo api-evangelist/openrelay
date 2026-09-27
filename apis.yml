@@ -54,7 +54,7 @@ tags:
 - GPU
 - Inference
 - Artificial Intelligence
-- Machine-Learning
+- Machine Learning
 - Cloud Compute
 - Infrastructure
 - OpenAI-Compatible
@@ -71,6 +71,7 @@ tags_raw:
 - OpenAI-Compatible
 - GPU Cloud
 - LLM
+- Machine-Learning
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

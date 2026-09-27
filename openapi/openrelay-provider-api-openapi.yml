@@ -370,198 +370,6 @@ paths:
         exclude: true
 components:
   schemas:
-    EarningsBreakdownGpu:
-      properties:
-        billableGrossCents:
-          description: Paid-band gross (billableHours × rate) — what commission applies to; earningsCents = billableGrossCents × commission%.
-          type: integer
-        billableHours:
-          description: Hours that fell in the paid band.
-          type: number
-        earningsCents:
-          type: integer
-        gpuModelId:
-          type: string
-        grossEarningsCents:
-          description: Gross hosted value before commission/free-credit waterfall (hosted hours × rate).
-          type: integer
-        hours:
-          description: Total hours hosted.
-          type: number
-        name:
-          type: string
-      required:
-      - gpuModelId
-      - name
-      - earningsCents
-      - hours
-      type: object
-    ProviderStats:
-      properties:
-        activeTokens:
-          type: integer
-        offlineNodes:
-          type: integer
-        onlineNodes:
-          type: integer
-        totalNodes:
-          type: integer
-      required:
-      - totalNodes
-      - onlineNodes
-      - offlineNodes
-      - activeTokens
-      type: object
-    PayoutItem:
-      properties:
-        amountCents:
-          type: integer
-        createdAt:
-          type: string
-        description:
-          nullable: true
-          type: string
-        id:
-          type: string
-        type:
-          type: string
-      required:
-      - id
-      - type
-      - amountCents
-      - createdAt
-      type: object
-    ProvisioningTokenCreated:
-      properties:
-        expiresAt:
-          nullable: true
-          type: string
-        id:
-          type: string
-        maxNodes:
-          type: integer
-        name:
-          nullable: true
-          type: string
-        nodePool:
-          type: string
-        token:
-          type: string
-        tokenPrefix:
-          type: string
-        warning:
-          type: string
-      required:
-      - id
-      - token
-      - tokenPrefix
-      - warning
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    NodeGpuItem:
-      properties:
-        gpuName:
-          type: string
-        quantity:
-          type: integer
-        vramGb:
-          type: integer
-      required:
-      - gpuName
-      - vramGb
-      - quantity
-      type: object
-    GenerateProvisioningTokenRequest:
-      properties:
-        expiresInHours:
-          type: integer
-        maxNodes:
-          description: Enrollment quota; 0/omitted = unlimited
-          type: integer
-        name:
-          type: string
-      type: object
-    ProviderEarnings:
-      properties:
-        availableForPayoutCents:
-          type: integer
-        billableGrossCents:
-          description: 'Total paid-band gross (Σ billableHours × rate) — exactly what commission applies to: totalEarningsCents ≈ billableGrossCents × commission%. Render the gross→net reconciliation from THIS, not grossEarningsCents.'
-          type: integer
-        billableHours:
-          description: Hours that earned (fell in customers' paid band). Diverges from totalHours when you host free-credit-funded usage.
-          type: number
-        byGpuModel:
-          items:
-            $ref: '#/components/schemas/EarningsBreakdownGpu'
-          type: array
-        byNode:
-          items:
-            $ref: '#/components/schemas/EarningsBreakdownNode'
-          type: array
-        byStream:
-          description: CPU vs GPU income streams.
-          items:
-            $ref: '#/components/schemas/EarningsBreakdownStream'
-          type: array
-        commissionPercent:
-          type: integer
-        currentMonthEarningsCents:
-          type: integer
-        currentMonthHours:
-          type: number
-        freeCreditHours:
-          description: Hours funded by customer free credits (not paid out
-          per the provider agreement).: null
-          type: number
-        grossEarningsCents:
-          description: Total gross hosted value before commission and the free-credit waterfall (Σ hosted hours × rate). totalEarningsCents is the net actually earned; the gap is commission + free/unpaid-band usage.
-          type: integer
-        pendingEarningsCents:
-          type: integer
-        recentPayouts:
-          items:
-            $ref: '#/components/schemas/PayoutItem'
-          type: array
-        totalEarningsCents:
-          type: integer
-        totalHours:
-          description: Total hours hosted across all of this provider's usage.
-          type: number
-        totalPaidOutCents:
-          type: integer
-        unpaidHours:
-          description: Hours the customer ran beyond their free credit + paid balance (debt — not collected
-          so not paid out).: null
-          type: number
-      required:
-      - totalEarningsCents
-      - totalHours
-      - currentMonthEarningsCents
-      - currentMonthHours
-      - pendingEarningsCents
-      - availableForPayoutCents
-      - totalPaidOutCents
-      - commissionPercent
-      - byNode
-      - byGpuModel
-      - recentPayouts
-      type: object
-    ApplyForProviderRequest:
-      properties:
-        note:
-          type: string
-      required:
-      - note
-      type: object
     EarningsBreakdownStream:
       properties:
         billableGrossCents:
@@ -587,18 +395,67 @@ components:
       - earningsCents
       - hours
       type: object
-    ProviderStatus:
+    EarningsBreakdownNode:
       properties:
-        applicationStatus:
-          nullable: true
+        billableGrossCents:
+          description: 'Paid-band gross (billableHours × rate) — exactly what commission applies to: earningsCents = billableGrossCents × commission%. Use THIS for the gross→net reconciliation, not grossEarningsCents.'
+          type: integer
+        billableHours:
+          description: Hours that fell in the paid band (i.e. that earned).
+          type: number
+        earningsCents:
+          type: integer
+        gpuCount:
+          description: 'GPU count on this node for the utilization denominator: sellable catalog inventory (Σ NodeGpu.Quantity, excluding unrecognised hardware), falling back to raw detected accelerators (Σ DetectedGpusRaw.Count) when no sellable rows exist. 0 only for a genuine CPU-only node.'
+          type: integer
+        grossEarningsCents:
+          description: Gross hosted value before commission/free-credit waterfall (hosted hours × rate). earningsCents is what's actually earned.
+          type: integer
+        hostname:
           type: string
-        applicationSubmittedAt:
-          nullable: true
+        hours:
+          description: Total hours hosted (paid + free-credit + unpaid).
+          type: number
+        nodeId:
           type: string
-        isProvider:
-          type: boolean
+        rentedGpuHoursMonth:
+          description: 'GPU-hours rented on this node so far this calendar month (Σ over GPU records of month-clamped hours × the record''s gpuCount). The utilizationPercent numerator. NOTE: usage records written before per-record gpuCount was stamped count as 1 GPU (a conservative floor).'
+          type: number
+        utilizationPercent:
+          description: 'Month-to-date utilization: rentedGpuHoursMonth / (gpuCount × hours elapsed this month) × 100, clamped to [0,100]. Null when gpuCount is 0 (CPU node) or the month just started (no elapsed time to measure against). CAVEAT: the denominator uses the node''s CURRENT gpuCount, so a node whose GPU inventory changed mid-month is exact only from the change onward (added GPUs understate; removed GPUs can saturate at 100).'
+          nullable: true
+          type: number
       required:
-      - isProvider
+      - nodeId
+      - hostname
+      - earningsCents
+      - hours
+      type: object
+    ProviderStats:
+      properties:
+        activeTokens:
+          type: integer
+        offlineNodes:
+          type: integer
+        onlineNodes:
+          type: integer
+        totalNodes:
+          type: integer
+      required:
+      - totalNodes
+      - onlineNodes
+      - offlineNodes
+      - activeTokens
+      type: object
+    GenerateProvisioningTokenRequest:
+      properties:
+        expiresInHours:
+          type: integer
+        maxNodes:
+          description: Enrollment quota; 0/omitted = unlimited
+          type: integer
+        name:
+          type: string
       type: object
     ProviderNode:
       properties:
@@ -682,67 +539,210 @@ components:
       - status
       - createdAt
       type: object
-    EarningsBreakdownNode:
+    ApplyForProviderRequest:
+      properties:
+        note:
+          type: string
+      required:
+      - note
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    ProvisioningTokenCreated:
+      properties:
+        expiresAt:
+          nullable: true
+          type: string
+        id:
+          type: string
+        maxNodes:
+          type: integer
+        name:
+          nullable: true
+          type: string
+        nodePool:
+          type: string
+        token:
+          type: string
+        tokenPrefix:
+          type: string
+        warning:
+          type: string
+      required:
+      - id
+      - token
+      - tokenPrefix
+      - warning
+      type: object
+    ProviderStatus:
+      properties:
+        applicationStatus:
+          nullable: true
+          type: string
+        applicationSubmittedAt:
+          nullable: true
+          type: string
+        isProvider:
+          type: boolean
+      required:
+      - isProvider
+      type: object
+    EarningsBreakdownGpu:
       properties:
         billableGrossCents:
-          description: 'Paid-band gross (billableHours × rate) — exactly what commission applies to: earningsCents = billableGrossCents × commission%. Use THIS for the gross→net reconciliation, not grossEarningsCents.'
+          description: Paid-band gross (billableHours × rate) — what commission applies to; earningsCents = billableGrossCents × commission%.
           type: integer
         billableHours:
-          description: Hours that fell in the paid band (i.e. that earned).
+          description: Hours that fell in the paid band.
           type: number
         earningsCents:
           type: integer
-        gpuCount:
-          description: 'GPU count on this node for the utilization denominator: sellable catalog inventory (Σ NodeGpu.Quantity, excluding unrecognised hardware), falling back to raw detected accelerators (Σ DetectedGpusRaw.Count) when no sellable rows exist. 0 only for a genuine CPU-only node.'
-          type: integer
+        gpuModelId:
+          type: string
         grossEarningsCents:
-          description: Gross hosted value before commission/free-credit waterfall (hosted hours × rate). earningsCents is what's actually earned.
+          description: Gross hosted value before commission/free-credit waterfall (hosted hours × rate).
           type: integer
-        hostname:
-          type: string
         hours:
-          description: Total hours hosted (paid + free-credit + unpaid).
+          description: Total hours hosted.
           type: number
-        nodeId:
+        name:
           type: string
-        rentedGpuHoursMonth:
-          description: 'GPU-hours rented on this node so far this calendar month (Σ over GPU records of month-clamped hours × the record''s gpuCount). The utilizationPercent numerator. NOTE: usage records written before per-record gpuCount was stamped count as 1 GPU (a conservative floor).'
-          type: number
-        utilizationPercent:
-          description: 'Month-to-date utilization: rentedGpuHoursMonth / (gpuCount × hours elapsed this month) × 100, clamped to [0,100]. Null when gpuCount is 0 (CPU node) or the month just started (no elapsed time to measure against). CAVEAT: the denominator uses the node''s CURRENT gpuCount, so a node whose GPU inventory changed mid-month is exact only from the change onward (added GPUs understate; removed GPUs can saturate at 100).'
-          nullable: true
-          type: number
       required:
-      - nodeId
-      - hostname
+      - gpuModelId
+      - name
       - earningsCents
       - hours
       type: object
+    NodeGpuItem:
+      properties:
+        gpuName:
+          type: string
+        quantity:
+          type: integer
+        vramGb:
+          type: integer
+      required:
+      - gpuName
+      - vramGb
+      - quantity
+      type: object
+    PayoutItem:
+      properties:
+        amountCents:
+          type: integer
+        createdAt:
+          type: string
+        description:
+          nullable: true
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - type
+      - amountCents
+      - createdAt
+      type: object
+    ProviderEarnings:
+      properties:
+        availableForPayoutCents:
+          type: integer
+        billableGrossCents:
+          description: 'Total paid-band gross (Σ billableHours × rate) — exactly what commission applies to: totalEarningsCents ≈ billableGrossCents × commission%. Render the gross→net reconciliation from THIS, not grossEarningsCents.'
+          type: integer
+        billableHours:
+          description: Hours that earned (fell in customers' paid band). Diverges from totalHours when you host free-credit-funded usage.
+          type: number
+        byGpuModel:
+          items:
+            $ref: '#/components/schemas/EarningsBreakdownGpu'
+          type: array
+        byNode:
+          items:
+            $ref: '#/components/schemas/EarningsBreakdownNode'
+          type: array
+        byStream:
+          description: CPU vs GPU income streams.
+          items:
+            $ref: '#/components/schemas/EarningsBreakdownStream'
+          type: array
+        commissionPercent:
+          type: integer
+        currentMonthEarningsCents:
+          type: integer
+        currentMonthHours:
+          type: number
+        freeCreditHours:
+          description: Hours funded by customer free credits (not paid out
+          per the provider agreement).: null
+          type: number
+        grossEarningsCents:
+          description: Total gross hosted value before commission and the free-credit waterfall (Σ hosted hours × rate). totalEarningsCents is the net actually earned; the gap is commission + free/unpaid-band usage.
+          type: integer
+        pendingEarningsCents:
+          type: integer
+        recentPayouts:
+          items:
+            $ref: '#/components/schemas/PayoutItem'
+          type: array
+        totalEarningsCents:
+          type: integer
+        totalHours:
+          description: Total hours hosted across all of this provider's usage.
+          type: number
+        totalPaidOutCents:
+          type: integer
+        unpaidHours:
+          description: Hours the customer ran beyond their free credit + paid balance (debt — not collected
+          so not paid out).: null
+          type: number
+      required:
+      - totalEarningsCents
+      - totalHours
+      - currentMonthEarningsCents
+      - currentMonthHours
+      - pendingEarningsCents
+      - availableForPayoutCents
+      - totalPaidOutCents
+      - commissionPercent
+      - byNode
+      - byGpuModel
+      - recentPayouts
+      type: object
   responses:
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
     NotFound:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: Resource not found
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
     Forbidden:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

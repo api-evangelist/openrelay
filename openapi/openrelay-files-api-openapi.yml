@@ -214,37 +214,6 @@ paths:
       x-openrelay-mcp:
         exclude: true
 components:
-  responses:
-    InferenceBadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: The request is invalid
-    InferenceNotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: Not found (also returned when the organization does not have Batch API access)
-    InferenceTooLarge:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: The upload exceeds the 200 MB limit
-    InferenceUnauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: Missing or invalid API key
-    InferenceRateLimited:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: Too many concurrent uploads; retry shortly
   schemas:
     FileObject:
       description: A file stored for the Batch API (OpenAI-compatible).
@@ -320,6 +289,37 @@ components:
       required:
       - error
       type: object
+  responses:
+    InferenceBadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The request is invalid
+    InferenceUnauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Missing or invalid API key
+    InferenceRateLimited:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Too many concurrent uploads; retry shortly
+    InferenceNotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Not found (also returned when the organization does not have Batch API access)
+    InferenceTooLarge:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The upload exceeds the 200 MB limit
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

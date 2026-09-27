@@ -209,68 +209,6 @@ components:
       - output_tokens
       - cost_nano_usd
       type: object
-    BatchRequestCounts:
-      description: Progress counters, settled as the batch validates and shards complete.
-      properties:
-        completed:
-          format: int64
-          type: integer
-        failed:
-          format: int64
-          type: integer
-        total:
-          format: int64
-          type: integer
-      required:
-      - total
-      - completed
-      - failed
-      type: object
-    BatchList:
-      description: One page of batches, newest first (OpenAI list envelope).
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/BatchObject'
-          type: array
-        first_id:
-          description: Id of the first batch on this page.
-          type: string
-        has_more:
-          type: boolean
-        last_id:
-          description: Id of the last batch on this page; pass it as `after` to fetch the next page.
-          type: string
-        object:
-          enum:
-          - list
-          type: string
-      required:
-      - object
-      - data
-      - has_more
-      type: object
-    InferenceError:
-      description: Error shape returned by the inference endpoint (OpenAI-compatible).
-      properties:
-        error:
-          properties:
-            code:
-              description: Machine code for the specific failure.
-              type: string
-            message:
-              description: Human-readable explanation.
-              type: string
-            type:
-              description: Error class, e.g. invalid_request_error.
-              type: string
-          required:
-          - message
-          - type
-          type: object
-      required:
-      - error
-      type: object
     BatchObject:
       description: A batch inference job (OpenAI-compatible).
       properties:
@@ -352,31 +290,81 @@ components:
       - created_at
       - request_counts
       type: object
+    BatchRequestCounts:
+      description: Progress counters, settled as the batch validates and shards complete.
+      properties:
+        completed:
+          format: int64
+          type: integer
+        failed:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - total
+      - completed
+      - failed
+      type: object
+    BatchList:
+      description: One page of batches, newest first (OpenAI list envelope).
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/BatchObject'
+          type: array
+        first_id:
+          description: Id of the first batch on this page.
+          type: string
+        has_more:
+          type: boolean
+        last_id:
+          description: Id of the last batch on this page; pass it as `after` to fetch the next page.
+          type: string
+        object:
+          enum:
+          - list
+          type: string
+      required:
+      - object
+      - data
+      - has_more
+      type: object
+    InferenceError:
+      description: Error shape returned by the inference endpoint (OpenAI-compatible).
+      properties:
+        error:
+          properties:
+            code:
+              description: Machine code for the specific failure.
+              type: string
+            message:
+              description: Human-readable explanation.
+              type: string
+            type:
+              description: Error class, e.g. invalid_request_error.
+              type: string
+          required:
+          - message
+          - type
+          type: object
+      required:
+      - error
+      type: object
   responses:
-    InferenceBadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: The request is invalid
-    InferenceNotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: Not found (also returned when the organization does not have Batch API access)
     InferenceUnavailable:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/InferenceError'
       description: The action could not be dispatched; retry
-    InferenceTooLarge:
+    InferenceBadRequest:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/InferenceError'
-      description: The upload exceeds the 200 MB limit
+      description: The request is invalid
     InferenceUnauthorized:
       content:
         application/json:
@@ -389,12 +377,24 @@ components:
           schema:
             $ref: '#/components/schemas/InferenceError'
       description: The resource is in a state that rejects this action
+    InferenceNotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Not found (also returned when the organization does not have Batch API access)
     InferenceRateLimited:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/InferenceError'
       description: Too many concurrent uploads; retry shortly
+    InferenceTooLarge:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The upload exceeds the 200 MB limit
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

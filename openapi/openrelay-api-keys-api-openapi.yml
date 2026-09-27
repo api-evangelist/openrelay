@@ -110,58 +110,6 @@ paths:
         destructiveHint: true
 components:
   schemas:
-    ApiKeySummary:
-      properties:
-        createdAt:
-          type: string
-        expiresAt:
-          type: string
-        id:
-          type: string
-        keyPrefix:
-          type: string
-        lastUsedAt:
-          type: string
-        name:
-          type: string
-        revokedAt:
-          type: string
-        scopes:
-          items:
-            type: string
-          type: array
-      required:
-      - id
-      - name
-      - keyPrefix
-      - scopes
-      - createdAt
-      type: object
-    CreateApiKeyRequest:
-      properties:
-        expiresInSeconds:
-          description: Optional server-side expiry, in seconds from now. When set (and > 0) the key stops authenticating after this many seconds, capping the leak window regardless of any client-side cleanup. Omitted or <= 0 means the key never expires (the default).
-          format: int64
-          type: integer
-        name:
-          type: string
-        scopes:
-          description: 'Supported values: clusters:read, clusters:write, vms:read, vms:write, inference.'
-          items:
-            type: string
-          type: array
-      required:
-      - name
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
     CreateApiKeyResult:
       properties:
         createdAt:
@@ -191,13 +139,59 @@ components:
       - createdAt
       - organizationId
       type: object
+    CreateApiKeyRequest:
+      properties:
+        expiresInSeconds:
+          description: Optional server-side expiry, in seconds from now. When set (and > 0) the key stops authenticating after this many seconds, capping the leak window regardless of any client-side cleanup. Omitted or <= 0 means the key never expires (the default).
+          format: int64
+          type: integer
+        name:
+          type: string
+        scopes:
+          description: 'Supported values: clusters:read, clusters:write, vms:read, vms:write, inference.'
+          items:
+            type: string
+          type: array
+      required:
+      - name
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    ApiKeySummary:
+      properties:
+        createdAt:
+          type: string
+        expiresAt:
+          type: string
+        id:
+          type: string
+        keyPrefix:
+          type: string
+        lastUsedAt:
+          type: string
+        name:
+          type: string
+        revokedAt:
+          type: string
+        scopes:
+          items:
+            type: string
+          type: array
+      required:
+      - id
+      - name
+      - keyPrefix
+      - scopes
+      - createdAt
+      type: object
   responses:
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
     Forbidden:
       content:
         application/json:
@@ -210,6 +204,12 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: The request is invalid
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

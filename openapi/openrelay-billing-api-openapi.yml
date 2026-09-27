@@ -234,63 +234,73 @@ paths:
       tags:
       - Billing
 components:
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    Unavailable:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: A required integration (e.g. payments) is not configured
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
   schemas:
-    InferenceModelUsage:
+    Transaction:
       properties:
-        batch:
-          type: boolean
-        dimensions:
-          additionalProperties:
-            pattern: ^[0-9]+$
-            type: string
-          description: Exact decimal token quantities. Current keys are input, cached_input, cache_write, and output; the map shape reserves room for future metered units.
-          type: object
-        model:
+        amountCents:
+          type: integer
+        createdAt:
           type: string
-        requestCount:
-          description: Exact decimal count; encoded as a string so browser clients do not lose int64 precision.
-          pattern: ^[0-9]+$
+        description:
+          type: string
+        id:
+          type: string
+        inferenceDetails:
+          $ref: '#/components/schemas/InferenceTransactionDetails'
+        source:
+          type: string
+        type:
           type: string
       required:
-      - model
-      - requestCount
-      - batch
-      - dimensions
+      - id
+      - type
+      - source
+      - amountCents
+      - createdAt
       type: object
-    Balance:
+    PaymentMethodCard:
       properties:
-        accruedUsageCents:
-          description: Current-month usage cost not yet settled into a transaction.
-          type: integer
-        availableCents:
-          description: Spendable balance = balanceCents − accruedUsageCents. This is what the deploy gate checks; it can be below balanceCents while usage is running, and slightly negative between auto-recharge ticks.
-          type: integer
-        balanceCents:
-          description: Raw ledger balance (deposits + credits − settled debits).
-          type: integer
-        monthlySpendLimitCents:
-          description: The org's monthly spend cap, or null if no limit is set. Drives the "used of limit" budget gauge in the dashboard.
-          nullable: true
-          type: integer
-        transactions:
-          items:
-            $ref: '#/components/schemas/Transaction'
-          type: array
-      required:
-      - balanceCents
-      - availableCents
-      - accruedUsageCents
-      - transactions
-      type: object
-    SetupIntent:
-      properties:
-        clientSecret:
+        brand:
           type: string
-        publishableKey:
+        expMonth:
+          type: integer
+        expYear:
+          type: integer
+        id:
+          type: string
+        last4:
           type: string
       required:
-      - clientSecret
-      - publishableKey
+      - id
+      - brand
+      - last4
+      - expMonth
+      - expYear
       type: object
     DepositResult:
       properties:
@@ -320,6 +330,62 @@ components:
       required:
       - amountCents
       type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    Balance:
+      properties:
+        accruedUsageCents:
+          description: Current-month usage cost not yet settled into a transaction.
+          type: integer
+        availableCents:
+          description: Spendable balance = balanceCents − accruedUsageCents. This is what the deploy gate checks; it can be below balanceCents while usage is running, and slightly negative between auto-recharge ticks.
+          type: integer
+        balanceCents:
+          description: Raw ledger balance (deposits + credits − settled debits).
+          type: integer
+        monthlySpendLimitCents:
+          description: The org's monthly spend cap, or null if no limit is set. Drives the "used of limit" budget gauge in the dashboard.
+          nullable: true
+          type: integer
+        transactions:
+          items:
+            $ref: '#/components/schemas/Transaction'
+          type: array
+      required:
+      - balanceCents
+      - availableCents
+      - accruedUsageCents
+      - transactions
+      type: object
+    InferenceModelUsage:
+      properties:
+        batch:
+          type: boolean
+        dimensions:
+          additionalProperties:
+            pattern: ^[0-9]+$
+            type: string
+          description: Exact decimal token quantities. Current keys are input, cached_input, cache_write, and output; the map shape reserves room for future metered units.
+          type: object
+        model:
+          type: string
+        requestCount:
+          description: Exact decimal count; encoded as a string so browser clients do not lose int64 precision.
+          pattern: ^[0-9]+$
+          type: string
+      required:
+      - model
+      - requestCount
+      - batch
+      - dimensions
+      type: object
     PaymentMethods:
       properties:
         defaultPaymentMethodId:
@@ -330,38 +396,6 @@ components:
           type: array
       required:
       - paymentMethods
-      type: object
-    Transaction:
-      properties:
-        amountCents:
-          type: integer
-        createdAt:
-          type: string
-        description:
-          type: string
-        id:
-          type: string
-        inferenceDetails:
-          $ref: '#/components/schemas/InferenceTransactionDetails'
-        source:
-          type: string
-        type:
-          type: string
-      required:
-      - id
-      - type
-      - source
-      - amountCents
-      - createdAt
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
       type: object
     InferenceTransactionDetails:
       properties:
@@ -381,25 +415,6 @@ components:
       - partial
       - carriedNanoUSD
       type: object
-    PaymentMethodCard:
-      properties:
-        brand:
-          type: string
-        expMonth:
-          type: integer
-        expYear:
-          type: integer
-        id:
-          type: string
-        last4:
-          type: string
-      required:
-      - id
-      - brand
-      - last4
-      - expMonth
-      - expYear
-      type: object
     AutoRechargeSettings:
       properties:
         amountCents:
@@ -416,31 +431,16 @@ components:
       - thresholdCents
       - amountCents
       type: object
-  responses:
-    Unavailable:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: A required integration (e.g. payments) is not configured
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
+    SetupIntent:
+      properties:
+        clientSecret:
+          type: string
+        publishableKey:
+          type: string
+      required:
+      - clientSecret
+      - publishableKey
+      type: object
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

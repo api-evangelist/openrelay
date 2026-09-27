@@ -23,16 +23,13 @@
     "openrelay-vms-api-openapi.yml",
     "openrelay-webhooks-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "openrelay-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "superseded outputs removed: openrelay-v-ms-api-openapi.yml",
-    "apis.yml register: written (+1 apis, 19 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "openrelay-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -51,7 +48,7 @@
     "openrelay-ssh-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "openrelay-transfers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "openrelay-usage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "openrelay-v-ms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "openrelay-vms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "openrelay-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

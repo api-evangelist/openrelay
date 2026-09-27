@@ -317,69 +317,6 @@ components:
       - userId
       - role
       type: object
-    Organization:
-      properties:
-        billingEmail:
-          type: string
-        createdAt:
-          type: string
-        id:
-          type: string
-        isProvider:
-          type: boolean
-        name:
-          type: string
-        plan:
-          type: string
-        shortId:
-          type: string
-        slug:
-          type: string
-      required:
-      - id
-      - shortId
-      - name
-      - slug
-      - billingEmail
-      - plan
-      type: object
-    BootstrapResult:
-      properties:
-        organizationId:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
-      type: object
-    UpdateOrgRequest:
-      properties:
-        billingEmail:
-          type: string
-        name:
-          type: string
-      type: object
-    CreateOrgRequest:
-      properties:
-        billingEmail:
-          type: string
-        name:
-          type: string
-        slug:
-          type: string
-      required:
-      - name
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
     Invite:
       properties:
         email:
@@ -412,6 +349,15 @@ components:
       - email
       - role
       type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     UpdateMemberRoleRequest:
       properties:
         role:
@@ -424,19 +370,73 @@ components:
       required:
       - role
       type: object
+    UpdateOrgRequest:
+      properties:
+        billingEmail:
+          type: string
+        name:
+          type: string
+      type: object
+    BootstrapResult:
+      properties:
+        organizationId:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
+      type: object
+    CreateOrgRequest:
+      properties:
+        billingEmail:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+      required:
+      - name
+      type: object
+    Organization:
+      properties:
+        billingEmail:
+          type: string
+        createdAt:
+          type: string
+        id:
+          type: string
+        isProvider:
+          type: boolean
+        name:
+          type: string
+        plan:
+          type: string
+        shortId:
+          type: string
+        slug:
+          type: string
+      required:
+      - id
+      - shortId
+      - name
+      - slug
+      - billingEmail
+      - plan
+      type: object
   responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
     NotFound:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: Resource not found
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
     BadRequest:
       content:
         application/json:
