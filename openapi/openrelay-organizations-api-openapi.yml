@@ -291,30 +291,50 @@ paths:
       tags:
       - Organizations
 components:
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
   schemas:
-    Member:
+    AddMemberRequest:
       properties:
-        avatarUrl:
-          type: string
         email:
           type: string
-        fullName:
-          type: string
-        invitedAt:
-          type: string
-        joinedAt:
-          type: string
         role:
-          type: string
-        status:
           enum:
-          - active
-          - invited
-          type: string
-        userId:
+          - admin
+          - member
+          - viewer
           type: string
       required:
-      - userId
+      - email
       - role
       type: object
     Invite:
@@ -335,20 +355,6 @@ components:
       - role
       - invitedAt
       type: object
-    AddMemberRequest:
-      properties:
-        email:
-          type: string
-        role:
-          enum:
-          - admin
-          - member
-          - viewer
-          type: string
-      required:
-      - email
-      - role
-      type: object
     Error:
       properties:
         code:
@@ -357,6 +363,17 @@ components:
           type: string
       required:
       - error
+      type: object
+    CreateOrgRequest:
+      properties:
+        billingEmail:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+      required:
+      - name
       type: object
     UpdateMemberRoleRequest:
       properties:
@@ -370,13 +387,6 @@ components:
       required:
       - role
       type: object
-    UpdateOrgRequest:
-      properties:
-        billingEmail:
-          type: string
-        name:
-          type: string
-      type: object
     BootstrapResult:
       properties:
         organizationId:
@@ -387,16 +397,12 @@ components:
       - organizationId
       - role
       type: object
-    CreateOrgRequest:
+    UpdateOrgRequest:
       properties:
         billingEmail:
           type: string
         name:
           type: string
-        slug:
-          type: string
-      required:
-      - name
       type: object
     Organization:
       properties:
@@ -424,37 +430,31 @@ components:
       - billingEmail
       - plan
       type: object
-  responses:
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
+    Member:
+      properties:
+        avatarUrl:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+        invitedAt:
+          type: string
+        joinedAt:
+          type: string
+        role:
+          type: string
+        status:
+          enum:
+          - active
+          - invited
+          type: string
+        userId:
+          type: string
+      required:
+      - userId
+      - role
+      type: object
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

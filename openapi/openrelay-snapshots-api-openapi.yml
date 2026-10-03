@@ -156,36 +156,36 @@ paths:
         group: VMs
 components:
   responses:
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
     Forbidden:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
     BadRequest:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: The request is invalid
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
     Conflict:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: The request conflicts with existing state
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
   schemas:
     ForkRequest:
       properties:
@@ -211,28 +211,6 @@ components:
           type: string
       required:
       - snapshotId
-      type: object
-    CreatedResource:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        status:
-          type: string
-      required:
-      - id
-      - name
-      - status
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
       type: object
     Snapshot:
       properties:
@@ -287,6 +265,28 @@ components:
       - diskSizeGb
       - chainDepth
       - createdAt
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    CreatedResource:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+      required:
+      - id
+      - name
+      - status
       type: object
     CreateSnapshotRequest:
       properties:

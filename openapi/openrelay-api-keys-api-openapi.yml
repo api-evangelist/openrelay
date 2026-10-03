@@ -109,6 +109,25 @@ paths:
       x-openrelay-mcp:
         destructiveHint: true
 components:
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
   schemas:
     CreateApiKeyResult:
       properties:
@@ -138,22 +157,6 @@ components:
       - scopes
       - createdAt
       - organizationId
-      type: object
-    CreateApiKeyRequest:
-      properties:
-        expiresInSeconds:
-          description: Optional server-side expiry, in seconds from now. When set (and > 0) the key stops authenticating after this many seconds, capping the leak window regardless of any client-side cleanup. Omitted or <= 0 means the key never expires (the default).
-          format: int64
-          type: integer
-        name:
-          type: string
-        scopes:
-          description: 'Supported values: clusters:read, clusters:write, vms:read, vms:write, inference.'
-          items:
-            type: string
-          type: array
-      required:
-      - name
       type: object
     Error:
       properties:
@@ -191,25 +194,22 @@ components:
       - scopes
       - createdAt
       type: object
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
+    CreateApiKeyRequest:
+      properties:
+        expiresInSeconds:
+          description: Optional server-side expiry, in seconds from now. When set (and > 0) the key stops authenticating after this many seconds, capping the leak window regardless of any client-side cleanup. Omitted or <= 0 means the key never expires (the default).
+          format: int64
+          type: integer
+        name:
+          type: string
+        scopes:
+          description: 'Supported values: clusters:read, clusters:write, vms:read, vms:write, inference.'
+          items:
+            type: string
+          type: array
+      required:
+      - name
+      type: object
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

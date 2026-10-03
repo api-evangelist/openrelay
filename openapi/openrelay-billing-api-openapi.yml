@@ -241,18 +241,18 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
     Unavailable:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: A required integration (e.g. payments) is not configured
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
     Unauthorized:
       content:
         application/json:
@@ -260,29 +260,6 @@ components:
             $ref: '#/components/schemas/Error'
       description: Missing or invalid API key
   schemas:
-    Transaction:
-      properties:
-        amountCents:
-          type: integer
-        createdAt:
-          type: string
-        description:
-          type: string
-        id:
-          type: string
-        inferenceDetails:
-          $ref: '#/components/schemas/InferenceTransactionDetails'
-        source:
-          type: string
-        type:
-          type: string
-      required:
-      - id
-      - type
-      - source
-      - amountCents
-      - createdAt
-      type: object
     PaymentMethodCard:
       properties:
         brand:
@@ -302,19 +279,51 @@ components:
       - expMonth
       - expYear
       type: object
-    DepositResult:
+    SetupIntent:
       properties:
         clientSecret:
-          description: Set only when status is requires_action (on-session SCA).
           type: string
-        paymentIntentId:
-          type: string
-        status:
-          description: Stripe PaymentIntent status. "succeeded" → credit lands via webhook; "requires_action" → complete SCA on-session with clientSecret; "requires_payment_method" → the card was declined.
+        publishableKey:
           type: string
       required:
-      - paymentIntentId
-      - status
+      - clientSecret
+      - publishableKey
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    AutoRechargeSettings:
+      properties:
+        amountCents:
+          description: Amount charged per auto-recharge (within deposit bounds $10–$500).
+          type: integer
+        enabled:
+          description: When on, the balance is topped up automatically below the threshold.
+          type: boolean
+        thresholdCents:
+          description: Recharge fires when available balance drops below this.
+          type: integer
+      required:
+      - enabled
+      - thresholdCents
+      - amountCents
+      type: object
+    PaymentMethods:
+      properties:
+        defaultPaymentMethodId:
+          type: string
+        paymentMethods:
+          items:
+            $ref: '#/components/schemas/PaymentMethodCard'
+          type: array
+      required:
+      - paymentMethods
       type: object
     DepositRequest:
       properties:
@@ -330,14 +339,41 @@ components:
       required:
       - amountCents
       type: object
-    Error:
+    InferenceModelUsage:
       properties:
-        code:
+        batch:
+          type: boolean
+        dimensions:
+          additionalProperties:
+            pattern: ^[0-9]+$
+            type: string
+          description: Exact decimal token quantities. Current keys are input, cached_input, cache_write, and output; the map shape reserves room for future metered units.
+          type: object
+        model:
           type: string
-        error:
+        requestCount:
+          description: Exact decimal count; encoded as a string so browser clients do not lose int64 precision.
+          pattern: ^[0-9]+$
           type: string
       required:
-      - error
+      - model
+      - requestCount
+      - batch
+      - dimensions
+      type: object
+    DepositResult:
+      properties:
+        clientSecret:
+          description: Set only when status is requires_action (on-session SCA).
+          type: string
+        paymentIntentId:
+          type: string
+        status:
+          description: Stripe PaymentIntent status. "succeeded" → credit lands via webhook; "requires_action" → complete SCA on-session with clientSecret; "requires_payment_method" → the card was declined.
+          type: string
+      required:
+      - paymentIntentId
+      - status
       type: object
     Balance:
       properties:
@@ -364,38 +400,28 @@ components:
       - accruedUsageCents
       - transactions
       type: object
-    InferenceModelUsage:
+    Transaction:
       properties:
-        batch:
-          type: boolean
-        dimensions:
-          additionalProperties:
-            pattern: ^[0-9]+$
-            type: string
-          description: Exact decimal token quantities. Current keys are input, cached_input, cache_write, and output; the map shape reserves room for future metered units.
-          type: object
-        model:
+        amountCents:
+          type: integer
+        createdAt:
           type: string
-        requestCount:
-          description: Exact decimal count; encoded as a string so browser clients do not lose int64 precision.
-          pattern: ^[0-9]+$
+        description:
+          type: string
+        id:
+          type: string
+        inferenceDetails:
+          $ref: '#/components/schemas/InferenceTransactionDetails'
+        source:
+          type: string
+        type:
           type: string
       required:
-      - model
-      - requestCount
-      - batch
-      - dimensions
-      type: object
-    PaymentMethods:
-      properties:
-        defaultPaymentMethodId:
-          type: string
-        paymentMethods:
-          items:
-            $ref: '#/components/schemas/PaymentMethodCard'
-          type: array
-      required:
-      - paymentMethods
+      - id
+      - type
+      - source
+      - amountCents
+      - createdAt
       type: object
     InferenceTransactionDetails:
       properties:
@@ -414,32 +440,6 @@ components:
       - models
       - partial
       - carriedNanoUSD
-      type: object
-    AutoRechargeSettings:
-      properties:
-        amountCents:
-          description: Amount charged per auto-recharge (within deposit bounds $10–$500).
-          type: integer
-        enabled:
-          description: When on, the balance is topped up automatically below the threshold.
-          type: boolean
-        thresholdCents:
-          description: Recharge fires when available balance drops below this.
-          type: integer
-      required:
-      - enabled
-      - thresholdCents
-      - amountCents
-      type: object
-    SetupIntent:
-      properties:
-        clientSecret:
-          type: string
-        publishableKey:
-          type: string
-      required:
-      - clientSecret
-      - publishableKey
       type: object
   securitySchemes:
     apiKey:

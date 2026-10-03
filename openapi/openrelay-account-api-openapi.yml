@@ -197,37 +197,92 @@ paths:
         default: true
 components:
   responses:
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    Gone:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The resource existed but is no longer usable (e.g. an expired invite)
     Forbidden:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
-    Unauthorized:
+    Gone:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
+      description: The resource existed but is no longer usable (e.g. an expired invite)
     Conflict:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: The request conflicts with existing state
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
   schemas:
+    MyInvite:
+      properties:
+        expiresAt:
+          type: string
+        invitedAt:
+          type: string
+        inviterEmail:
+          description: Email of the user who sent the invite, when resolvable.
+          type: string
+        organizationId:
+          type: string
+        organizationName:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
+      - invitedAt
+      type: object
+    AcceptInviteResult:
+      properties:
+        organizationId:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
+      type: object
+    UserProfile:
+      properties:
+        avatarUrl:
+          type: string
+        defaultOrganizationId:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+        id:
+          type: string
+      required:
+      - id
+      - email
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     Me:
       properties:
         organizations:
@@ -249,14 +304,36 @@ components:
         fullName:
           type: string
       type: object
-    Error:
+    OrgMembership:
       properties:
-        code:
+        features:
+          $ref: '#/components/schemas/OrgFeatures'
+        name:
           type: string
-        error:
+        organizationId:
+          type: string
+        role:
           type: string
       required:
-      - error
+      - organizationId
+      - name
+      - role
+      - features
+      type: object
+    BootstrapResult:
+      properties:
+        organizationId:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
+      type: object
+    BootstrapRequest:
+      properties:
+        orgName:
+          type: string
       type: object
     OrgFeatures:
       description: Per-org feature entitlements the dashboard gates its UI on.
@@ -271,16 +348,6 @@ components:
       required:
       - batch
       - publicEndpoint
-      type: object
-    BootstrapResult:
-      properties:
-        organizationId:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
       type: object
     Whoami:
       properties:
@@ -317,73 +384,6 @@ components:
       required:
       - principalType
       - organizationId
-      type: object
-    AcceptInviteResult:
-      properties:
-        organizationId:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
-      type: object
-    BootstrapRequest:
-      properties:
-        orgName:
-          type: string
-      type: object
-    OrgMembership:
-      properties:
-        features:
-          $ref: '#/components/schemas/OrgFeatures'
-        name:
-          type: string
-        organizationId:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - name
-      - role
-      - features
-      type: object
-    UserProfile:
-      properties:
-        avatarUrl:
-          type: string
-        defaultOrganizationId:
-          type: string
-        email:
-          type: string
-        fullName:
-          type: string
-        id:
-          type: string
-      required:
-      - id
-      - email
-      type: object
-    MyInvite:
-      properties:
-        expiresAt:
-          type: string
-        invitedAt:
-          type: string
-        inviterEmail:
-          description: Email of the user who sent the invite, when resolvable.
-          type: string
-        organizationId:
-          type: string
-        organizationName:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
-      - invitedAt
       type: object
   securitySchemes:
     apiKey:

@@ -277,147 +277,48 @@ paths:
       x-openrelay-mcp:
         default: true
 components:
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
   schemas:
-    ScaleRequest:
+    ClusterPage:
       properties:
-        replicaCount:
-          minimum: 1
-          type: integer
-      required:
-      - replicaCount
-      type: object
-    ClusterSummary:
-      properties:
-        activeReplicas:
-          type: integer
-        createdAt:
-          type: string
-        endpointUrl:
-          type: string
-        gpuModelId:
-          type: string
-        id:
-          type: string
-        name:
-          type: string
-        organizationId:
-          type: string
-        replicaCount:
-          type: integer
-        status:
+        items:
+          items:
+            $ref: '#/components/schemas/ClusterSummary'
+          type: array
+        nextCursor:
           type: string
       required:
-      - id
-      - organizationId
-      - name
-      - status
-      type: object
-    ClusterReplicaItem:
-      properties:
-        consecutiveFailures:
-          type: integer
-        createdAt:
-          type: string
-        diskTotalBytes:
-          format: int64
-          type: integer
-        diskUpdatedAt:
-          type: string
-        diskUsedBytes:
-          format: int64
-          type: integer
-        endpointUrl:
-          type: string
-        gpuCount:
-          type: integer
-        healthy:
-          type: boolean
-        id:
-          type: string
-        internalIp:
-          type: string
-        lastHealthCheckAt:
-          type: string
-        nodeHostname:
-          type: string
-        nodeId:
-          type: string
-        nodeLocation:
-          type: string
-        nodeRegion:
-          type: string
-        nvlinkEnabled:
-          type: boolean
-        port:
-          type: integer
-        sshPort:
-          type: integer
-        startedAt:
-          type: string
-        status:
-          type: string
-      required:
-      - id
-      - gpuCount
-      - status
-      - healthy
-      - nvlinkEnabled
-      - createdAt
-      type: object
-    CreateClusterRequest:
-      properties:
-        allowFallback:
-          type: boolean
-        containerCommand:
-          items:
-            type: string
-          type: array
-        containerPort:
-          type: integer
-        diskSizeGb:
-          type: integer
-        envVars:
-          additionalProperties:
-            type: string
-          type: object
-        gpuModelId:
-          type: string
-        gpusPerReplica:
-          type: integer
-        healthCheckPath:
-          type: string
-        healthCheckPort:
-          type: integer
-        healthChecks:
-          items:
-            type: string
-          type: array
-        imageUrl:
-          type: string
-        kernelModules:
-          items:
-            type: string
-          type: array
-        name:
-          type: string
-        preferredRegions:
-          items:
-            type: string
-          type: array
-        privileged:
-          type: boolean
-        registryCredentialId:
-          type: string
-        replicaCount:
-          type: integer
-        resourceSize:
-          type: string
-        templateId:
-          type: string
-        tier:
-          type: string
-      required:
-      - name
+      - items
       type: object
     ClusterDetail:
       properties:
@@ -500,26 +401,6 @@ components:
       - createdAt
       - updatedAt
       type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    ClusterPage:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/ClusterSummary'
-          type: array
-        nextCursor:
-          type: string
-      required:
-      - items
-      type: object
     GpuModel:
       properties:
         architecture:
@@ -543,37 +424,156 @@ components:
       - vramGb
       - hidden
       type: object
-  responses:
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    CreateClusterRequest:
+      properties:
+        allowFallback:
+          type: boolean
+        containerCommand:
+          items:
+            type: string
+          type: array
+        containerPort:
+          type: integer
+        diskSizeGb:
+          type: integer
+        envVars:
+          additionalProperties:
+            type: string
+          type: object
+        gpuModelId:
+          type: string
+        gpusPerReplica:
+          type: integer
+        healthCheckPath:
+          type: string
+        healthCheckPort:
+          type: integer
+        healthChecks:
+          items:
+            type: string
+          type: array
+        imageUrl:
+          type: string
+        kernelModules:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        preferredRegions:
+          items:
+            type: string
+          type: array
+        privileged:
+          type: boolean
+        registryCredentialId:
+          type: string
+        replicaCount:
+          type: integer
+        resourceSize:
+          type: string
+        templateId:
+          type: string
+        tier:
+          type: string
+      required:
+      - name
+      type: object
+    ClusterSummary:
+      properties:
+        activeReplicas:
+          type: integer
+        createdAt:
+          type: string
+        endpointUrl:
+          type: string
+        gpuModelId:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        organizationId:
+          type: string
+        replicaCount:
+          type: integer
+        status:
+          type: string
+      required:
+      - id
+      - organizationId
+      - name
+      - status
+      type: object
+    ClusterReplicaItem:
+      properties:
+        consecutiveFailures:
+          type: integer
+        createdAt:
+          type: string
+        diskTotalBytes:
+          format: int64
+          type: integer
+        diskUpdatedAt:
+          type: string
+        diskUsedBytes:
+          format: int64
+          type: integer
+        endpointUrl:
+          type: string
+        gpuCount:
+          type: integer
+        healthy:
+          type: boolean
+        id:
+          type: string
+        internalIp:
+          type: string
+        lastHealthCheckAt:
+          type: string
+        nodeHostname:
+          type: string
+        nodeId:
+          type: string
+        nodeLocation:
+          type: string
+        nodeRegion:
+          type: string
+        nvlinkEnabled:
+          type: boolean
+        port:
+          type: integer
+        sshPort:
+          type: integer
+        startedAt:
+          type: string
+        status:
+          type: string
+      required:
+      - id
+      - gpuCount
+      - status
+      - healthy
+      - nvlinkEnabled
+      - createdAt
+      type: object
+    ScaleRequest:
+      properties:
+        replicaCount:
+          minimum: 1
+          type: integer
+      required:
+      - replicaCount
+      type: object
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

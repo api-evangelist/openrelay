@@ -56,6 +56,15 @@ components:
             $ref: '#/components/schemas/Error'
       description: Missing or invalid API key
   schemas:
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     CurrentUsage:
       properties:
         autoStopFloorCents:
@@ -81,15 +90,6 @@ components:
       - usageCents
       - usageHours
       - breakdown
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
       type: object
     UsageBreakdownItem:
       properties:

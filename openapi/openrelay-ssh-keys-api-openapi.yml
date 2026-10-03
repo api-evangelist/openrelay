@@ -119,19 +119,38 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
     Conflict:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: The request conflicts with existing state
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
   schemas:
+    CreateSshKeyRequest:
+      properties:
+        name:
+          type: string
+        publicKey:
+          type: string
+      required:
+      - name
+      - publicKey
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     SshKeySummary:
       properties:
         createdAt:
@@ -150,25 +169,6 @@ components:
       - publicKey
       - fingerprint
       - createdAt
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    CreateSshKeyRequest:
-      properties:
-        name:
-          type: string
-        publicKey:
-          type: string
-      required:
-      - name
-      - publicKey
       type: object
   securitySchemes:
     apiKey:

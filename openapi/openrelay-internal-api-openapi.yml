@@ -76,6 +76,25 @@ paths:
       x-internal: true
 components:
   schemas:
+    Health:
+      properties:
+        service:
+          type: string
+        status:
+          type: string
+      required:
+      - status
+      - service
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     EnrollNodeRequest:
       properties:
         cpuCores:
@@ -128,89 +147,6 @@ components:
       - token
       - hardwareFingerprint
       - nebulaPubkey
-      type: object
-    GpuInventory:
-      description: 'Versioned, driverless GPU detection (lspci) collected by enroll.sh. Works on VFIO hosts with no NVIDIA driver and on non-NVIDIA accelerators. source=none means the node could not detect (no lspci) — the control plane must NOT treat that as "no GPUs".
-
-        '
-      properties:
-        devices:
-          items:
-            properties:
-              bdfs:
-                description: full BDFs of the group's devices
-                items:
-                  type: string
-                type: array
-              count:
-                type: integer
-              pciClass:
-                description: PCI class code, e.g. 0300/0302/1200
-                type: string
-              pciDeviceId:
-                description: vendor:device, e.g. 10de:2204
-                type: string
-              pciName:
-                description: lspci device name string
-                type: string
-            required:
-            - pciDeviceId
-            - count
-            type: object
-          type: array
-        driverVersion:
-          type: string
-        iommuGroups:
-          description: 'Per-IOMMU-group VFIO units: each entry is one IOMMU group containing an NVIDIA/AMD GPU. A group''s GPUs are indivisible (must be passed together). Empty when IOMMU is off (gVisor/CPU nodes) — those GPUs are fed via the Nomad device fingerprint instead. Kept out of the hardware fingerprint (BDFs renumber across reboots).
-
-            '
-          items:
-            properties:
-              gpus:
-                description: GPU-class (0300/0302) NVIDIA/AMD devices in this group — the sellable + passthrough set
-                items:
-                  properties:
-                    bdf:
-                      description: full BDF, e.g. 0000:04:00.0
-                      type: string
-                    deviceId:
-                      description: vendor:device, e.g. 10de:2204
-                      type: string
-                  required:
-                  - bdf
-                  - deviceId
-                  type: object
-                type: array
-              group:
-                description: IOMMU group number (provenance)
-                type: integer
-            required:
-            - group
-            - gpus
-            type: object
-          type: array
-        nvswitchCount:
-          description: NVSwitch bridges (PCI class 0680, vendor 10de) on the node
-          type: integer
-        source:
-          description: none | lspci | lspci+nvidia-smi
-          type: string
-        version:
-          type: integer
-      required:
-      - version
-      - source
-      - devices
-      - nvswitchCount
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
       type: object
     EnrollNodeBundle:
       properties:
@@ -289,15 +225,79 @@ components:
       - gatewayAddr
       - gatewayServerName
       type: object
-    Health:
+    GpuInventory:
+      description: 'Versioned, driverless GPU detection (lspci) collected by enroll.sh. Works on VFIO hosts with no NVIDIA driver and on non-NVIDIA accelerators. source=none means the node could not detect (no lspci) — the control plane must NOT treat that as "no GPUs".
+
+        '
       properties:
-        service:
+        devices:
+          items:
+            properties:
+              bdfs:
+                description: full BDFs of the group's devices
+                items:
+                  type: string
+                type: array
+              count:
+                type: integer
+              pciClass:
+                description: PCI class code, e.g. 0300/0302/1200
+                type: string
+              pciDeviceId:
+                description: vendor:device, e.g. 10de:2204
+                type: string
+              pciName:
+                description: lspci device name string
+                type: string
+            required:
+            - pciDeviceId
+            - count
+            type: object
+          type: array
+        driverVersion:
           type: string
-        status:
+        iommuGroups:
+          description: 'Per-IOMMU-group VFIO units: each entry is one IOMMU group containing an NVIDIA/AMD GPU. A group''s GPUs are indivisible (must be passed together). Empty when IOMMU is off (gVisor/CPU nodes) — those GPUs are fed via the Nomad device fingerprint instead. Kept out of the hardware fingerprint (BDFs renumber across reboots).
+
+            '
+          items:
+            properties:
+              gpus:
+                description: GPU-class (0300/0302) NVIDIA/AMD devices in this group — the sellable + passthrough set
+                items:
+                  properties:
+                    bdf:
+                      description: full BDF, e.g. 0000:04:00.0
+                      type: string
+                    deviceId:
+                      description: vendor:device, e.g. 10de:2204
+                      type: string
+                  required:
+                  - bdf
+                  - deviceId
+                  type: object
+                type: array
+              group:
+                description: IOMMU group number (provenance)
+                type: integer
+            required:
+            - group
+            - gpus
+            type: object
+          type: array
+        nvswitchCount:
+          description: NVSwitch bridges (PCI class 0680, vendor 10de) on the node
+          type: integer
+        source:
+          description: none | lspci | lspci+nvidia-smi
           type: string
+        version:
+          type: integer
       required:
-      - status
-      - service
+      - version
+      - source
+      - devices
+      - nvswitchCount
       type: object
   securitySchemes:
     apiKey:

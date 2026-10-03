@@ -215,41 +215,6 @@ paths:
         exclude: true
 components:
   schemas:
-    FileObject:
-      description: A file stored for the Batch API (OpenAI-compatible).
-      properties:
-        bytes:
-          description: File size in bytes.
-          format: int64
-          type: integer
-        created_at:
-          description: Unix timestamp (seconds).
-          format: int64
-          type: integer
-        expires_at:
-          description: Unix timestamp (seconds); files are retained for 30 days.
-          format: int64
-          type: integer
-        filename:
-          type: string
-        id:
-          description: File id (file-…). Pass it as input_file_id when creating a batch.
-          type: string
-        object:
-          enum:
-          - file
-          type: string
-        purpose:
-          description: '"batch" for inputs, "batch_output" / "batch_error" for result files.'
-          type: string
-      required:
-      - id
-      - object
-      - bytes
-      - created_at
-      - filename
-      - purpose
-      type: object
     PresignUploadResponse:
       description: A minted file id and a signed URL for a direct browser upload.
       properties:
@@ -289,25 +254,42 @@ components:
       required:
       - error
       type: object
+    FileObject:
+      description: A file stored for the Batch API (OpenAI-compatible).
+      properties:
+        bytes:
+          description: File size in bytes.
+          format: int64
+          type: integer
+        created_at:
+          description: Unix timestamp (seconds).
+          format: int64
+          type: integer
+        expires_at:
+          description: Unix timestamp (seconds); files are retained for 30 days.
+          format: int64
+          type: integer
+        filename:
+          type: string
+        id:
+          description: File id (file-…). Pass it as input_file_id when creating a batch.
+          type: string
+        object:
+          enum:
+          - file
+          type: string
+        purpose:
+          description: '"batch" for inputs, "batch_output" / "batch_error" for result files.'
+          type: string
+      required:
+      - id
+      - object
+      - bytes
+      - created_at
+      - filename
+      - purpose
+      type: object
   responses:
-    InferenceBadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: The request is invalid
-    InferenceUnauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: Missing or invalid API key
-    InferenceRateLimited:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: Too many concurrent uploads; retry shortly
     InferenceNotFound:
       content:
         application/json:
@@ -320,6 +302,24 @@ components:
           schema:
             $ref: '#/components/schemas/InferenceError'
       description: The upload exceeds the 200 MB limit
+    InferenceRateLimited:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Too many concurrent uploads; retry shortly
+    InferenceUnauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Missing or invalid API key
+    InferenceBadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The request is invalid
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
