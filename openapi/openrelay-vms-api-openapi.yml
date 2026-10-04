@@ -472,46 +472,213 @@ paths:
       x-openrelay-mcp:
         default: true
 components:
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
   schemas:
-    VmNodeInfo:
+    AttachSshKeyRequest:
       properties:
-        hostname:
-          type: string
-        location:
+        sshKeyId:
           type: string
       required:
-      - hostname
+      - sshKeyId
+      type: object
+    VmPage:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/VmSummary'
+          type: array
+        nextCursor:
+          type: string
+      required:
+      - items
+      type: object
+    VmGpuInfo:
+      properties:
+        name:
+          type: string
+        pricePerHourCents:
+          description: current catalog per-GPU-hour rate for this model/tier (informational; the billed rate is VmDetail.pricePerHourCents)
+          type: integer
+        vramGb:
+          type: integer
+      required:
+      - name
+      - vramGb
+      type: object
+    VmSshKeyItem:
+      properties:
+        attached:
+          type: boolean
+        crossOrg:
+          type: boolean
+        fingerprint:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        orgName:
+          nullable: true
+          type: string
+      required:
+      - id
+      - name
+      - fingerprint
+      - attached
+      - crossOrg
+      type: object
+    VmBurn:
+      properties:
+        accruedSessionCents:
+          description: cost accrued by the open session so far (session span times the locked rate, the same span math settlement uses); omitted when no session is open
+          type: integer
+        autoStopFloorCents:
+          description: available-balance floor (cents) below which the org is auto-stopped
+          type: integer
+        diskBilled:
+          description: 'always false today: disk is included in the bundled hourly rate and never billed as a separate line item'
+          type: boolean
+        gpuCount:
+          description: set when rateBasis is gpu
+          type: integer
+        orgAccruedMonthCents:
+          description: the org's current-month accrued, un-settled usage across all workloads
+          type: integer
+        orgAvailableCents:
+          description: spendable balance = ledger balance minus orgAccruedMonthCents (can be negative)
+          type: integer
+        orgBurnPerHourCents:
+          description: sum of the locked rates of every open usage record in the org
+          type: integer
+        perGpuCents:
+          description: pricePerHourCents / gpuCount; set when rateBasis is gpu
+          type: integer
+        pricePerHourCents:
+          description: 'the VM''s bundled hourly rate: the open usage record''s locked rate when a session is accruing, else the current catalog rate for the VM''s shape'
+          type: integer
+        projectedRunwayHours:
+          description: (orgAvailableCents - autoStopFloorCents) / orgBurnPerHourCents; null when orgBurnPerHourCents is 0, clamped to 0 when available is already at or below the floor
+          format: double
+          nullable: true
+          type: number
+        rateBasis:
+          description: gpu = per-GPU catalog price times gpuCount; cpu = flat per-resource-size rate
+          enum:
+          - gpu
+          - cpu
+          type: string
+        rateSource:
+          description: locked = read from the open usage record (exactly what settlement will charge); catalog = no open session, the rate that would apply on next start
+          enum:
+          - locked
+          - catalog
+          type: string
+        sessionStartedAt:
+          description: start of the open usage session; omitted when none
+          type: string
+        vmId:
+          type: string
+      required:
+      - vmId
+      - pricePerHourCents
+      - rateSource
+      - rateBasis
+      - diskBilled
+      - orgAccruedMonthCents
+      - orgAvailableCents
+      - orgBurnPerHourCents
+      - projectedRunwayHours
+      - autoStopFloorCents
+      type: object
+    ResizeDiskRequest:
+      properties:
+        newSizeGb:
+          type: integer
+      required:
+      - newSizeGb
+      type: object
+    VmTemplateInfo:
+      properties:
+        name:
+          type: string
+        osType:
+          type: string
+        osVersion:
+          type: string
+      required:
+      - name
+      - osType
+      type: object
+    VmSummary:
+      properties:
+        createdAt:
+          type: string
+        diskSizeGb:
+          type: integer
+        endpointUrl:
+          type: string
+        gpuCount:
+          type: integer
+        gpuModelId:
+          type: string
+        gpuModelName:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        organizationId:
+          type: string
+        pricePerHourCents:
+          type: integer
+        provisioningStage:
+          type: string
+        public:
+          description: true = open endpoint (no data-plane auth); false = require an org API key
+          type: boolean
+        resourceSize:
+          type: string
+        serviceType:
+          description: managed-service tag, e.g. "paseo" for a Coding Server; empty for a plain VM
+          type: string
+        status:
+          type: string
+        statusReason:
+          description: human-readable cause for failed/stuck states
+          type: string
+        tier:
+          type: string
+      required:
+      - id
+      - organizationId
+      - name
+      - status
+      type: object
+    TelegramLinkResult:
+      properties:
+        createdAt:
+          type: string
+        linkedAt:
+          type: string
+        linkingCode:
+          type: string
+        present:
+          type: boolean
+        telegramUserId:
+          format: int64
+          type: integer
+        telegramUsername:
+          type: string
+      required:
+      - present
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
       type: object
     VmDetail:
       properties:
@@ -615,221 +782,6 @@ components:
       - createdAt
       - updatedAt
       type: object
-    AttachSshKeyRequest:
-      properties:
-        sshKeyId:
-          type: string
-      required:
-      - sshKeyId
-      type: object
-    VmSummary:
-      properties:
-        createdAt:
-          type: string
-        diskSizeGb:
-          type: integer
-        endpointUrl:
-          type: string
-        gpuCount:
-          type: integer
-        gpuModelId:
-          type: string
-        gpuModelName:
-          type: string
-        id:
-          type: string
-        name:
-          type: string
-        organizationId:
-          type: string
-        pricePerHourCents:
-          type: integer
-        provisioningStage:
-          type: string
-        public:
-          description: true = open endpoint (no data-plane auth); false = require an org API key
-          type: boolean
-        resourceSize:
-          type: string
-        serviceType:
-          description: managed-service tag, e.g. "paseo" for a Coding Server; empty for a plain VM
-          type: string
-        status:
-          type: string
-        statusReason:
-          description: human-readable cause for failed/stuck states
-          type: string
-        tier:
-          type: string
-      required:
-      - id
-      - organizationId
-      - name
-      - status
-      type: object
-    VmGpuInfo:
-      properties:
-        name:
-          type: string
-        pricePerHourCents:
-          description: current catalog per-GPU-hour rate for this model/tier (informational; the billed rate is VmDetail.pricePerHourCents)
-          type: integer
-        vramGb:
-          type: integer
-      required:
-      - name
-      - vramGb
-      type: object
-    ResizeDiskRequest:
-      properties:
-        newSizeGb:
-          type: integer
-      required:
-      - newSizeGb
-      type: object
-    VmBurn:
-      properties:
-        accruedSessionCents:
-          description: cost accrued by the open session so far (session span times the locked rate, the same span math settlement uses); omitted when no session is open
-          type: integer
-        autoStopFloorCents:
-          description: available-balance floor (cents) below which the org is auto-stopped
-          type: integer
-        diskBilled:
-          description: 'always false today: disk is included in the bundled hourly rate and never billed as a separate line item'
-          type: boolean
-        gpuCount:
-          description: set when rateBasis is gpu
-          type: integer
-        orgAccruedMonthCents:
-          description: the org's current-month accrued, un-settled usage across all workloads
-          type: integer
-        orgAvailableCents:
-          description: spendable balance = ledger balance minus orgAccruedMonthCents (can be negative)
-          type: integer
-        orgBurnPerHourCents:
-          description: sum of the locked rates of every open usage record in the org
-          type: integer
-        perGpuCents:
-          description: pricePerHourCents / gpuCount; set when rateBasis is gpu
-          type: integer
-        pricePerHourCents:
-          description: 'the VM''s bundled hourly rate: the open usage record''s locked rate when a session is accruing, else the current catalog rate for the VM''s shape'
-          type: integer
-        projectedRunwayHours:
-          description: (orgAvailableCents - autoStopFloorCents) / orgBurnPerHourCents; null when orgBurnPerHourCents is 0, clamped to 0 when available is already at or below the floor
-          format: double
-          nullable: true
-          type: number
-        rateBasis:
-          description: gpu = per-GPU catalog price times gpuCount; cpu = flat per-resource-size rate
-          enum:
-          - gpu
-          - cpu
-          type: string
-        rateSource:
-          description: locked = read from the open usage record (exactly what settlement will charge); catalog = no open session, the rate that would apply on next start
-          enum:
-          - locked
-          - catalog
-          type: string
-        sessionStartedAt:
-          description: start of the open usage session; omitted when none
-          type: string
-        vmId:
-          type: string
-      required:
-      - vmId
-      - pricePerHourCents
-      - rateSource
-      - rateBasis
-      - diskBilled
-      - orgAccruedMonthCents
-      - orgAvailableCents
-      - orgBurnPerHourCents
-      - projectedRunwayHours
-      - autoStopFloorCents
-      type: object
-    VmTemplateInfo:
-      properties:
-        name:
-          type: string
-        osType:
-          type: string
-        osVersion:
-          type: string
-      required:
-      - name
-      - osType
-      type: object
-    SetVmVisibilityRequest:
-      properties:
-        public:
-          description: true = open endpoint (no data-plane auth); false = require an org API key
-          type: boolean
-      required:
-      - public
-      type: object
-    VmSshKeyItem:
-      properties:
-        attached:
-          type: boolean
-        crossOrg:
-          type: boolean
-        fingerprint:
-          type: string
-        id:
-          type: string
-        name:
-          type: string
-        orgName:
-          nullable: true
-          type: string
-      required:
-      - id
-      - name
-      - fingerprint
-      - attached
-      - crossOrg
-      type: object
-    VmPage:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/VmSummary'
-          type: array
-        nextCursor:
-          type: string
-      required:
-      - items
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    TelegramLinkResult:
-      properties:
-        createdAt:
-          type: string
-        linkedAt:
-          type: string
-        linkingCode:
-          type: string
-        present:
-          type: boolean
-        telegramUserId:
-          format: int64
-          type: integer
-        telegramUsername:
-          type: string
-      required:
-      - present
-      type: object
     CreateVmRequest:
       properties:
         allowFallback:
@@ -893,6 +845,54 @@ components:
       required:
       - name
       type: object
+    VmNodeInfo:
+      properties:
+        hostname:
+          type: string
+        location:
+          type: string
+      required:
+      - hostname
+      type: object
+    SetVmVisibilityRequest:
+      properties:
+        public:
+          description: true = open endpoint (no data-plane auth); false = require an org API key
+          type: boolean
+      required:
+      - public
+      type: object
+  responses:
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

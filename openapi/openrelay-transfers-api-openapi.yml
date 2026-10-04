@@ -229,70 +229,44 @@ paths:
       x-openrelay-mcp:
         destructiveHint: true
 components:
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
   schemas:
-    TransferItem:
+    AcceptTransferRequest:
       properties:
-        clusterId:
-          type: string
-        completedAt:
-          type: string
-        createdAt:
-          type: string
-        expiresAt:
-          type: string
-        id:
-          type: string
+        sshKeyIds:
+          items:
+            type: string
+          type: array
+      type: object
+    InitiateTransferRequest:
+      properties:
         note:
           type: string
-        resourceName:
+        resourceId:
           type: string
         resourceType:
-          type: string
-        respondedAt:
-          type: string
-        sourceOrgName:
-          type: string
-        sourceOrgSlug:
-          type: string
-        status:
-          type: string
-        targetOrgName:
+          enum:
+          - cluster
+          - vm
           type: string
         targetOrgSlug:
           type: string
-        vmId:
+      required:
+      - resourceType
+      - resourceId
+      - targetOrgSlug
+      type: object
+    TargetOrg:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
           type: string
       required:
       - id
-      - resourceType
-      - status
-      - resourceName
-      - createdAt
+      - name
+      - slug
       type: object
     Error:
       properties:
@@ -302,6 +276,13 @@ components:
           type: string
       required:
       - error
+      type: object
+    PendingCount:
+      properties:
+        count:
+          type: integer
+      required:
+      - count
       type: object
     TransferRequest:
       properties:
@@ -341,51 +322,70 @@ components:
       - status
       - createdAt
       type: object
-    PendingCount:
+    TransferItem:
       properties:
-        count:
-          type: integer
-      required:
-      - count
-      type: object
-    AcceptTransferRequest:
-      properties:
-        sshKeyIds:
-          items:
-            type: string
-          type: array
-      type: object
-    TargetOrg:
-      properties:
+        clusterId:
+          type: string
+        completedAt:
+          type: string
+        createdAt:
+          type: string
+        expiresAt:
+          type: string
         id:
           type: string
-        name:
-          type: string
-        slug:
-          type: string
-      required:
-      - id
-      - name
-      - slug
-      type: object
-    InitiateTransferRequest:
-      properties:
         note:
           type: string
-        resourceId:
+        resourceName:
           type: string
         resourceType:
-          enum:
-          - cluster
-          - vm
+          type: string
+        respondedAt:
+          type: string
+        sourceOrgName:
+          type: string
+        sourceOrgSlug:
+          type: string
+        status:
+          type: string
+        targetOrgName:
           type: string
         targetOrgSlug:
           type: string
+        vmId:
+          type: string
       required:
+      - id
       - resourceType
-      - resourceId
-      - targetOrgSlug
+      - status
+      - resourceName
+      - createdAt
       type: object
+  responses:
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

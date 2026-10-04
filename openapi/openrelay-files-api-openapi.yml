@@ -214,25 +214,38 @@ paths:
       x-openrelay-mcp:
         exclude: true
 components:
+  responses:
+    InferenceRateLimited:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Too many concurrent uploads; retry shortly
+    InferenceBadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The request is invalid
+    InferenceUnauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Missing or invalid API key
+    InferenceNotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: Not found (also returned when the organization does not have Batch API access)
+    InferenceTooLarge:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InferenceError'
+      description: The upload exceeds the 200 MB limit
   schemas:
-    PresignUploadResponse:
-      description: A minted file id and a signed URL for a direct browser upload.
-      properties:
-        expires_at:
-          description: Unix timestamp (seconds) the signed URL stops working.
-          format: int64
-          type: integer
-        file_id:
-          description: File id to register with the complete call after the PUT succeeds.
-          type: string
-        put_url:
-          description: Signed URL; PUT the raw JSONL bytes to it.
-          type: string
-      required:
-      - file_id
-      - put_url
-      - expires_at
-      type: object
     InferenceError:
       description: Error shape returned by the inference endpoint (OpenAI-compatible).
       properties:
@@ -289,37 +302,24 @@ components:
       - filename
       - purpose
       type: object
-  responses:
-    InferenceNotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: Not found (also returned when the organization does not have Batch API access)
-    InferenceTooLarge:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: The upload exceeds the 200 MB limit
-    InferenceRateLimited:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: Too many concurrent uploads; retry shortly
-    InferenceUnauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: Missing or invalid API key
-    InferenceBadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InferenceError'
-      description: The request is invalid
+    PresignUploadResponse:
+      description: A minted file id and a signed URL for a direct browser upload.
+      properties:
+        expires_at:
+          description: Unix timestamp (seconds) the signed URL stops working.
+          format: int64
+          type: integer
+        file_id:
+          description: File id to register with the complete call after the PUT succeeds.
+          type: string
+        put_url:
+          description: Signed URL; PUT the raw JSONL bytes to it.
+          type: string
+      required:
+      - file_id
+      - put_url
+      - expires_at
+      type: object
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

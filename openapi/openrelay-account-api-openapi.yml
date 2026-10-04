@@ -196,38 +196,23 @@ paths:
       x-openrelay-mcp:
         default: true
 components:
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    Gone:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The resource existed but is no longer usable (e.g. an expired invite)
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
   schemas:
+    UserProfile:
+      properties:
+        avatarUrl:
+          type: string
+        defaultOrganizationId:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+        id:
+          type: string
+      required:
+      - id
+      - email
+      type: object
     MyInvite:
       properties:
         expiresAt:
@@ -248,41 +233,6 @@ components:
       - role
       - invitedAt
       type: object
-    AcceptInviteResult:
-      properties:
-        organizationId:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
-      type: object
-    UserProfile:
-      properties:
-        avatarUrl:
-          type: string
-        defaultOrganizationId:
-          type: string
-        email:
-          type: string
-        fullName:
-          type: string
-        id:
-          type: string
-      required:
-      - id
-      - email
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
     Me:
       properties:
         organizations:
@@ -294,6 +244,15 @@ components:
       required:
       - user
       - organizations
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
       type: object
     UpdateProfileRequest:
       properties:
@@ -349,6 +308,16 @@ components:
       - batch
       - publicEndpoint
       type: object
+    AcceptInviteResult:
+      properties:
+        organizationId:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - role
+      type: object
     Whoami:
       properties:
         availableOrgs:
@@ -385,6 +354,37 @@ components:
       - principalType
       - organizationId
       type: object
+  responses:
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    Gone:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The resource existed but is no longer usable (e.g. an expired invite)
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

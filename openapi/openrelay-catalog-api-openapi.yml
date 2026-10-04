@@ -155,68 +155,7 @@ paths:
       x-openrelay-mcp:
         default: true
 components:
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
   schemas:
-    VmTemplate:
-      properties:
-        compatibleGpuModelIds:
-          description: GPU model ids this template supports; null = all GPUs allowed
-          items:
-            type: string
-          nullable: true
-          type: array
-        description:
-          type: string
-        driverVersion:
-          type: string
-        filename:
-          type: string
-        id:
-          type: string
-        isDefault:
-          type: boolean
-        name:
-          type: string
-        osType:
-          type: string
-        osVersion:
-          type: string
-        requiresGpu:
-          type: boolean
-        slug:
-          type: string
-        sortOrder:
-          type: integer
-      required:
-      - id
-      - name
-      - slug
-      - filename
-      - requiresGpu
-      - osType
-      type: object
-    CpuPrice:
-      properties:
-        pricePerHourCents:
-          type: integer
-        resourceSize:
-          type: string
-      required:
-      - resourceSize
-      - pricePerHourCents
-      type: object
     NodeClassCap:
       properties:
         freeGpus:
@@ -235,69 +174,6 @@ components:
       - freeUnits
       - freeGpus
       type: object
-    GpuAvailability:
-      description: 'Per-model GPU availability, answered separately for the two consumption modes because a physical GPU belongs to exactly one alloc-class (its driver binding): "vm" (vfio-group passthrough) and "cluster" (device-request).'
-      properties:
-        cluster:
-          $ref: '#/components/schemas/ClassAvailability'
-        gpuModelId:
-          type: string
-        vm:
-          $ref: '#/components/schemas/ClassAvailability'
-      required:
-      - gpuModelId
-      - vm
-      - cluster
-      type: object
-    GpuPrice:
-      properties:
-        gpuModelId:
-          type: string
-        gpuModelName:
-          type: string
-        pricePerHourCents:
-          type: integer
-        tier:
-          type: string
-        vramGb:
-          type: integer
-      required:
-      - gpuModelId
-      - tier
-      - pricePerHourCents
-      type: object
-    GpuModel:
-      properties:
-        architecture:
-          type: string
-        createdAt:
-          type: string
-        hidden:
-          type: boolean
-        id:
-          type: string
-        manufacturer:
-          type: string
-        name:
-          type: string
-        vramGb:
-          type: integer
-      required:
-      - id
-      - name
-      - manufacturer
-      - vramGb
-      - hidden
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
     ModelList:
       properties:
         data:
@@ -312,35 +188,51 @@ components:
       - object
       - data
       type: object
-    ClassAvailability:
-      description: 'Availability for one consumption mode of a model: "vm" = VFIO passthrough (exact, from per-node unit state); "cluster" = container device-request (capacity minus cluster commitment).'
+    Error:
       properties:
-        freeGpus:
-          type: integer
-        maxPlaceableGpus:
-          description: Largest single allocation possible right now — for a VM the biggest tiling on any one node, for a cluster the largest per-replica device count on any one node. A workload can never exceed this even if freeGpus is larger (it lands on a single node).
-          type: integer
-        nodes:
-          items:
-            $ref: '#/components/schemas/NodeClassCap'
-          type: array
-        placeableGpuCounts:
-          description: GPU counts actually placeable on >=1 node right now. Frontends drive the count picker from this so offered counts can't 409/deploy-timeout.
-          items:
-            type: integer
-          type: array
-        tileLattice:
-          description: Structural set of counts this model's units can ever tile to (free or not) — the hardware shape. vm view only; clusters are step-1.
-          items:
-            type: integer
-          type: array
-        totalGpus:
-          description: free + claimed
-          type: integer
+        code:
+          type: string
+        error:
+          type: string
       required:
-      - totalGpus
-      - freeGpus
-      - maxPlaceableGpus
+      - error
+      type: object
+    Pricing:
+      properties:
+        cpu:
+          items:
+            $ref: '#/components/schemas/CpuPrice'
+          type: array
+        gpu:
+          items:
+            $ref: '#/components/schemas/GpuPrice'
+          type: array
+      required:
+      - gpu
+      - cpu
+      type: object
+    Location:
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        id:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        name:
+          type: string
+        region:
+          type: string
+      required:
+      - id
+      - name
+      - city
+      - country
+      - region
       type: object
     Model:
       description: A public model in the OpenRelay catalog (OpenAI-compatible).
@@ -388,42 +280,83 @@ components:
       - modalities
       - status
       type: object
-    Pricing:
+    ClassAvailability:
+      description: 'Availability for one consumption mode of a model: "vm" = VFIO passthrough (exact, from per-node unit state); "cluster" = container device-request (capacity minus cluster commitment).'
       properties:
-        cpu:
+        freeGpus:
+          type: integer
+        maxPlaceableGpus:
+          description: Largest single allocation possible right now — for a VM the biggest tiling on any one node, for a cluster the largest per-replica device count on any one node. A workload can never exceed this even if freeGpus is larger (it lands on a single node).
+          type: integer
+        nodes:
           items:
-            $ref: '#/components/schemas/CpuPrice'
+            $ref: '#/components/schemas/NodeClassCap'
           type: array
-        gpu:
+        placeableGpuCounts:
+          description: GPU counts actually placeable on >=1 node right now. Frontends drive the count picker from this so offered counts can't 409/deploy-timeout.
           items:
-            $ref: '#/components/schemas/GpuPrice'
+            type: integer
           type: array
+        tileLattice:
+          description: Structural set of counts this model's units can ever tile to (free or not) — the hardware shape. vm view only; clusters are step-1.
+          items:
+            type: integer
+          type: array
+        totalGpus:
+          description: free + claimed
+          type: integer
       required:
-      - gpu
-      - cpu
+      - totalGpus
+      - freeGpus
+      - maxPlaceableGpus
       type: object
-    Location:
+    CpuPrice:
       properties:
-        city:
+        pricePerHourCents:
+          type: integer
+        resourceSize:
           type: string
-        country:
+      required:
+      - resourceSize
+      - pricePerHourCents
+      type: object
+    VmTemplate:
+      properties:
+        compatibleGpuModelIds:
+          description: GPU model ids this template supports; null = all GPUs allowed
+          items:
+            type: string
+          nullable: true
+          type: array
+        description:
+          type: string
+        driverVersion:
+          type: string
+        filename:
           type: string
         id:
           type: string
-        latitude:
-          type: number
-        longitude:
-          type: number
+        isDefault:
+          type: boolean
         name:
           type: string
-        region:
+        osType:
           type: string
+        osVersion:
+          type: string
+        requiresGpu:
+          type: boolean
+        slug:
+          type: string
+        sortOrder:
+          type: integer
       required:
       - id
       - name
-      - city
-      - country
-      - region
+      - slug
+      - filename
+      - requiresGpu
+      - osType
       type: object
     Modalities:
       description: 'Input and output modalities the model accepts and produces. Values are free-form strings (text, image, audio, video, and novel ones such as a world model''s state/actions) so new modalities need no schema change. This is what distinguishes text→text, vision (image→text), text→image, image→image, TTS/STT, and video/world models.
@@ -444,6 +377,73 @@ components:
       - input
       - output
       type: object
+    GpuModel:
+      properties:
+        architecture:
+          type: string
+        createdAt:
+          type: string
+        hidden:
+          type: boolean
+        id:
+          type: string
+        manufacturer:
+          type: string
+        name:
+          type: string
+        vramGb:
+          type: integer
+      required:
+      - id
+      - name
+      - manufacturer
+      - vramGb
+      - hidden
+      type: object
+    GpuAvailability:
+      description: 'Per-model GPU availability, answered separately for the two consumption modes because a physical GPU belongs to exactly one alloc-class (its driver binding): "vm" (vfio-group passthrough) and "cluster" (device-request).'
+      properties:
+        cluster:
+          $ref: '#/components/schemas/ClassAvailability'
+        gpuModelId:
+          type: string
+        vm:
+          $ref: '#/components/schemas/ClassAvailability'
+      required:
+      - gpuModelId
+      - vm
+      - cluster
+      type: object
+    GpuPrice:
+      properties:
+        gpuModelId:
+          type: string
+        gpuModelName:
+          type: string
+        pricePerHourCents:
+          type: integer
+        tier:
+          type: string
+        vramGb:
+          type: integer
+      required:
+      - gpuModelId
+      - tier
+      - pricePerHourCents
+      type: object
+  responses:
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

@@ -256,126 +256,12 @@ paths:
       tags:
       - Webhooks
 components:
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
   schemas:
-    WebhookSecret:
-      properties:
-        id:
-          type: string
-        secret:
-          type: string
-        secretPrefix:
-          type: string
-      required:
-      - id
-      - secret
-      - secretPrefix
-      type: object
-    WebhookUpdateResult:
-      properties:
-        events:
-          items:
-            type: string
-          type: array
-        id:
-          type: string
-        name:
-          type: string
-        url:
-          type: string
-      required:
-      - id
-      - name
-      - url
-      - events
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
     ToggleWebhookRequest:
       properties:
         enabled:
           type: boolean
       required:
-      - enabled
-      type: object
-    UpdateWebhookRequest:
-      properties:
-        events:
-          items:
-            type: string
-          type: array
-        name:
-          type: string
-        url:
-          type: string
-      type: object
-    WebhookDeliveryItem:
-      properties:
-        attemptNumber:
-          type: integer
-        createdAt:
-          type: string
-        deliveredAt:
-          type: string
-        errorMessage:
-          type: string
-        eventId:
-          type: string
-        eventType:
-          type: string
-        id:
-          type: string
-        status:
-          type: string
-        statusCode:
-          type: integer
-      required:
-      - id
-      - eventType
-      - eventId
-      - attemptNumber
-      - status
-      - createdAt
-      type: object
-    WebhookToggleResult:
-      properties:
-        enabled:
-          type: boolean
-        id:
-          type: string
-      required:
-      - id
       - enabled
       type: object
     WebhookWithSecret:
@@ -422,6 +308,95 @@ components:
       - name
       - url
       type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    UpdateWebhookRequest:
+      properties:
+        events:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        url:
+          type: string
+      type: object
+    WebhookToggleResult:
+      properties:
+        enabled:
+          type: boolean
+        id:
+          type: string
+      required:
+      - id
+      - enabled
+      type: object
+    WebhookSecret:
+      properties:
+        id:
+          type: string
+        secret:
+          type: string
+        secretPrefix:
+          type: string
+      required:
+      - id
+      - secret
+      - secretPrefix
+      type: object
+    WebhookDeliveryItem:
+      properties:
+        attemptNumber:
+          type: integer
+        createdAt:
+          type: string
+        deliveredAt:
+          type: string
+        errorMessage:
+          type: string
+        eventId:
+          type: string
+        eventType:
+          type: string
+        id:
+          type: string
+        status:
+          type: string
+        statusCode:
+          type: integer
+      required:
+      - id
+      - eventType
+      - eventId
+      - attemptNumber
+      - status
+      - createdAt
+      type: object
+    WebhookUpdateResult:
+      properties:
+        events:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+      required:
+      - id
+      - name
+      - url
+      - events
+      type: object
     WebhookSummary:
       properties:
         createdAt:
@@ -452,6 +427,31 @@ components:
       - createdAt
       - updatedAt
       type: object
+  responses:
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

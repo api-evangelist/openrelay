@@ -109,55 +109,7 @@ paths:
       x-openrelay-mcp:
         destructiveHint: true
 components:
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
   schemas:
-    CreateApiKeyResult:
-      properties:
-        createdAt:
-          type: string
-        id:
-          type: string
-        key:
-          description: Plaintext key — shown once
-          type: string
-        keyPrefix:
-          type: string
-        name:
-          type: string
-        organizationId:
-          description: The organization this key is bound to. Every API key belongs to exactly one organization; keep this id alongside the key so callers can build org-scoped request paths without a separate lookup (GET /v1/whoami returns the same id for an existing key).
-          type: string
-        scopes:
-          items:
-            type: string
-          type: array
-      required:
-      - id
-      - key
-      - keyPrefix
-      - name
-      - scopes
-      - createdAt
-      - organizationId
-      type: object
     Error:
       properties:
         code:
@@ -194,6 +146,35 @@ components:
       - scopes
       - createdAt
       type: object
+    CreateApiKeyResult:
+      properties:
+        createdAt:
+          type: string
+        id:
+          type: string
+        key:
+          description: Plaintext key — shown once
+          type: string
+        keyPrefix:
+          type: string
+        name:
+          type: string
+        organizationId:
+          description: The organization this key is bound to. Every API key belongs to exactly one organization; keep this id alongside the key so callers can build org-scoped request paths without a separate lookup (GET /v1/whoami returns the same id for an existing key).
+          type: string
+        scopes:
+          items:
+            type: string
+          type: array
+      required:
+      - id
+      - key
+      - keyPrefix
+      - name
+      - scopes
+      - createdAt
+      - organizationId
+      type: object
     CreateApiKeyRequest:
       properties:
         expiresInSeconds:
@@ -210,6 +191,25 @@ components:
       required:
       - name
       type: object
+  responses:
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

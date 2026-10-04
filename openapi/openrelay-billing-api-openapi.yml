@@ -234,110 +234,24 @@ paths:
       tags:
       - Billing
 components:
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    Unavailable:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: A required integration (e.g. payments) is not configured
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
   schemas:
-    PaymentMethodCard:
+    InferenceTransactionDetails:
       properties:
-        brand:
+        carriedNanoUSD:
+          description: Customer charge represented by these metered requests that remains as sub-cent accrual for a later debit.
+          pattern: ^[0-9]+$
           type: string
-        expMonth:
-          type: integer
-        expYear:
-          type: integer
-        id:
-          type: string
-        last4:
-          type: string
-      required:
-      - id
-      - brand
-      - last4
-      - expMonth
-      - expYear
-      type: object
-    SetupIntent:
-      properties:
-        clientSecret:
-          type: string
-        publishableKey:
-          type: string
-      required:
-      - clientSecret
-      - publishableKey
-      type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    AutoRechargeSettings:
-      properties:
-        amountCents:
-          description: Amount charged per auto-recharge (within deposit bounds $10–$500).
-          type: integer
-        enabled:
-          description: When on, the balance is topped up automatically below the threshold.
-          type: boolean
-        thresholdCents:
-          description: Recharge fires when available balance drops below this.
-          type: integer
-      required:
-      - enabled
-      - thresholdCents
-      - amountCents
-      type: object
-    PaymentMethods:
-      properties:
-        defaultPaymentMethodId:
-          type: string
-        paymentMethods:
+        models:
           items:
-            $ref: '#/components/schemas/PaymentMethodCard'
+            $ref: '#/components/schemas/InferenceModelUsage'
           type: array
+        partial:
+          description: True when some of the debit is not itemized in this row, including legacy usage or sub-cent cost carried from a prior row.
+          type: boolean
       required:
-      - paymentMethods
-      type: object
-    DepositRequest:
-      properties:
-        amountCents:
-          description: Amount to charge the saved card, in cents (bounds $10–$500).
-          type: integer
-        idempotencyKey:
-          description: Client-generated id for this logical deposit; reused verbatim on retry so a network/client retry can't double-charge. Optional — the server generates one if absent (then retries won't dedupe).
-          type: string
-        promoCode:
-          description: Optional first-deposit promo code. When valid on the org's first deposit, amountCents is the deposit the customer wants credited and the saved card is charged the DISCOUNTED amount; the discount is credited as free (usage-only) credit by the webhook. Invalid / already-used codes are rejected (400) before any charge.
-          type: string
-      required:
-      - amountCents
+      - models
+      - partial
+      - carriedNanoUSD
       type: object
     InferenceModelUsage:
       properties:
@@ -361,19 +275,16 @@ components:
       - batch
       - dimensions
       type: object
-    DepositResult:
+    PaymentMethods:
       properties:
-        clientSecret:
-          description: Set only when status is requires_action (on-session SCA).
+        defaultPaymentMethodId:
           type: string
-        paymentIntentId:
-          type: string
-        status:
-          description: Stripe PaymentIntent status. "succeeded" → credit lands via webhook; "requires_action" → complete SCA on-session with clientSecret; "requires_payment_method" → the card was declined.
-          type: string
+        paymentMethods:
+          items:
+            $ref: '#/components/schemas/PaymentMethodCard'
+          type: array
       required:
-      - paymentIntentId
-      - status
+      - paymentMethods
       type: object
     Balance:
       properties:
@@ -400,6 +311,88 @@ components:
       - accruedUsageCents
       - transactions
       type: object
+    PaymentMethodCard:
+      properties:
+        brand:
+          type: string
+        expMonth:
+          type: integer
+        expYear:
+          type: integer
+        id:
+          type: string
+        last4:
+          type: string
+      required:
+      - id
+      - brand
+      - last4
+      - expMonth
+      - expYear
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
+    AutoRechargeSettings:
+      properties:
+        amountCents:
+          description: Amount charged per auto-recharge (within deposit bounds $10–$500).
+          type: integer
+        enabled:
+          description: When on, the balance is topped up automatically below the threshold.
+          type: boolean
+        thresholdCents:
+          description: Recharge fires when available balance drops below this.
+          type: integer
+      required:
+      - enabled
+      - thresholdCents
+      - amountCents
+      type: object
+    DepositResult:
+      properties:
+        clientSecret:
+          description: Set only when status is requires_action (on-session SCA).
+          type: string
+        paymentIntentId:
+          type: string
+        status:
+          description: Stripe PaymentIntent status. "succeeded" → credit lands via webhook; "requires_action" → complete SCA on-session with clientSecret; "requires_payment_method" → the card was declined.
+          type: string
+      required:
+      - paymentIntentId
+      - status
+      type: object
+    SetupIntent:
+      properties:
+        clientSecret:
+          type: string
+        publishableKey:
+          type: string
+      required:
+      - clientSecret
+      - publishableKey
+      type: object
+    DepositRequest:
+      properties:
+        amountCents:
+          description: Amount to charge the saved card, in cents (bounds $10–$500).
+          type: integer
+        idempotencyKey:
+          description: Client-generated id for this logical deposit; reused verbatim on retry so a network/client retry can't double-charge. Optional — the server generates one if absent (then retries won't dedupe).
+          type: string
+        promoCode:
+          description: Optional first-deposit promo code. When valid on the org's first deposit, amountCents is the deposit the customer wants credited and the saved card is charged the DISCOUNTED amount; the discount is credited as free (usage-only) credit by the webhook. Invalid / already-used codes are rejected (400) before any charge.
+          type: string
+      required:
+      - amountCents
+      type: object
     Transaction:
       properties:
         amountCents:
@@ -423,24 +416,31 @@ components:
       - amountCents
       - createdAt
       type: object
-    InferenceTransactionDetails:
-      properties:
-        carriedNanoUSD:
-          description: Customer charge represented by these metered requests that remains as sub-cent accrual for a later debit.
-          pattern: ^[0-9]+$
-          type: string
-        models:
-          items:
-            $ref: '#/components/schemas/InferenceModelUsage'
-          type: array
-        partial:
-          description: True when some of the debit is not itemized in this row, including legacy usage or sub-cent cost carried from a prior row.
-          type: boolean
-      required:
-      - models
-      - partial
-      - carriedNanoUSD
-      type: object
+  responses:
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    Unavailable:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: A required integration (e.g. payments) is not configured
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

@@ -291,51 +291,17 @@ paths:
       tags:
       - Organizations
 components:
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
   schemas:
-    AddMemberRequest:
+    CreateOrgRequest:
       properties:
-        email:
+        billingEmail:
           type: string
-        role:
-          enum:
-          - admin
-          - member
-          - viewer
+        name:
+          type: string
+        slug:
           type: string
       required:
-      - email
-      - role
+      - name
       type: object
     Invite:
       properties:
@@ -364,45 +330,30 @@ components:
       required:
       - error
       type: object
-    CreateOrgRequest:
+    Member:
       properties:
-        billingEmail:
+        avatarUrl:
           type: string
-        name:
+        email:
           type: string
-        slug:
+        fullName:
           type: string
-      required:
-      - name
-      type: object
-    UpdateMemberRoleRequest:
-      properties:
+        invitedAt:
+          type: string
+        joinedAt:
+          type: string
         role:
+          type: string
+        status:
           enum:
-          - owner
-          - admin
-          - member
-          - viewer
+          - active
+          - invited
+          type: string
+        userId:
           type: string
       required:
+      - userId
       - role
-      type: object
-    BootstrapResult:
-      properties:
-        organizationId:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
-      type: object
-    UpdateOrgRequest:
-      properties:
-        billingEmail:
-          type: string
-        name:
-          type: string
       type: object
     Organization:
       properties:
@@ -430,31 +381,80 @@ components:
       - billingEmail
       - plan
       type: object
-    Member:
+    UpdateMemberRoleRequest:
       properties:
-        avatarUrl:
+        role:
+          enum:
+          - owner
+          - admin
+          - member
+          - viewer
           type: string
-        email:
-          type: string
-        fullName:
-          type: string
-        invitedAt:
-          type: string
-        joinedAt:
+      required:
+      - role
+      type: object
+    BootstrapResult:
+      properties:
+        organizationId:
           type: string
         role:
           type: string
-        status:
-          enum:
-          - active
-          - invited
-          type: string
-        userId:
-          type: string
       required:
-      - userId
+      - organizationId
       - role
       type: object
+    AddMemberRequest:
+      properties:
+        email:
+          type: string
+        role:
+          enum:
+          - admin
+          - member
+          - viewer
+          type: string
+      required:
+      - email
+      - role
+      type: object
+    UpdateOrgRequest:
+      properties:
+        billingEmail:
+          type: string
+        name:
+          type: string
+      type: object
+  responses:
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

@@ -156,24 +156,6 @@ paths:
         group: VMs
 components:
   responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
     Conflict:
       content:
         application/json:
@@ -186,7 +168,34 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
   schemas:
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     ForkRequest:
       properties:
         containerPort:
@@ -211,6 +220,13 @@ components:
           type: string
       required:
       - snapshotId
+      type: object
+    CreateSnapshotRequest:
+      properties:
+        name:
+          type: string
+      required:
+      - name
       type: object
     Snapshot:
       properties:
@@ -266,15 +282,6 @@ components:
       - chainDepth
       - createdAt
       type: object
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
     CreatedResource:
       properties:
         id:
@@ -287,13 +294,6 @@ components:
       - id
       - name
       - status
-      type: object
-    CreateSnapshotRequest:
-      properties:
-        name:
-          type: string
-      required:
-      - name
       type: object
   securitySchemes:
     apiKey:

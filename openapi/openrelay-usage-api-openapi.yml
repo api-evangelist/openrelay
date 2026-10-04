@@ -42,19 +42,6 @@ paths:
       x-openrelay-mcp:
         default: true
 components:
-  responses:
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
   schemas:
     Error:
       properties:
@@ -64,6 +51,19 @@ components:
           type: string
       required:
       - error
+      type: object
+    UsageBreakdownItem:
+      properties:
+        cents:
+          type: integer
+        hours:
+          type: number
+        key:
+          type: string
+      required:
+      - key
+      - hours
+      - cents
       type: object
     CurrentUsage:
       properties:
@@ -91,19 +91,19 @@ components:
       - usageHours
       - breakdown
       type: object
-    UsageBreakdownItem:
-      properties:
-        cents:
-          type: integer
-        hours:
-          type: number
-        key:
-          type: string
-      required:
-      - key
-      - hours
-      - cents
-      type: object
+  responses:
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'
