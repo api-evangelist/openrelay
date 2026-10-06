@@ -48,7 +48,7 @@ accessModel:
 image: https://openrelay.inc/og-image.png
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-07-20'
+modified: '2026-10-06'
 tags:
 - Company
 - GPU
@@ -365,6 +365,8 @@ apis:
   - type: APIReference
     url: https://docs.openrelay.inc/docs/account/overview
 common:
+- url: https://openrelay.inc/blog/feed.xml
+  type: BlogRSS
 - type: Plans
   url: plans/openrelay-plans-pricing.yml
 - type: Website
