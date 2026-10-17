@@ -237,6 +237,15 @@ components:
             type: string
           type: array
       type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
+      type: object
     InitiateTransferRequest:
       properties:
         note:
@@ -268,14 +277,44 @@ components:
       - name
       - slug
       type: object
-    Error:
+    TransferItem:
       properties:
-        code:
+        clusterId:
           type: string
-        error:
+        completedAt:
+          type: string
+        createdAt:
+          type: string
+        expiresAt:
+          type: string
+        id:
+          type: string
+        note:
+          type: string
+        resourceName:
+          type: string
+        resourceType:
+          type: string
+        respondedAt:
+          type: string
+        sourceOrgName:
+          type: string
+        sourceOrgSlug:
+          type: string
+        status:
+          type: string
+        targetOrgName:
+          type: string
+        targetOrgSlug:
+          type: string
+        vmId:
           type: string
       required:
-      - error
+      - id
+      - resourceType
+      - status
+      - resourceName
+      - createdAt
       type: object
     PendingCount:
       properties:
@@ -322,46 +361,13 @@ components:
       - status
       - createdAt
       type: object
-    TransferItem:
-      properties:
-        clusterId:
-          type: string
-        completedAt:
-          type: string
-        createdAt:
-          type: string
-        expiresAt:
-          type: string
-        id:
-          type: string
-        note:
-          type: string
-        resourceName:
-          type: string
-        resourceType:
-          type: string
-        respondedAt:
-          type: string
-        sourceOrgName:
-          type: string
-        sourceOrgSlug:
-          type: string
-        status:
-          type: string
-        targetOrgName:
-          type: string
-        targetOrgSlug:
-          type: string
-        vmId:
-          type: string
-      required:
-      - id
-      - resourceType
-      - status
-      - resourceName
-      - createdAt
-      type: object
   responses:
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
     Unauthorized:
       content:
         application/json:
@@ -374,12 +380,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
     NotFound:
       content:
         application/json:

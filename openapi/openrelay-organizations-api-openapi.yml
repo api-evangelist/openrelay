@@ -292,43 +292,29 @@ paths:
       - Organizations
 components:
   schemas:
-    CreateOrgRequest:
+    BootstrapResult:
       properties:
-        billingEmail:
-          type: string
-        name:
-          type: string
-        slug:
-          type: string
-      required:
-      - name
-      type: object
-    Invite:
-      properties:
-        email:
-          type: string
-        expiresAt:
-          description: RFC3339; the invite cannot be accepted after this time. Re-invite to refresh.
-          type: string
-        invitedAt:
-          type: string
-        invitedBy:
+        organizationId:
           type: string
         role:
           type: string
       required:
-      - email
+      - organizationId
       - role
-      - invitedAt
       type: object
-    Error:
+    AddMemberRequest:
       properties:
-        code:
+        email:
           type: string
-        error:
+        role:
+          enum:
+          - admin
+          - member
+          - viewer
           type: string
       required:
-      - error
+      - email
+      - role
       type: object
     Member:
       properties:
@@ -354,6 +340,40 @@ components:
       required:
       - userId
       - role
+      type: object
+    Invite:
+      properties:
+        email:
+          type: string
+        expiresAt:
+          description: RFC3339; the invite cannot be accepted after this time. Re-invite to refresh.
+          type: string
+        invitedAt:
+          type: string
+        invitedBy:
+          type: string
+        role:
+          type: string
+      required:
+      - email
+      - role
+      - invitedAt
+      type: object
+    UpdateOrgRequest:
+      properties:
+        billingEmail:
+          type: string
+        name:
+          type: string
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
       type: object
     Organization:
       properties:
@@ -393,36 +413,16 @@ components:
       required:
       - role
       type: object
-    BootstrapResult:
-      properties:
-        organizationId:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
-      type: object
-    AddMemberRequest:
-      properties:
-        email:
-          type: string
-        role:
-          enum:
-          - admin
-          - member
-          - viewer
-          type: string
-      required:
-      - email
-      - role
-      type: object
-    UpdateOrgRequest:
+    CreateOrgRequest:
       properties:
         billingEmail:
           type: string
         name:
           type: string
+        slug:
+          type: string
+      required:
+      - name
       type: object
   responses:
     Conflict:
@@ -431,6 +431,12 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: The request conflicts with existing state
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
     Unauthorized:
       content:
         application/json:
@@ -443,12 +449,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
     NotFound:
       content:
         application/json:

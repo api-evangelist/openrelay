@@ -155,46 +155,19 @@ paths:
       x-openrelay-cli:
         group: VMs
 components:
-  responses:
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
-    Unauthorized:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Missing or invalid API key
-    Forbidden:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: API key lacks the required scope
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request is invalid
-    NotFound:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: Resource not found
   schemas:
-    Error:
+    CreatedResource:
       properties:
-        code:
+        id:
           type: string
-        error:
+        name:
+          type: string
+        status:
           type: string
       required:
-      - error
+      - id
+      - name
+      - status
       type: object
     ForkRequest:
       properties:
@@ -221,12 +194,14 @@ components:
       required:
       - snapshotId
       type: object
-    CreateSnapshotRequest:
+    Error:
       properties:
-        name:
+        code:
+          type: string
+        error:
           type: string
       required:
-      - name
+      - error
       type: object
     Snapshot:
       properties:
@@ -282,19 +257,44 @@ components:
       - chainDepth
       - createdAt
       type: object
-    CreatedResource:
+    CreateSnapshotRequest:
       properties:
-        id:
-          type: string
         name:
           type: string
-        status:
-          type: string
       required:
-      - id
       - name
-      - status
       type: object
+  responses:
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request is invalid
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Missing or invalid API key
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: API key lacks the required scope
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Resource not found
   securitySchemes:
     apiKey:
       description: 'OpenRelay API key. Send it as `Authorization: Bearer vl_…`.'

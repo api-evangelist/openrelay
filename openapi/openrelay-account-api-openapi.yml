@@ -197,21 +197,57 @@ paths:
         default: true
 components:
   schemas:
-    UserProfile:
+    Me:
       properties:
-        avatarUrl:
+        organizations:
+          items:
+            $ref: '#/components/schemas/OrgMembership'
+          type: array
+        user:
+          $ref: '#/components/schemas/UserProfile'
+      required:
+      - user
+      - organizations
+      type: object
+    BootstrapResult:
+      properties:
+        organizationId:
           type: string
-        defaultOrganizationId:
-          type: string
-        email:
-          type: string
-        fullName:
-          type: string
-        id:
+        role:
           type: string
       required:
-      - id
-      - email
+      - organizationId
+      - role
+      type: object
+    OrgFeatures:
+      description: Per-org feature entitlements the dashboard gates its UI on.
+      properties:
+        batch:
+          description: The org is allowlisted for the Batch API (batch-api.md §8).
+          type: boolean
+        publicEndpoint:
+          deprecated: true
+          description: Vestigial, always false. The public-endpoint feature is GA (ungated); this field is kept only to avoid a breaking response-contract change and will be removed in a follow-up deprecation PR.
+          type: boolean
+      required:
+      - batch
+      - publicEndpoint
+      type: object
+    OrgMembership:
+      properties:
+        features:
+          $ref: '#/components/schemas/OrgFeatures'
+        name:
+          type: string
+        organizationId:
+          type: string
+        role:
+          type: string
+      required:
+      - organizationId
+      - name
+      - role
+      - features
       type: object
     MyInvite:
       properties:
@@ -233,17 +269,14 @@ components:
       - role
       - invitedAt
       type: object
-    Me:
+    UpdateProfileRequest:
       properties:
-        organizations:
-          items:
-            $ref: '#/components/schemas/OrgMembership'
-          type: array
-        user:
-          $ref: '#/components/schemas/UserProfile'
-      required:
-      - user
-      - organizations
+        avatarUrl:
+          type: string
+        defaultOrganizationId:
+          type: string
+        fullName:
+          type: string
       type: object
     Error:
       properties:
@@ -254,32 +287,23 @@ components:
       required:
       - error
       type: object
-    UpdateProfileRequest:
+    UserProfile:
       properties:
         avatarUrl:
           type: string
         defaultOrganizationId:
           type: string
+        email:
+          type: string
         fullName:
           type: string
-      type: object
-    OrgMembership:
-      properties:
-        features:
-          $ref: '#/components/schemas/OrgFeatures'
-        name:
-          type: string
-        organizationId:
-          type: string
-        role:
+        id:
           type: string
       required:
-      - organizationId
-      - name
-      - role
-      - features
+      - id
+      - email
       type: object
-    BootstrapResult:
+    AcceptInviteResult:
       properties:
         organizationId:
           type: string
@@ -293,30 +317,6 @@ components:
       properties:
         orgName:
           type: string
-      type: object
-    OrgFeatures:
-      description: Per-org feature entitlements the dashboard gates its UI on.
-      properties:
-        batch:
-          description: The org is allowlisted for the Batch API (batch-api.md §8).
-          type: boolean
-        publicEndpoint:
-          deprecated: true
-          description: Vestigial, always false. The public-endpoint feature is GA (ungated); this field is kept only to avoid a breaking response-contract change and will be removed in a follow-up deprecation PR.
-          type: boolean
-      required:
-      - batch
-      - publicEndpoint
-      type: object
-    AcceptInviteResult:
-      properties:
-        organizationId:
-          type: string
-        role:
-          type: string
-      required:
-      - organizationId
-      - role
       type: object
     Whoami:
       properties:
@@ -355,30 +355,30 @@ components:
       - organizationId
       type: object
   responses:
-    Conflict:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The request conflicts with existing state
-    Gone:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-      description: The resource existed but is no longer usable (e.g. an expired invite)
     Unauthorized:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: Missing or invalid API key
+    Gone:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The resource existed but is no longer usable (e.g. an expired invite)
     Forbidden:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
       description: API key lacks the required scope
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The request conflicts with existing state
     NotFound:
       content:
         application/json:

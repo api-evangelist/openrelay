@@ -43,28 +43,6 @@ paths:
         default: true
 components:
   schemas:
-    Error:
-      properties:
-        code:
-          type: string
-        error:
-          type: string
-      required:
-      - error
-      type: object
-    UsageBreakdownItem:
-      properties:
-        cents:
-          type: integer
-        hours:
-          type: number
-        key:
-          type: string
-      required:
-      - key
-      - hours
-      - cents
-      type: object
     CurrentUsage:
       properties:
         autoStopFloorCents:
@@ -90,6 +68,28 @@ components:
       - usageCents
       - usageHours
       - breakdown
+      type: object
+    UsageBreakdownItem:
+      properties:
+        cents:
+          type: integer
+        hours:
+          type: number
+        key:
+          type: string
+      required:
+      - key
+      - hours
+      - cents
+      type: object
+    Error:
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+      required:
+      - error
       type: object
   responses:
     Unauthorized:
