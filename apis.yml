@@ -365,6 +365,8 @@ apis:
   - type: APIReference
     url: https://docs.openrelay.inc/docs/account/overview
 common:
+- type: PostmanWorkspace
+  url: https://www.postman.com/kinlaneapi/openrelay/overview
 - url: https://openrelay.inc/blog/feed.xml
   type: BlogRSS
 - type: Plans
