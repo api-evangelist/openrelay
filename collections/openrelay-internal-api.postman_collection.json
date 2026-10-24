@@ -1,371 +1,434 @@
 {
+  "info": {
+    "_postman_id": "544c2037-24a2-4185-a4f4-6fbf5bc482dc",
+    "name": "OpenRelay Internal API",
+    "description": "The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_\u2026`) unless noted otherwise.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-22T01:52:29.000Z",
+    "updatedAt": "2026-10-22T01:52:29.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-544c2037-24a2-4185-a4f4-6fbf5bc482dc"
+  },
   "item": [
     {
-      "id": "96e35cbe-8e5a-43a6-aba3-b10bc00ee187",
-      "name": "Internal",
-      "description": {
-        "content": "Machine-to-machine endpoints used by platform infrastructure. Not part of the public API.",
-        "type": "text/plain"
-      },
+      "name": "health",
       "item": [
         {
-          "id": "7078c5a5-0cf7-4434-b270-67b4eca7fe45",
           "name": "Liveness probe (no auth)",
+          "id": "3bba28d8-0dfe-4ff9-8211-781e5d8546ed",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
           "request": {
-            "name": "Liveness probe (no auth)",
-            "description": {},
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
               "path": [
                 "health"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": null
+              ]
+            }
           },
           "response": [
             {
-              "id": "4785a87b-96de-403c-829a-307ce0122a0e",
+              "id": "20b64959-3e4a-47ef-8901-13d5a6c866b6",
               "name": "Service is up",
               "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
                 "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "health"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"status\": \"string\",\n  \"service\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "f8d060b9-a8b6-4a09-b296-369f243c6949",
-          "name": "Self-enroll a node using a provisioning token (no API key)",
-          "request": {
-            "name": "Self-enroll a node using a provisioning token (no API key)",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "nodes",
-                "enroll"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "POST",
-            "auth": null,
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": \"<integer>\",\n    \"source\": \"<string>\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      },\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      }\n    ],\n    \"nvswitchCount\": \"<integer>\",\n    \"driverVersion\": \"<string>\",\n    \"iommuGroups\": [\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      },\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": [
-            {
-              "id": "67992cbe-f95c-4e8c-8cf1-0fbe6b230566",
-              "name": "Enrolled",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "nodes",
-                    "enroll"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": 6859,\n    \"source\": \"string\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 5716,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      },\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 4496,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      }\n    ],\n    \"nvswitchCount\": 2870,\n    \"driverVersion\": \"string\",\n    \"iommuGroups\": [\n      {\n        \"group\": 6332,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      },\n      {\n        \"group\": 2230,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
+                  ]
                 }
               },
               "status": "OK",
               "code": 200,
+              "_postman_previewlanguage": "json",
               "header": [
                 {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"nodeId\": \"string\",\n  \"nebulaCert\": \"string\",\n  \"nebulaCa\": \"string\",\n  \"nebulaOverlayIp\": \"string\",\n  \"nebulaLighthouses\": [\n    {\n      \"nebulaIp\": \"string\",\n      \"endpoint\": \"string\"\n    },\n    {\n      \"nebulaIp\": \"string\",\n      \"endpoint\": \"string\"\n    }\n  ],\n  \"nomadCa\": \"string\",\n  \"nomadClientCert\": \"string\",\n  \"nomadClientKey\": \"string\",\n  \"nomadServers\": [\n    \"string\",\n    \"string\"\n  ],\n  \"nomadIntroToken\": \"string\",\n  \"nomadPool\": \"string\",\n  \"datacenter\": \"string\",\n  \"dataPlaneCert\": \"string\",\n  \"dataPlaneKey\": \"string\",\n  \"dataPlaneCa\": \"string\",\n  \"gatewayAddr\": \"string\",\n  \"gatewayServerName\": \"string\",\n  \"nodeAgentToken\": \"string\"\n}",
               "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "da5dc029-3057-4a64-bd14-12ac49322bbe",
-              "name": "Invalid/expired token",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "nodes",
-                    "enroll"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": 6859,\n    \"source\": \"string\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 5716,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      },\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 4496,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      }\n    ],\n    \"nvswitchCount\": 2870,\n    \"driverVersion\": \"string\",\n    \"iommuGroups\": [\n      {\n        \"group\": 6332,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      },\n      {\n        \"group\": 2230,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "81c945d7-ca7e-4fc7-bbe8-679ec098f837",
-              "name": "Revoked",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "nodes",
-                    "enroll"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": 6859,\n    \"source\": \"string\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 5716,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      },\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 4496,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      }\n    ],\n    \"nvswitchCount\": 2870,\n    \"driverVersion\": \"string\",\n    \"iommuGroups\": [\n      {\n        \"group\": 6332,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      },\n      {\n        \"group\": 2230,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "1095fde0-5fae-4389-84d6-105494d37b7c",
-              "name": "Node busy (reassign blocked) or hostname conflict",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "nodes",
-                    "enroll"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": 6859,\n    \"source\": \"string\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 5716,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      },\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 4496,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      }\n    ],\n    \"nvswitchCount\": 2870,\n    \"driverVersion\": \"string\",\n    \"iommuGroups\": [\n      {\n        \"group\": 6332,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      },\n      {\n        \"group\": 2230,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Conflict",
-              "code": 409,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "df5da5ef-87a3-40f3-b140-3f22a0a683db",
-              "name": "Quota exhausted",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "nodes",
-                    "enroll"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": 6859,\n    \"source\": \"string\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 5716,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      },\n      {\n        \"pciDeviceId\": \"string\",\n        \"count\": 4496,\n        \"bdfs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"pciClass\": \"string\",\n        \"pciName\": \"string\"\n      }\n    ],\n    \"nvswitchCount\": 2870,\n    \"driverVersion\": \"string\",\n    \"iommuGroups\": [\n      {\n        \"group\": 6332,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      },\n      {\n        \"group\": 2230,\n        \"gpus\": [\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          },\n          {\n            \"bdf\": \"string\",\n            \"deviceId\": \"string\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Too Many Requests",
-              "code": 429,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "responseTime": null,
+              "body": "{\n  \"status\": \"<string>\",\n  \"service\": \"<string>\"\n}",
+              "createdAt": "2026-10-22T01:52:29.000Z",
+              "updatedAt": "2026-10-22T01:52:29.000Z",
+              "uid": "35240-20b64959-3e4a-47ef-8901-13d5a6c866b6"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "createdAt": "2026-10-22T01:52:29.000Z",
+          "updatedAt": "2026-10-22T01:52:29.000Z",
+          "uid": "35240-3bba28d8-0dfe-4ff9-8211-781e5d8546ed"
         }
       ],
-      "event": []
+      "id": "5a9ebe52-0a5c-4ab9-bb08-fe5b86fc1d33",
+      "createdAt": "2026-10-22T01:52:29.000Z",
+      "updatedAt": "2026-10-22T01:52:29.000Z",
+      "uid": "35240-5a9ebe52-0a5c-4ab9-bb08-fe5b86fc1d33"
+    },
+    {
+      "name": "v1",
+      "item": [
+        {
+          "name": "nodes",
+          "item": [
+            {
+              "name": "enroll",
+              "item": [
+                {
+                  "name": "Self-enroll a node using a provisioning token (no API key)",
+                  "id": "6eb8e9ea-e650-458e-bf96-79fc17e3d15c",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": \"<integer>\",\n    \"source\": \"<string>\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      },\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      }\n    ],\n    \"nvswitchCount\": \"<integer>\",\n    \"driverVersion\": \"<string>\",\n    \"iommuGroups\": [\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      },\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/nodes/enroll",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "nodes",
+                        "enroll"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "id": "a0e17428-12a7-4e1f-babb-b121d49e1a23",
+                      "name": "Enrolled",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": \"<integer>\",\n    \"source\": \"<string>\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      },\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      }\n    ],\n    \"nvswitchCount\": \"<integer>\",\n    \"driverVersion\": \"<string>\",\n    \"iommuGroups\": [\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      },\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/nodes/enroll",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "nodes",
+                            "enroll"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"nodeId\": \"<string>\",\n  \"nebulaCert\": \"<string>\",\n  \"nebulaCa\": \"<string>\",\n  \"nebulaOverlayIp\": \"<string>\",\n  \"nebulaLighthouses\": [\n    {\n      \"nebulaIp\": \"<string>\",\n      \"endpoint\": \"<string>\"\n    },\n    {\n      \"nebulaIp\": \"<string>\",\n      \"endpoint\": \"<string>\"\n    }\n  ],\n  \"nomadCa\": \"<string>\",\n  \"nomadClientCert\": \"<string>\",\n  \"nomadClientKey\": \"<string>\",\n  \"nomadServers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"nomadIntroToken\": \"<string>\",\n  \"nomadPool\": \"<string>\",\n  \"datacenter\": \"<string>\",\n  \"dataPlaneCert\": \"<string>\",\n  \"dataPlaneKey\": \"<string>\",\n  \"dataPlaneCa\": \"<string>\",\n  \"gatewayAddr\": \"<string>\",\n  \"gatewayServerName\": \"<string>\",\n  \"nodeAgentToken\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:52:29.000Z",
+                      "updatedAt": "2026-10-22T01:52:29.000Z",
+                      "uid": "35240-a0e17428-12a7-4e1f-babb-b121d49e1a23"
+                    },
+                    {
+                      "id": "703723c3-0849-4f44-b5fc-9a2f8890b88f",
+                      "name": "Invalid/expired token",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": \"<integer>\",\n    \"source\": \"<string>\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      },\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      }\n    ],\n    \"nvswitchCount\": \"<integer>\",\n    \"driverVersion\": \"<string>\",\n    \"iommuGroups\": [\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      },\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/nodes/enroll",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "nodes",
+                            "enroll"
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:52:29.000Z",
+                      "updatedAt": "2026-10-22T01:52:29.000Z",
+                      "uid": "35240-703723c3-0849-4f44-b5fc-9a2f8890b88f"
+                    },
+                    {
+                      "id": "67c778a1-ed09-4ce3-b510-a25aaa9638de",
+                      "name": "Revoked",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": \"<integer>\",\n    \"source\": \"<string>\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      },\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      }\n    ],\n    \"nvswitchCount\": \"<integer>\",\n    \"driverVersion\": \"<string>\",\n    \"iommuGroups\": [\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      },\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/nodes/enroll",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "nodes",
+                            "enroll"
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:52:29.000Z",
+                      "updatedAt": "2026-10-22T01:52:29.000Z",
+                      "uid": "35240-67c778a1-ed09-4ce3-b510-a25aaa9638de"
+                    },
+                    {
+                      "id": "a4f235d5-87ad-458a-8794-9ca407f61ab0",
+                      "name": "Node busy (reassign blocked) or hostname conflict",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": \"<integer>\",\n    \"source\": \"<string>\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      },\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      }\n    ],\n    \"nvswitchCount\": \"<integer>\",\n    \"driverVersion\": \"<string>\",\n    \"iommuGroups\": [\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      },\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/nodes/enroll",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "nodes",
+                            "enroll"
+                          ]
+                        }
+                      },
+                      "status": "Conflict",
+                      "code": 409,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:52:29.000Z",
+                      "updatedAt": "2026-10-22T01:52:29.000Z",
+                      "uid": "35240-a4f235d5-87ad-458a-8794-9ca407f61ab0"
+                    },
+                    {
+                      "id": "4c29033f-b3e9-4986-a772-35cdac3d1322",
+                      "name": "Quota exhausted",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"token\": \"<string>\",\n  \"hardwareFingerprint\": \"<string>\",\n  \"nebulaPubkey\": \"<string>\",\n  \"cpuCores\": \"<integer>\",\n  \"cpuModel\": \"<string>\",\n  \"gpuInventory\": {\n    \"version\": \"<integer>\",\n    \"source\": \"<string>\",\n    \"devices\": [\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      },\n      {\n        \"pciDeviceId\": \"<string>\",\n        \"count\": \"<integer>\",\n        \"bdfs\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"pciClass\": \"<string>\",\n        \"pciName\": \"<string>\"\n      }\n    ],\n    \"nvswitchCount\": \"<integer>\",\n    \"driverVersion\": \"<string>\",\n    \"iommuGroups\": [\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      },\n      {\n        \"group\": \"<integer>\",\n        \"gpus\": [\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          },\n          {\n            \"bdf\": \"<string>\",\n            \"deviceId\": \"<string>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"gpus\": [\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"pciId\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"hostname\": \"<string>\",\n  \"identityPubkey\": \"<string>\",\n  \"machineId\": \"<string>\",\n  \"ramGb\": \"<integer>\",\n  \"runtime\": \"<string>\",\n  \"signature\": \"<string>\",\n  \"signedAt\": \"<integer>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/nodes/enroll",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "nodes",
+                            "enroll"
+                          ]
+                        }
+                      },
+                      "status": "Too Many Requests",
+                      "code": 429,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:52:29.000Z",
+                      "updatedAt": "2026-10-22T01:52:29.000Z",
+                      "uid": "35240-4c29033f-b3e9-4986-a772-35cdac3d1322"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T01:52:29.000Z",
+                  "updatedAt": "2026-10-22T01:52:29.000Z",
+                  "uid": "35240-6eb8e9ea-e650-458e-bf96-79fc17e3d15c"
+                }
+              ],
+              "id": "8ebdd7d8-efa8-46aa-82b0-d411f0e62e5c",
+              "createdAt": "2026-10-22T01:52:29.000Z",
+              "updatedAt": "2026-10-22T01:52:29.000Z",
+              "uid": "35240-8ebdd7d8-efa8-46aa-82b0-d411f0e62e5c"
+            }
+          ],
+          "id": "5c55364e-798f-4f1c-990c-dd29eecc7bf7",
+          "createdAt": "2026-10-22T01:52:29.000Z",
+          "updatedAt": "2026-10-22T01:52:29.000Z",
+          "uid": "35240-5c55364e-798f-4f1c-990c-dd29eecc7bf7"
+        }
+      ],
+      "id": "a17ece37-87b2-40d1-bad8-bfa6cd653e68",
+      "createdAt": "2026-10-22T01:52:29.000Z",
+      "updatedAt": "2026-10-22T01:52:29.000Z",
+      "uid": "35240-a17ece37-87b2-40d1-bad8-bfa6cd653e68"
     }
   ],
-  "event": [],
   "variable": [
     {
-      "type": "string",
-      "value": "https://api.openrelay.inc",
-      "key": "baseUrl"
+      "key": "baseUrl",
+      "value": "https://api.openrelay.inc"
     }
-  ],
-  "info": {
-    "_postman_id": "ac6e1986-9057-4a42-9943-6b9010b7fdfd",
-    "name": "OpenRelay Account Internal API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.\n",
-      "type": "text/plain"
-    }
-  }
+  ]
 }

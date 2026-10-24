@@ -1,866 +1,877 @@
 {
+  "info": {
+    "_postman_id": "565ec93d-3d15-43ae-b474-7545c67393e9",
+    "name": "OpenRelay SSH Keys API",
+    "description": "The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_\u2026`) unless noted otherwise.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-22T01:53:13.000Z",
+    "updatedAt": "2026-10-22T01:53:13.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-565ec93d-3d15-43ae-b474-7545c67393e9"
+  },
   "item": [
     {
-      "id": "09c1ec7a-f61e-486a-bf84-1178493e83d0",
-      "name": "SSH Keys",
-      "description": {
-        "content": "Org-level SSH public keys that can be attached to VMs.",
-        "type": "text/plain"
-      },
+      "name": "v1",
       "item": [
         {
-          "id": "abaf1b7f-0c8c-4518-b3f4-6bd315e09e64",
-          "name": "List an org's SSH public keys",
-          "request": {
-            "name": "List an org's SSH public keys",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "orgs",
-                ":orgId",
-                "ssh-keys"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "orgId",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}"
-                }
-              ]
-            }
-          },
-          "response": [
+          "name": "orgs",
+          "item": [
             {
-              "id": "12b06263-9429-486b-85a6-389eaab57dd2",
-              "name": "SSH keys",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
+              "name": "{orgId}",
+              "item": [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
+                  "name": "ssh-keys",
+                  "item": [
+                    {
+                      "name": "create",
+                      "item": [
+                        {
+                          "name": "Add an SSH public key (computes fingerprint)",
+                          "id": "4b1fd130-0df0-47ff-b227-c9e2f1883d77",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "auth": {
+                              "type": "bearer",
+                              "bearer": [
+                                {
+                                  "key": "token",
+                                  "value": "{{bearerToken}}",
+                                  "type": "string"
+                                }
+                              ]
+                            },
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"name\": \"<string>\",\n  \"publicKey\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/create",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "ssh-keys",
+                                "create"
+                              ],
+                              "variable": [
+                                {
+                                  "id": "80c1c61d-4e3e-48a3-9f0a-bed37fa0d483",
+                                  "key": "orgId",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                }
+                              ]
+                            }
+                          },
+                          "response": [
+                            {
+                              "id": "350d9031-d951-4447-895e-aa4db5f33c09",
+                              "name": "Added",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"name\": \"<string>\",\n  \"publicKey\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/create",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "ssh-keys",
+                                    "create"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"publicKey\": \"<string>\",\n  \"fingerprint\": \"<string>\",\n  \"createdAt\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:13.000Z",
+                              "updatedAt": "2026-10-22T01:53:13.000Z",
+                              "uid": "35240-350d9031-d951-4447-895e-aa4db5f33c09"
+                            },
+                            {
+                              "id": "be0bc949-dff0-4462-bc8b-acac6c6d28e1",
+                              "name": "Invalid key",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"name\": \"<string>\",\n  \"publicKey\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/create",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "ssh-keys",
+                                    "create"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Bad Request",
+                              "code": 400,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:13.000Z",
+                              "updatedAt": "2026-10-22T01:53:13.000Z",
+                              "uid": "35240-be0bc949-dff0-4462-bc8b-acac6c6d28e1"
+                            },
+                            {
+                              "id": "eccd9aa8-c698-4b5c-a3fc-34071fdc6f54",
+                              "name": "Missing or invalid API key",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"name\": \"<string>\",\n  \"publicKey\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/create",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "ssh-keys",
+                                    "create"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Unauthorized",
+                              "code": 401,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:13.000Z",
+                              "updatedAt": "2026-10-22T01:53:13.000Z",
+                              "uid": "35240-eccd9aa8-c698-4b5c-a3fc-34071fdc6f54"
+                            },
+                            {
+                              "id": "2ac99332-731b-47b0-9f59-291786f7f4d9",
+                              "name": "API key lacks the required scope",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"name\": \"<string>\",\n  \"publicKey\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/create",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "ssh-keys",
+                                    "create"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Forbidden",
+                              "code": 403,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:13.000Z",
+                              "updatedAt": "2026-10-22T01:53:13.000Z",
+                              "uid": "35240-2ac99332-731b-47b0-9f59-291786f7f4d9"
+                            },
+                            {
+                              "id": "c8d0549e-92cc-4943-a356-e5ecee459407",
+                              "name": "The request conflicts with existing state",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"name\": \"<string>\",\n  \"publicKey\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/create",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "ssh-keys",
+                                    "create"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Conflict",
+                              "code": 409,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:13.000Z",
+                              "updatedAt": "2026-10-22T01:53:13.000Z",
+                              "uid": "35240-c8d0549e-92cc-4943-a356-e5ecee459407"
+                            }
+                          ],
+                          "createdAt": "2026-10-22T01:53:13.000Z",
+                          "updatedAt": "2026-10-22T01:53:13.000Z",
+                          "uid": "35240-4b1fd130-0df0-47ff-b227-c9e2f1883d77"
+                        }
+                      ],
+                      "id": "e97cc02b-e712-48e5-a8b3-7397e623a0f2",
+                      "createdAt": "2026-10-22T01:53:13.000Z",
+                      "updatedAt": "2026-10-22T01:53:13.000Z",
+                      "uid": "35240-e97cc02b-e712-48e5-a8b3-7397e623a0f2"
+                    },
+                    {
+                      "name": "{id}",
+                      "item": [
+                        {
+                          "name": "Delete an SSH public key",
+                          "id": "ff6dccbd-0374-40dd-aca6-b511a89fb509",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "auth": {
+                              "type": "bearer",
+                              "bearer": [
+                                {
+                                  "key": "token",
+                                  "value": "{{bearerToken}}",
+                                  "type": "string"
+                                }
+                              ]
+                            },
+                            "method": "DELETE",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "ssh-keys",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "id": "a7c0e728-c1f7-46b8-8f6c-bb0f0d5e02ea",
+                                  "key": "orgId",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                },
+                                {
+                                  "id": "68ba4552-8178-42b9-ac89-7113ffc9797b",
+                                  "key": "id",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                }
+                              ]
+                            }
+                          },
+                          "response": [
+                            {
+                              "id": "9ed61ed1-82ec-4642-bcc0-e035d2877d4b",
+                              "name": "Deleted",
+                              "originalRequest": {
+                                "method": "DELETE",
+                                "header": [
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/:id",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "ssh-keys",
+                                    ":id"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    },
+                                    {
+                                      "key": "id"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "No Content",
+                              "code": 204,
+                              "_postman_previewlanguage": "text",
+                              "header": [],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": null,
+                              "createdAt": "2026-10-22T01:53:13.000Z",
+                              "updatedAt": "2026-10-22T01:53:13.000Z",
+                              "uid": "35240-9ed61ed1-82ec-4642-bcc0-e035d2877d4b"
+                            },
+                            {
+                              "id": "d7b36d4c-4793-4479-a098-9388482be9ef",
+                              "name": "Missing or invalid API key",
+                              "originalRequest": {
+                                "method": "DELETE",
+                                "header": [
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/:id",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "ssh-keys",
+                                    ":id"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    },
+                                    {
+                                      "key": "id"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Unauthorized",
+                              "code": 401,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:13.000Z",
+                              "updatedAt": "2026-10-22T01:53:13.000Z",
+                              "uid": "35240-d7b36d4c-4793-4479-a098-9388482be9ef"
+                            },
+                            {
+                              "id": "32995d10-50f7-4cf9-a78e-4afc14667a2b",
+                              "name": "API key lacks the required scope",
+                              "originalRequest": {
+                                "method": "DELETE",
+                                "header": [
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys/:id",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "ssh-keys",
+                                    ":id"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    },
+                                    {
+                                      "key": "id"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Forbidden",
+                              "code": 403,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:13.000Z",
+                              "updatedAt": "2026-10-22T01:53:13.000Z",
+                              "uid": "35240-32995d10-50f7-4cf9-a78e-4afc14667a2b"
+                            }
+                          ],
+                          "createdAt": "2026-10-22T01:53:13.000Z",
+                          "updatedAt": "2026-10-22T01:53:13.000Z",
+                          "uid": "35240-ff6dccbd-0374-40dd-aca6-b511a89fb509"
+                        }
+                      ],
+                      "id": "77c1b643-a4b1-4592-b625-ad129cbdd6a2",
+                      "createdAt": "2026-10-22T01:53:13.000Z",
+                      "updatedAt": "2026-10-22T01:53:13.000Z",
+                      "uid": "35240-77c1b643-a4b1-4592-b625-ad129cbdd6a2"
+                    },
+                    {
+                      "name": "List an org's SSH public keys",
+                      "id": "413b7e55-884f-4c25-b6f0-7cb2fcd60323",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "auth": {
+                          "type": "bearer",
+                          "bearer": [
+                            {
+                              "key": "token",
+                              "value": "{{bearerToken}}",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "orgs",
+                            ":orgId",
+                            "ssh-keys"
+                          ],
+                          "variable": [
+                            {
+                              "id": "a19d897d-56a5-4c5a-971e-73f773b671ff",
+                              "key": "orgId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "44b4e64e-185c-4e88-8adf-28ff505e2579",
+                          "name": "SSH keys",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "ssh-keys"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "orgId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "[\n  {\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"publicKey\": \"<string>\",\n    \"fingerprint\": \"<string>\",\n    \"createdAt\": \"<string>\"\n  },\n  {\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"publicKey\": \"<string>\",\n    \"fingerprint\": \"<string>\",\n    \"createdAt\": \"<string>\"\n  }\n]",
+                          "createdAt": "2026-10-22T01:53:13.000Z",
+                          "updatedAt": "2026-10-22T01:53:13.000Z",
+                          "uid": "35240-44b4e64e-185c-4e88-8adf-28ff505e2579"
+                        },
+                        {
+                          "id": "204f289d-d100-43c2-a4e7-539657f2ee37",
+                          "name": "Missing or invalid API key",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "ssh-keys"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "orgId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Unauthorized",
+                          "code": 401,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:13.000Z",
+                          "updatedAt": "2026-10-22T01:53:13.000Z",
+                          "uid": "35240-204f289d-d100-43c2-a4e7-539657f2ee37"
+                        },
+                        {
+                          "id": "a40dcfbc-d369-495e-b107-8ce5a4dca357",
+                          "name": "API key lacks the required scope",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/ssh-keys",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "ssh-keys"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "orgId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Forbidden",
+                          "code": 403,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:13.000Z",
+                          "updatedAt": "2026-10-22T01:53:13.000Z",
+                          "uid": "35240-a40dcfbc-d369-495e-b107-8ce5a4dca357"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T01:53:13.000Z",
+                      "updatedAt": "2026-10-22T01:53:13.000Z",
+                      "uid": "35240-413b7e55-884f-4c25-b6f0-7cb2fcd60323"
+                    }
+                  ],
+                  "id": "e55f71cd-beec-4f29-9405-05c78b2224a9",
+                  "createdAt": "2026-10-22T01:53:13.000Z",
+                  "updatedAt": "2026-10-22T01:53:13.000Z",
+                  "uid": "35240-e55f71cd-beec-4f29-9405-05c78b2224a9"
                 }
               ],
-              "body": "[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"publicKey\": \"string\",\n    \"fingerprint\": \"string\",\n    \"createdAt\": \"string\"\n  },\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"publicKey\": \"string\",\n    \"fingerprint\": \"string\",\n    \"createdAt\": \"string\"\n  }\n]",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "b30d5b30-678f-43d4-8529-17464b27bb24",
-              "name": "Missing or invalid API key",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "01ae1cea-2ded-4cb4-91d2-581f672bfd1f",
-              "name": "API key lacks the required scope",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "id": "0a0a2975-5322-489c-b417-74af05948cef",
+              "createdAt": "2026-10-22T01:53:13.000Z",
+              "updatedAt": "2026-10-22T01:53:13.000Z",
+              "uid": "35240-0a0a2975-5322-489c-b417-74af05948cef"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "de33cc16-03e3-4311-b36e-abd3f1b17ddd",
-          "name": "Add an SSH public key (computes fingerprint)",
-          "request": {
-            "name": "Add an SSH public key (computes fingerprint)",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "orgs",
-                ":orgId",
-                "ssh-keys",
-                "create"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "orgId",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "POST",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"<string>\",\n  \"publicKey\": \"<string>\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": [
-            {
-              "id": "d487d972-a81d-469d-9ec5-3022f5ee9864",
-              "name": "Added",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys",
-                    "create"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"work-laptop\",\n  \"publicKey\": \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB5ro6Vg2mXKC3jExample user@laptop\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"publicKey\": \"string\",\n  \"fingerprint\": \"string\",\n  \"createdAt\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "41abdf2c-5c5a-4e71-aefe-f52bfc6a5acd",
-              "name": "Invalid key",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys",
-                    "create"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"work-laptop\",\n  \"publicKey\": \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB5ro6Vg2mXKC3jExample user@laptop\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "12dd9e65-f9fd-4633-a681-08e41c8f074c",
-              "name": "Missing or invalid API key",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys",
-                    "create"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"work-laptop\",\n  \"publicKey\": \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB5ro6Vg2mXKC3jExample user@laptop\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "766d07a3-7a1b-4be0-93ad-64c3b438ffae",
-              "name": "API key lacks the required scope",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys",
-                    "create"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"work-laptop\",\n  \"publicKey\": \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB5ro6Vg2mXKC3jExample user@laptop\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "c11a563e-bbf2-40d5-8e78-6f64d765cc63",
-              "name": "The request conflicts with existing state",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys",
-                    "create"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"work-laptop\",\n  \"publicKey\": \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB5ro6Vg2mXKC3jExample user@laptop\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Conflict",
-              "code": 409,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "15bdf752-070f-4b49-9d00-9e9c5d58e6bb",
-          "name": "Delete an SSH public key",
-          "request": {
-            "name": "Delete an SSH public key",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "orgs",
-                ":orgId",
-                "ssh-keys",
-                ":id"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "orgId",
-                  "description": "(Required) "
-                },
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "DELETE",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}"
-                }
-              ]
-            }
-          },
-          "response": [
-            {
-              "id": "83807b8f-a84b-49cb-bca6-990351bd8ca6",
-              "name": "Deleted",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    },
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "No Content",
-              "code": 204,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "c9900a75-1a88-45fb-a5b1-5532a706f700",
-              "name": "Missing or invalid API key",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    },
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "44239eb4-7716-453f-89d8-1bd3ca60426a",
-              "name": "API key lacks the required scope",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "ssh-keys",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    },
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "1bc4c417-50fb-47d9-8ce8-df28f763136b",
+          "createdAt": "2026-10-22T01:53:13.000Z",
+          "updatedAt": "2026-10-22T01:53:13.000Z",
+          "uid": "35240-1bc4c417-50fb-47d9-8ce8-df28f763136b"
         }
       ],
-      "event": []
+      "id": "faa81c8f-624a-4860-972b-d19ded2eae06",
+      "createdAt": "2026-10-22T01:53:13.000Z",
+      "updatedAt": "2026-10-22T01:53:13.000Z",
+      "uid": "35240-faa81c8f-624a-4860-972b-d19ded2eae06"
     }
   ],
-  "event": [],
   "variable": [
     {
-      "type": "string",
-      "value": "https://api.openrelay.inc",
-      "key": "baseUrl"
+      "key": "baseUrl",
+      "value": "https://api.openrelay.inc"
     }
-  ],
-  "info": {
-    "_postman_id": "7b0625a6-26af-4acc-9b57-ac2eff7c044c",
-    "name": "OpenRelay Account SSH Keys API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.\n",
-      "type": "text/plain"
-    }
-  }
+  ]
 }

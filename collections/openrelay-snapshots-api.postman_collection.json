@@ -1,1518 +1,1592 @@
 {
+  "info": {
+    "_postman_id": "943bf722-f669-4ead-8e35-b7201adb3843",
+    "name": "OpenRelay Snapshots API",
+    "description": "The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_\u2026`) unless noted otherwise.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-22T01:53:06.000Z",
+    "updatedAt": "2026-10-22T01:53:07.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-943bf722-f669-4ead-8e35-b7201adb3843"
+  },
   "item": [
     {
-      "id": "3a04ebeb-f327-49dd-a6db-884b01ad2063",
-      "name": "Snapshots",
-      "description": {
-        "content": "Point-in-time VM snapshots and forking new VMs from them.",
-        "type": "text/plain"
-      },
+      "name": "v1",
       "item": [
         {
-          "id": "96c85b13-683e-446a-a571-34d771ad81f0",
-          "name": "List an org's VM snapshots (optionally filtered by source VM)",
-          "request": {
-            "name": "List an org's VM snapshots (optionally filtered by source VM)",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "orgs",
-                ":orgId",
-                "snapshots"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": false,
-                  "key": "vmId",
-                  "value": "<string>"
-                }
-              ],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "orgId",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}"
-                }
-              ]
-            }
-          },
-          "response": [
+          "name": "orgs",
+          "item": [
             {
-              "id": "e802fb5f-c0d5-4f49-ad37-9c6fde41e50c",
-              "name": "OK",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "vmId",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
+              "name": "{orgId}",
+              "item": [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
+                  "name": "snapshots",
+                  "item": [
+                    {
+                      "name": "List an org's VM snapshots (optionally filtered by source VM)",
+                      "id": "6b655909-aef8-4629-8538-40ac45f7e4c3",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "auth": {
+                          "type": "bearer",
+                          "bearer": [
+                            {
+                              "key": "token",
+                              "value": "{{bearerToken}}",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/orgs/:orgId/snapshots?vmId=<string>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "orgs",
+                            ":orgId",
+                            "snapshots"
+                          ],
+                          "query": [
+                            {
+                              "key": "vmId",
+                              "value": "<string>"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "id": "afcd6aa2-3307-4fa5-a42a-14bd4bddd048",
+                              "key": "orgId",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "109010ad-a82d-428b-9b43-69f256dde195",
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/snapshots?vmId=<string>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "snapshots"
+                              ],
+                              "query": [
+                                {
+                                  "key": "vmId",
+                                  "value": "<string>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "orgId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "[\n  {\n    \"id\": \"<string>\",\n    \"organizationId\": \"<string>\",\n    \"name\": \"<string>\",\n    \"status\": \"<string>\",\n    \"diskSizeGb\": \"<integer>\",\n    \"chainDepth\": \"<integer>\",\n    \"createdAt\": \"<string>\",\n    \"containerPort\": \"<integer>\",\n    \"deletedAt\": \"<string>\",\n    \"diskPath\": \"<string>\",\n    \"envVars\": {\n      \"ut9\": \"<string>\",\n      \"infe_\": \"<string>\"\n    },\n    \"errorMessage\": \"<string>\",\n    \"gpuCount\": \"<integer>\",\n    \"gpuModelId\": \"<string>\",\n    \"imageUrl\": \"<string>\",\n    \"nodeId\": \"<string>\",\n    \"resourceSize\": \"<string>\",\n    \"sizeBytes\": \"<long>\",\n    \"sourceVmId\": \"<string>\",\n    \"templateId\": \"<string>\"\n  },\n  {\n    \"id\": \"<string>\",\n    \"organizationId\": \"<string>\",\n    \"name\": \"<string>\",\n    \"status\": \"<string>\",\n    \"diskSizeGb\": \"<integer>\",\n    \"chainDepth\": \"<integer>\",\n    \"createdAt\": \"<string>\",\n    \"containerPort\": \"<integer>\",\n    \"deletedAt\": \"<string>\",\n    \"diskPath\": \"<string>\",\n    \"envVars\": {\n      \"sed_2\": \"<string>\"\n    },\n    \"errorMessage\": \"<string>\",\n    \"gpuCount\": \"<integer>\",\n    \"gpuModelId\": \"<string>\",\n    \"imageUrl\": \"<string>\",\n    \"nodeId\": \"<string>\",\n    \"resourceSize\": \"<string>\",\n    \"sizeBytes\": \"<long>\",\n    \"sourceVmId\": \"<string>\",\n    \"templateId\": \"<string>\"\n  }\n]",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-109010ad-a82d-428b-9b43-69f256dde195"
+                        },
+                        {
+                          "id": "583bff79-24b1-4921-a13b-475519c376a6",
+                          "name": "The request is invalid",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/snapshots?vmId=<string>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "snapshots"
+                              ],
+                              "query": [
+                                {
+                                  "key": "vmId",
+                                  "value": "<string>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "orgId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Bad Request",
+                          "code": 400,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-583bff79-24b1-4921-a13b-475519c376a6"
+                        },
+                        {
+                          "id": "7894a0fb-752c-409c-bfee-e8a389a1725f",
+                          "name": "Missing or invalid API key",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/snapshots?vmId=<string>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "snapshots"
+                              ],
+                              "query": [
+                                {
+                                  "key": "vmId",
+                                  "value": "<string>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "orgId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Unauthorized",
+                          "code": 401,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-7894a0fb-752c-409c-bfee-e8a389a1725f"
+                        },
+                        {
+                          "id": "066a393d-498d-4704-98c1-818b83afd954",
+                          "name": "API key lacks the required scope",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/snapshots?vmId=<string>",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "snapshots"
+                              ],
+                              "query": [
+                                {
+                                  "key": "vmId",
+                                  "value": "<string>"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "orgId"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Forbidden",
+                          "code": 403,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-066a393d-498d-4704-98c1-818b83afd954"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T01:53:07.000Z",
+                      "updatedAt": "2026-10-22T01:53:07.000Z",
+                      "uid": "35240-6b655909-aef8-4629-8538-40ac45f7e4c3"
+                    }
+                  ],
+                  "id": "31ab5a9a-f701-41e3-a83d-858d5bd74705",
+                  "createdAt": "2026-10-22T01:53:07.000Z",
+                  "updatedAt": "2026-10-22T01:53:07.000Z",
+                  "uid": "35240-31ab5a9a-f701-41e3-a83d-858d5bd74705"
+                },
+                {
+                  "name": "vms",
+                  "item": [
+                    {
+                      "name": "fork",
+                      "item": [
+                        {
+                          "name": "Fork a new VM from a snapshot",
+                          "id": "fe62e4f2-2534-42c0-92dc-92e508c85794",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "auth": {
+                              "type": "bearer",
+                              "bearer": [
+                                {
+                                  "key": "token",
+                                  "value": "{{bearerToken}}",
+                                  "type": "string"
+                                }
+                              ]
+                            },
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"esse02\": \"<string>\",\n    \"aliquip_4\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/orgs/:orgId/vms/fork",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "orgs",
+                                ":orgId",
+                                "vms",
+                                "fork"
+                              ],
+                              "variable": [
+                                {
+                                  "id": "a25dec03-767d-4b5c-a7ae-10914b86f22d",
+                                  "key": "orgId",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                }
+                              ]
+                            }
+                          },
+                          "response": [
+                            {
+                              "id": "a1680b3b-3172-41b7-b846-a120dde14a97",
+                              "name": "Created",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"esse02\": \"<string>\",\n    \"aliquip_4\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/vms/fork",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "vms",
+                                    "fork"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"status\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:07.000Z",
+                              "updatedAt": "2026-10-22T01:53:07.000Z",
+                              "uid": "35240-a1680b3b-3172-41b7-b846-a120dde14a97"
+                            },
+                            {
+                              "id": "54513455-c0c3-4b05-ae0e-4863087ec736",
+                              "name": "The request is invalid",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"esse02\": \"<string>\",\n    \"aliquip_4\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/vms/fork",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "vms",
+                                    "fork"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Bad Request",
+                              "code": 400,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:07.000Z",
+                              "updatedAt": "2026-10-22T01:53:07.000Z",
+                              "uid": "35240-54513455-c0c3-4b05-ae0e-4863087ec736"
+                            },
+                            {
+                              "id": "8776a39e-7e52-4a80-82e1-a0f243aac0e6",
+                              "name": "Missing or invalid API key",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"esse02\": \"<string>\",\n    \"aliquip_4\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/vms/fork",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "vms",
+                                    "fork"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Unauthorized",
+                              "code": 401,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:07.000Z",
+                              "updatedAt": "2026-10-22T01:53:07.000Z",
+                              "uid": "35240-8776a39e-7e52-4a80-82e1-a0f243aac0e6"
+                            },
+                            {
+                              "id": "ea300f93-cfab-40b2-800a-e4033a37b97d",
+                              "name": "API key lacks the required scope",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"esse02\": \"<string>\",\n    \"aliquip_4\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/vms/fork",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "vms",
+                                    "fork"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Forbidden",
+                              "code": 403,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:07.000Z",
+                              "updatedAt": "2026-10-22T01:53:07.000Z",
+                              "uid": "35240-ea300f93-cfab-40b2-800a-e4033a37b97d"
+                            },
+                            {
+                              "id": "6f13dfe9-1e48-489c-9c04-bfa45e6bab45",
+                              "name": "Resource not found",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"esse02\": \"<string>\",\n    \"aliquip_4\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/vms/fork",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "vms",
+                                    "fork"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Not Found",
+                              "code": 404,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:07.000Z",
+                              "updatedAt": "2026-10-22T01:53:07.000Z",
+                              "uid": "35240-6f13dfe9-1e48-489c-9c04-bfa45e6bab45"
+                            },
+                            {
+                              "id": "624483a9-e6a9-4394-ad34-0c043e7c425a",
+                              "name": "The request conflicts with existing state",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"esse02\": \"<string>\",\n    \"aliquip_4\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/orgs/:orgId/vms/fork",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "orgs",
+                                    ":orgId",
+                                    "vms",
+                                    "fork"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "orgId"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "Conflict",
+                              "code": 409,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                                }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                              "createdAt": "2026-10-22T01:53:07.000Z",
+                              "updatedAt": "2026-10-22T01:53:07.000Z",
+                              "uid": "35240-624483a9-e6a9-4394-ad34-0c043e7c425a"
+                            }
+                          ],
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-fe62e4f2-2534-42c0-92dc-92e508c85794"
+                        }
+                      ],
+                      "id": "c55b3f24-6702-4721-9061-e9280c2a27fd",
+                      "createdAt": "2026-10-22T01:53:07.000Z",
+                      "updatedAt": "2026-10-22T01:53:07.000Z",
+                      "uid": "35240-c55b3f24-6702-4721-9061-e9280c2a27fd"
+                    }
+                  ],
+                  "id": "a9d2b536-ced7-437b-904c-d0e8e984f2d6",
+                  "createdAt": "2026-10-22T01:53:07.000Z",
+                  "updatedAt": "2026-10-22T01:53:07.000Z",
+                  "uid": "35240-a9d2b536-ced7-437b-904c-d0e8e984f2d6"
                 }
               ],
-              "body": "[\n  {\n    \"id\": \"string\",\n    \"organizationId\": \"string\",\n    \"name\": \"string\",\n    \"status\": \"string\",\n    \"diskSizeGb\": 6694,\n    \"chainDepth\": 4583,\n    \"createdAt\": \"string\",\n    \"containerPort\": 4657,\n    \"deletedAt\": \"string\",\n    \"diskPath\": \"string\",\n    \"envVars\": {\n      \"key_0\": \"string\"\n    },\n    \"errorMessage\": \"string\",\n    \"gpuCount\": 3624,\n    \"gpuModelId\": \"string\",\n    \"imageUrl\": \"string\",\n    \"nodeId\": \"string\",\n    \"resourceSize\": \"string\",\n    \"sizeBytes\": 1286,\n    \"sourceVmId\": \"string\",\n    \"templateId\": \"string\"\n  },\n  {\n    \"id\": \"string\",\n    \"organizationId\": \"string\",\n    \"name\": \"string\",\n    \"status\": \"string\",\n    \"diskSizeGb\": 5423,\n    \"chainDepth\": 2071,\n    \"createdAt\": \"string\",\n    \"containerPort\": 3794,\n    \"deletedAt\": \"string\",\n    \"diskPath\": \"string\",\n    \"envVars\": {\n      \"key_0\": \"string\"\n    },\n    \"errorMessage\": \"string\",\n    \"gpuCount\": 3866,\n    \"gpuModelId\": \"string\",\n    \"imageUrl\": \"string\",\n    \"nodeId\": \"string\",\n    \"resourceSize\": \"string\",\n    \"sizeBytes\": 522,\n    \"sourceVmId\": \"string\",\n    \"templateId\": \"string\"\n  }\n]",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "f0e464f6-4b36-44a7-860a-e988d4f781bd",
-              "name": "The request is invalid",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "vmId",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "5aaa67e4-a903-4ac1-a754-9aaaec0af7a7",
-              "name": "Missing or invalid API key",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "vmId",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "39e59c11-09b2-4fa6-8aaf-5b0ae90f4d78",
-              "name": "API key lacks the required scope",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "vmId",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "id": "1e0d790e-9ebc-4ee0-aa63-fabe395cf0ee",
+              "createdAt": "2026-10-22T01:53:07.000Z",
+              "updatedAt": "2026-10-22T01:53:07.000Z",
+              "uid": "35240-1e0d790e-9ebc-4ee0-aa63-fabe395cf0ee"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "533ea3a5-c0c8-4da0-bde5-6251774912cb",
+          "createdAt": "2026-10-22T01:53:07.000Z",
+          "updatedAt": "2026-10-22T01:53:07.000Z",
+          "uid": "35240-533ea3a5-c0c8-4da0-bde5-6251774912cb"
         },
         {
-          "id": "a58e84e4-ea87-4172-8c48-30096e052ab3",
-          "name": "Fork a new VM from a snapshot",
-          "request": {
-            "name": "Fork a new VM from a snapshot",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "orgs",
-                ":orgId",
-                "vms",
-                "fork"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "orgId",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "POST",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": [
+          "name": "snapshots",
+          "item": [
             {
-              "id": "04524ddf-6b31-45c6-8c69-ca263b69cfb5",
-              "name": "Created",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "vms",
-                    "fork"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
+              "name": "{id}",
+              "item": [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
+                  "name": "Soft-delete a snapshot",
+                  "id": "ea42e00c-35d9-4eb2-b738-b926bb83c8ab",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/snapshots/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "snapshots",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "fd746918-6c6a-4c8f-8230-08f9c81b74fe",
+                          "key": "id",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "id": "60157ae8-d764-4ab1-a2d6-c83ee2bfe830",
+                      "name": "Deleted",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/snapshots/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "snapshots",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "No Content",
+                      "code": 204,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T01:53:07.000Z",
+                      "updatedAt": "2026-10-22T01:53:07.000Z",
+                      "uid": "35240-60157ae8-d764-4ab1-a2d6-c83ee2bfe830"
+                    },
+                    {
+                      "id": "5a5c2d7b-020f-496b-9081-84612443bf5d",
+                      "name": "Missing or invalid API key",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/snapshots/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "snapshots",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:53:07.000Z",
+                      "updatedAt": "2026-10-22T01:53:07.000Z",
+                      "uid": "35240-5a5c2d7b-020f-496b-9081-84612443bf5d"
+                    },
+                    {
+                      "id": "f62b7c62-be3b-4e45-a243-313190e7d5a1",
+                      "name": "API key lacks the required scope",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/snapshots/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "snapshots",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:53:07.000Z",
+                      "updatedAt": "2026-10-22T01:53:07.000Z",
+                      "uid": "35240-f62b7c62-be3b-4e45-a243-313190e7d5a1"
+                    },
+                    {
+                      "id": "4afa14c1-32d6-4293-99b7-e41a20f15f2e",
+                      "name": "Resource not found",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/snapshots/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "snapshots",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:53:07.000Z",
+                      "updatedAt": "2026-10-22T01:53:07.000Z",
+                      "uid": "35240-4afa14c1-32d6-4293-99b7-e41a20f15f2e"
+                    },
+                    {
+                      "id": "98f09895-575e-4f46-a4dd-1b65a8ba8b41",
+                      "name": "The request conflicts with existing state",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/snapshots/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "snapshots",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Conflict",
+                      "code": 409,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:53:07.000Z",
+                      "updatedAt": "2026-10-22T01:53:07.000Z",
+                      "uid": "35240-98f09895-575e-4f46-a4dd-1b65a8ba8b41"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T01:53:07.000Z",
+                  "updatedAt": "2026-10-22T01:53:07.000Z",
+                  "uid": "35240-ea42e00c-35d9-4eb2-b738-b926bb83c8ab"
                 }
               ],
-              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"status\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "ab735f6c-6900-4b0b-9402-9537e45d0f0b",
-              "name": "The request is invalid",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "vms",
-                    "fork"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "eafcbdb4-7271-4ea4-8613-d38d72df6a53",
-              "name": "Missing or invalid API key",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "vms",
-                    "fork"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "210f18ad-6454-4b91-841b-721eb875fb4d",
-              "name": "API key lacks the required scope",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "vms",
-                    "fork"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "3b9e90ae-5d41-4b13-ae5e-31e2e0448237",
-              "name": "Resource not found",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "vms",
-                    "fork"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "e98b0269-4b9c-48a3-9332-bbda849a600b",
-              "name": "The request conflicts with existing state",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "orgs",
-                    ":orgId",
-                    "vms",
-                    "fork"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "orgId",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"snapshotId\": \"<string>\",\n  \"containerPort\": \"<integer>\",\n  \"diskSizeGb\": \"<integer>\",\n  \"envVars\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"gpuCount\": \"<integer>\",\n  \"gpuModelId\": \"<string>\",\n  \"imageUrl\": \"<string>\",\n  \"name\": \"<string>\",\n  \"resourceSize\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Conflict",
-              "code": 409,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "id": "4e7a14db-00b4-4810-9bfc-abb66dd97a69",
+              "createdAt": "2026-10-22T01:53:07.000Z",
+              "updatedAt": "2026-10-22T01:53:07.000Z",
+              "uid": "35240-4e7a14db-00b4-4810-9bfc-abb66dd97a69"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "002e355e-78bb-40fb-a0d4-96a82dfe7625",
+          "createdAt": "2026-10-22T01:53:07.000Z",
+          "updatedAt": "2026-10-22T01:53:07.000Z",
+          "uid": "35240-002e355e-78bb-40fb-a0d4-96a82dfe7625"
         },
         {
-          "id": "661ed163-e727-42bf-bfb3-2fbac7ee3f71",
-          "name": "Soft-delete a snapshot",
-          "request": {
-            "name": "Soft-delete a snapshot",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "snapshots",
-                ":id"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "DELETE",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}"
-                }
-              ]
-            }
-          },
-          "response": [
+          "name": "vms",
+          "item": [
             {
-              "id": "9b083f14-1fc3-43b6-b6cb-3b5b548a7198",
-              "name": "Deleted",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "snapshots",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "snapshots",
+                  "item": [
                     {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
+                      "name": "Create a snapshot of a VM",
+                      "id": "2ddc3da8-f20d-458a-a2eb-3d2cdab5f637",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "auth": {
+                          "type": "bearer",
+                          "bearer": [
+                            {
+                              "key": "token",
+                              "value": "{{bearerToken}}",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"name\": \"<string>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/vms/:id/snapshots",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "vms",
+                            ":id",
+                            "snapshots"
+                          ],
+                          "variable": [
+                            {
+                              "id": "72e09814-4cad-4405-8cb9-15d39347b123",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        },
+                        "description": "Beta: the snapshot record is created, but snapshot capture is not yet enabled on the data plane."
+                      },
+                      "response": [
+                        {
+                          "id": "adeacef2-cfb6-4441-8c3f-150683ff4703",
+                          "name": "Created",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"name\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/vms/:id/snapshots",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "vms",
+                                ":id",
+                                "snapshots"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"status\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-adeacef2-cfb6-4441-8c3f-150683ff4703"
+                        },
+                        {
+                          "id": "df693f31-6981-4290-9957-838026a79408",
+                          "name": "The request is invalid",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"name\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/vms/:id/snapshots",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "vms",
+                                ":id",
+                                "snapshots"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Bad Request",
+                          "code": 400,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-df693f31-6981-4290-9957-838026a79408"
+                        },
+                        {
+                          "id": "8d9fccea-f97c-4c7d-b554-f7f17b6022ff",
+                          "name": "Missing or invalid API key",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"name\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/vms/:id/snapshots",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "vms",
+                                ":id",
+                                "snapshots"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Unauthorized",
+                          "code": 401,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-8d9fccea-f97c-4c7d-b554-f7f17b6022ff"
+                        },
+                        {
+                          "id": "b658090a-acec-43ad-842d-d6bad9d0fb20",
+                          "name": "API key lacks the required scope",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"name\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/vms/:id/snapshots",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "vms",
+                                ":id",
+                                "snapshots"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Forbidden",
+                          "code": 403,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-b658090a-acec-43ad-842d-d6bad9d0fb20"
+                        },
+                        {
+                          "id": "8b58a68b-9d9e-487c-84c2-11300ab86b06",
+                          "name": "Resource not found",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"name\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/vms/:id/snapshots",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "vms",
+                                ":id",
+                                "snapshots"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Not Found",
+                          "code": 404,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-8b58a68b-9d9e-487c-84c2-11300ab86b06"
+                        },
+                        {
+                          "id": "4fa70c6d-469d-4c16-97e2-65acfab81c9a",
+                          "name": "The request conflicts with existing state",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"name\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/vms/:id/snapshots",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "vms",
+                                ":id",
+                                "snapshots"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Conflict",
+                          "code": 409,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T01:53:07.000Z",
+                          "updatedAt": "2026-10-22T01:53:07.000Z",
+                          "uid": "35240-4fa70c6d-469d-4c16-97e2-65acfab81c9a"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T01:53:07.000Z",
+                      "updatedAt": "2026-10-22T01:53:07.000Z",
+                      "uid": "35240-2ddc3da8-f20d-458a-a2eb-3d2cdab5f637"
                     }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "No Content",
-              "code": 204,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
+                  ],
+                  "id": "014aa5de-64d8-4cf3-97e4-0abb58e10900",
+                  "createdAt": "2026-10-22T01:53:07.000Z",
+                  "updatedAt": "2026-10-22T01:53:07.000Z",
+                  "uid": "35240-014aa5de-64d8-4cf3-97e4-0abb58e10900"
                 }
               ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "25729ede-31d1-41d0-bf07-20cc05f3dbd2",
-              "name": "Missing or invalid API key",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "snapshots",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "addef01f-0054-4837-8884-6020d5c08c47",
-              "name": "API key lacks the required scope",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "snapshots",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "450fd2d9-ba17-47ea-a9da-3da5fedb9390",
-              "name": "Resource not found",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "snapshots",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "66a963f2-7c54-47ec-9975-320c7170f9ab",
-              "name": "The request conflicts with existing state",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "snapshots",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Conflict",
-              "code": 409,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "6b9ceff4-03e7-4b20-885c-7eeb7f839b9b",
-          "name": "Create a snapshot of a VM",
-          "request": {
-            "name": "Create a snapshot of a VM",
-            "description": {
-              "content": "Beta: the snapshot record is created, but snapshot capture is not yet enabled on the data plane.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "vms",
-                ":id",
-                "snapshots"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "POST",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"<string>\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": [
-            {
-              "id": "5af24aee-5318-462d-835a-ad698862f767",
-              "name": "Created",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "vms",
-                    ":id",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"status\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "f1839ff3-7086-4f0f-8ad5-0d745d168c51",
-              "name": "The request is invalid",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "vms",
-                    ":id",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "cec0f527-5fdb-48fe-be1e-07ff852b10dd",
-              "name": "Missing or invalid API key",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "vms",
-                    ":id",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "f2ed6434-36e0-46fd-a484-ba018c2b2d9d",
-              "name": "API key lacks the required scope",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "vms",
-                    ":id",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "9772983f-6b38-4c4e-9bbd-73f870415cc3",
-              "name": "Resource not found",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "vms",
-                    ":id",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "042c1e5c-7dbd-460a-8233-8c35d2b401b1",
-              "name": "The request conflicts with existing state",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "vms",
-                    ":id",
-                    "snapshots"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Conflict",
-              "code": 409,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "id": "b6fc445b-949b-46cf-9d1b-7b07900a87a7",
+              "createdAt": "2026-10-22T01:53:07.000Z",
+              "updatedAt": "2026-10-22T01:53:07.000Z",
+              "uid": "35240-b6fc445b-949b-46cf-9d1b-7b07900a87a7"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "fe0133a9-65df-49ee-8a59-d760ee454baf",
+          "createdAt": "2026-10-22T01:53:07.000Z",
+          "updatedAt": "2026-10-22T01:53:07.000Z",
+          "uid": "35240-fe0133a9-65df-49ee-8a59-d760ee454baf"
         }
       ],
-      "event": []
+      "id": "2c0497af-149e-4392-8364-8f832f343eff",
+      "createdAt": "2026-10-22T01:53:07.000Z",
+      "updatedAt": "2026-10-22T01:53:07.000Z",
+      "uid": "35240-2c0497af-149e-4392-8364-8f832f343eff"
     }
   ],
-  "event": [],
   "variable": [
     {
-      "type": "string",
-      "value": "https://api.openrelay.inc",
-      "key": "baseUrl"
+      "key": "baseUrl",
+      "value": "https://api.openrelay.inc"
     }
-  ],
-  "info": {
-    "_postman_id": "8245586b-813a-4f83-b8a8-ad5a32beaa06",
-    "name": "OpenRelay Account Snapshots API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "The OpenRelay control-plane REST API. Deploy GPU VMs and inference clusters, manage organizations and billing, and automate your infrastructure. All requests are authenticated with an API key (`vl_…`) unless noted otherwise.\n",
-      "type": "text/plain"
-    }
-  }
+  ]
 }
